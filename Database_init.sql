@@ -22,6 +22,14 @@ CREATE table if not exists course(
     PRIMARY KEY (CourseID)
 );
 
+CREATE TABLE IF NOT EXISTS coursePrereq(
+    CourseID INT NOT NULL,
+    PrereqID INT NOT NULL,
+    PRIMARY KEY (CourseID, PrereqID),
+    FOREIGN KEY CourseID REFERENCES course(CourseID),
+    FOREIGN KEY PrereqID REFERENCES course(CourseID)
+)
+
 CREATE TABLE IF NOT EXISTS LearnerCourse(
     LearnerID INT NOT NULL,
     CourseID INT NOT NULL,
@@ -138,14 +146,14 @@ CREATE TABLE IF NOT EXISTS studentAnswer(
 
 
 
-create table if not exists course_forum();
+-- create table if not exists course_forum();
 
-create table if not exists public_forum(
-    topic
-)
+-- create table if not exists public_forum(
+--     topic
+-- )
 
-student
+-- student
 
-student_courses(
-    sid, cid, passed?
-)
+-- student_courses(
+--     sid, cid, passed?
+-- )
