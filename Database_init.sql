@@ -226,4 +226,4 @@ CREATE TABLE IF NOT EXISTS publicForumReply(
 
 -- student_courses(
 --     sid, cid, passed?
--- )
+-- ) #test
