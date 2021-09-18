@@ -54,9 +54,19 @@ CREATE table if not exists class(
     TrainerID INT NOT NULL,
     StartDate DATE NOT NULL,
     EndDate DATE NOT NULL,
+    ClassSize INT NOT NULL,
     PRIMARY KEY (ClassID),
     FOREIGN KEY (TrainerID) REFERENCES trainer(TrainerID),
     FOREIGN KEY (CourseID) REFERENCES course(CourseID)
+);
+
+CREATE TABLE IF NOT EXISTS classLearner(
+    CourseID INT NOT NULL,
+    ClassID INT NOT NULL,
+    LearnerID INT NOT NULL,
+    PRIMARY KEY (ClassID, CourseID, LearnerID),
+    FOREIGN KEY (CourseID, ClassID) REFERENCES class(CourseID, ClassID),
+    FOREIGN KEY (LearnerID) REFERENCES learner(LearnerID) 
 );
 
 CREATE TABLE IF NOT EXISTS section(
