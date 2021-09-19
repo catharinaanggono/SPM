@@ -4,22 +4,9 @@ USE one_stop_lms;
 
 CREATE TABLE IF NOT EXISTS userTable(
     UserID INT NOT NULL AUTO_INCREMENT,
+    UserName TEXT NOT NULL,
+    UserType TEXT NOT NULL,
     PRIMARY KEY (UserID)
-);
-
-CREATE TABLE IF NOT EXISTS trainer(
-    TrainerID INT NOT NULL,
-    TrainerName TEXT NOT NULL,
-    PRIMARY KEY (TrainerID),
-    FOREIGN KEY (TrainerID) REFERENCES userTable(UserID)
-);
-
-CREATE TABLE IF NOT EXISTS learner(
-    LearnerID INT NOT NULL,
-    LearnerName TEXT NOT NULL,
-    PRIMARY KEY (LearnerID),
-    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
-    -- what else do we need to put in?
 );
 
 CREATE table if not exists course(
@@ -43,7 +30,7 @@ CREATE TABLE IF NOT EXISTS LearnerCourse(
     CourseID INT NOT NULL,
     Status TEXT NOT NULL,
     PRIMARY KEY (LearnerID, CourseID),
-    FOREIGN KEY (LearnerID) REFERENCES learner(LearnerID),
+    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID),
     FOREIGN KEY (CourseID) REFERENCES course(CourseID)
     -- Should we also mention the class and the trainer?
 );
@@ -56,7 +43,7 @@ CREATE table if not exists class(
     EndDate DATE NOT NULL,
     ClassSize INT NOT NULL,
     PRIMARY KEY (ClassID),
-    FOREIGN KEY (TrainerID) REFERENCES trainer(TrainerID),
+    FOREIGN KEY (TrainerID) REFERENCES userTable(UserID),
     FOREIGN KEY (CourseID) REFERENCES course(CourseID)
 );
 
@@ -66,7 +53,7 @@ CREATE TABLE IF NOT EXISTS classLearner(
     LearnerID INT NOT NULL,
     PRIMARY KEY (ClassID, CourseID, LearnerID),
     FOREIGN KEY (CourseID, ClassID) REFERENCES class(CourseID, ClassID),
-    FOREIGN KEY (LearnerID) REFERENCES learner(LearnerID) 
+    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID) 
 );
 
 CREATE TABLE IF NOT EXISTS section(
@@ -74,8 +61,8 @@ CREATE TABLE IF NOT EXISTS section(
     ClassID INT NOT NULL,
     SectionID INT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (SectionID),
-    FOREIGN KEY (CourseID) REFERENCES Class(CourseID),
-    FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
+    FOREIGN KEY (CourseID) REFERENCES class(CourseID),
+    FOREIGN KEY (ClassID) REFERENCES class(ClassID)
 );
 
 CREATE TABLE IF NOT EXISTS sectionMaterial(
@@ -85,9 +72,9 @@ CREATE TABLE IF NOT EXISTS sectionMaterial(
     MaterialID INT NOT NULL AUTO_INCREMENT,
     MaterialContent TEXT NOT NULL,
     PRIMARY KEY (MaterialID),
-    FOREIGN KEY (CourseID) REFERENCES Section(CourseID),
-    FOREIGN KEY (ClassID) REFERENCES Section(ClassID),
-    FOREIGN KEY (SectionID) REFERENCES Section(SectionID)
+    FOREIGN KEY (CourseID) REFERENCES section(CourseID),
+    FOREIGN KEY (ClassID) REFERENCES section(ClassID),
+    FOREIGN KEY (SectionID) REFERENCES section(SectionID)
 );
 
 CREATE TABLE IF NOT EXISTS quiz(
@@ -99,9 +86,9 @@ CREATE TABLE IF NOT EXISTS quiz(
     QuizTimer INT NOT NULL,
     PassingScore INT NOT NULL,
     PRIMARY KEY (QuizID),
-    FOREIGN KEY (CourseID) REFERENCES Section(CourseID),
-    FOREIGN KEY (ClassID) REFERENCES Section(ClassID),
-    FOREIGN KEY (SectionID) REFERENCES Section(SectionID)
+    FOREIGN KEY (CourseID) REFERENCES section(CourseID),
+    FOREIGN KEY (ClassID) REFERENCES section(ClassID),
+    FOREIGN KEY (SectionID) REFERENCES section(SectionID)
 );
 
 CREATE TABLE IF NOT EXISTS question(
@@ -112,10 +99,10 @@ CREATE TABLE IF NOT EXISTS question(
     QuestionID INT NOT NULL AUTO_INCREMENT,
     QuestionContent TEXT NOT NULL,
     PRIMARY KEY (QuestionID),
-    FOREIGN KEY (CourseID) REFERENCES QUIZ(CourseID),
-    FOREIGN KEY (ClassID) REFERENCES QUIZ(ClassID),
-    FOREIGN KEY (SectionID) REFERENCES QUIZ(SectionID),
-    FOREIGN KEY (QuizID) REFERENCES QUIZ(QuizID)
+    FOREIGN KEY (CourseID) REFERENCES quiz(CourseID),
+    FOREIGN KEY (ClassID) REFERENCES quiz(ClassID),
+    FOREIGN KEY (SectionID) REFERENCES quiz(SectionID),
+    FOREIGN KEY (QuizID) REFERENCES quiz(QuizID)
 );
 
 CREATE TABLE IF NOT EXISTS questionAnswer(
@@ -142,11 +129,11 @@ CREATE TABLE IF NOT EXISTS studentQuizResult(
     LearnerID INT NOT NULL,
     Grade INT NOT NULL,
     PRIMARY KEY (CourseID, ClassID, SectionID, QuizID, LearnerID),
-    FOREIGN KEY (CourseID) REFERENCES QUIZ(CourseID),
-    FOREIGN KEY (ClassID) REFERENCES QUIZ(ClassID),
-    FOREIGN KEY (SectionID) REFERENCES QUIZ(SectionID),
-    FOREIGN KEY (QuizID) REFERENCES QUIZ(QuizID),
-    FOREIGN KEY (LearnerID) REFERENCES learner(LearnerID)
+    FOREIGN KEY (CourseID) REFERENCES quiz(CourseID),
+    FOREIGN KEY (ClassID) REFERENCES quiz(ClassID),
+    FOREIGN KEY (SectionID) REFERENCES quiz(SectionID),
+    FOREIGN KEY (QuizID) REFERENCES quiz(QuizID),
+    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
 
 );
 
@@ -164,7 +151,7 @@ CREATE TABLE IF NOT EXISTS studentAnswer(
     FOREIGN KEY (SectionID) REFERENCES question(SectionID),
     FOREIGN KEY (QuizID) REFERENCES question(QuizID),
     FOREIGN KEY (AnswerID) REFERENCES questionAnswer(AnswerID),
-    FOREIGN KEY (LearnerID) REFERENCES learner(LearnerID)
+    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
 );
 
 CREATE TABLE IF NOT EXISTS MaterialProgress(
@@ -175,7 +162,7 @@ CREATE TABLE IF NOT EXISTS MaterialProgress(
     LearnerID INT NOT NULL,
     STATUS BOOLEAN NOT NULL,
     PRIMARY KEY (CourseID, ClassID, SectionID, MaterialID, LearnerID),
-    FOREIGN KEY (LearnerID) REFERENCES learner(LearnerID),
+    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID),
     FOREIGN KEY (CourseID) REFERENCES sectionMaterial(CourseID),
     FOREIGN KEY (ClassID) REFERENCES sectionMaterial(ClassID),
     FOREIGN KEY (SectionID) REFERENCES sectionMaterial(SectionID),
