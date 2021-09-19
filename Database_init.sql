@@ -2,31 +2,31 @@ DROP DATABASE IF EXISTS one_stop_lms;
 CREATE DATABASE one_stop_lms;
 USE one_stop_lms;
 
-CREATE TABLE IF NOT EXISTS user(
+CREATE TABLE IF NOT EXISTS userTable(
     UserID INT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (UserID)
 );
 
 CREATE TABLE IF NOT EXISTS trainer(
     TrainerID INT NOT NULL,
-    TrainerName VARCHAR(65535) NOT NULL,
+    TrainerName TEXT NOT NULL,
     PRIMARY KEY (TrainerID),
-    FOREIGN KEY (TrainerID) REFERENCES user(UserID)
+    FOREIGN KEY (TrainerID) REFERENCES userTable(UserID)
 );
 
 CREATE TABLE IF NOT EXISTS learner(
     LearnerID INT NOT NULL,
-    LearnerName VARCHAR(65535) NOT NULL,
+    LearnerName TEXT NOT NULL,
     PRIMARY KEY (LearnerID),
-    FOREIGN KEY (LearnerID) REFERENCES user(UserID)
+    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
     -- what else do we need to put in?
 );
 
 CREATE table if not exists course(
 	CourseID INT NOT NULL AUTO_INCREMENT,
     CourseTitle VARCHAR(50) NOT NULL,
-    CourseDescription VARCHAR(65535) NOT NULL,
-    Badge VARCHAR(65535) NOT NULL,
+    CourseDescription TEXT NOT NULL,
+    Badge TEXT NOT NULL,
     PRIMARY KEY (CourseID)
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS coursePrereq(
 CREATE TABLE IF NOT EXISTS LearnerCourse(
     LearnerID INT NOT NULL,
     CourseID INT NOT NULL,
-    Status VARCHAR(65535) NOT NULL,
+    Status TEXT NOT NULL,
     PRIMARY KEY (LearnerID, CourseID),
     FOREIGN KEY (LearnerID) REFERENCES learner(LearnerID),
     FOREIGN KEY (CourseID) REFERENCES course(CourseID)
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS sectionMaterial(
     ClassID INT NOT NULL,
     SectionID INT NOT NULL,
     MaterialID INT NOT NULL AUTO_INCREMENT,
-    MaterialContent VARCHAR(65535) NOT NULL,
+    MaterialContent TEXT NOT NULL,
     PRIMARY KEY (MaterialID),
     FOREIGN KEY (CourseID) REFERENCES Section(CourseID),
     FOREIGN KEY (ClassID) REFERENCES Section(ClassID),
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS question(
     SectionID INT NOT NULL,
     QuizID INT NOT NULL,
     QuestionID INT NOT NULL AUTO_INCREMENT,
-    QuestionContent VARCHAR(65535) NOT NULL,
+    QuestionContent TEXT NOT NULL,
     PRIMARY KEY (QuestionID),
     FOREIGN KEY (CourseID) REFERENCES QUIZ(CourseID),
     FOREIGN KEY (ClassID) REFERENCES QUIZ(ClassID),
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS questionAnswer(
     QuizID INT NOT NULL,
     QuestionID INT NOT NULL,
     AnswerID INT NOT NULL AUTO_INCREMENT,
-    AnswerContent VARCHAR(65535) NOT NULL,
+    AnswerContent TEXT NOT NULL,
     Correct BOOLEAN NOT NULL,
     PRIMARY KEY (AnswerID),
     FOREIGN KEY (CourseID) REFERENCES question(CourseID),
@@ -186,45 +186,45 @@ CREATE TABLE IF NOT EXISTS MaterialProgress(
 CREATE TABLE IF NOT EXISTS courseForum(
     CourseID INT NOT NULL,
     ForumID INT AUTO_INCREMENT,
-    ForumTitle VARCHAR(65535) NOT NULL,
+    ForumTitle TEXT NOT NULL,
     UserID INT NOT NULL,
-    ForumDetails VARCHAR(65535) NOT NULL,
+    ForumDetails TEXT NOT NULL,
     ForumCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (ForumID),
     FOREIGN KEY (CourseID) REFERENCES course(CourseID),
-    FOREIGN KEY (UserID) REFERENCES user(UserID)   
+    FOREIGN KEY (UserID) REFERENCES userTable(UserID)   
 );
 
 CREATE TABLE IF NOT EXISTS courseForumReply(
     ForumID INT NOT NULL,
     ReplyID INT AUTO_INCREMENT,
-    ReplyContent VARCHAR(65535) NOT NULL,
+    ReplyContent TEXT NOT NULL,
     UserID INT NOT NULL,
     ReplyTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (ReplyID),
     FOREIGN KEY (ForumID) REFERENCES courseForum(ForumID),
-    FOREIGN KEY (UserID) REFERENCES user(UserID)
+    FOREIGN KEY (UserID) REFERENCES userTable(UserID)
 );
 
 CREATE TABLE IF NOT EXISTS publicForum(
     ForumID INT NOT NULL AUTO_INCREMENT,
-    ForumTitle VARCHAR(65535) NOT NULL,
+    ForumTitle TEXT NOT NULL,
     UserID INT NOT NULL,
-    ForumDetails VARCHAR(65535) NOT NULL,
+    ForumDetails TEXT NOT NULL,
     ForumCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (ForumID),
-    FOREIGN KEY (UserID) REFERENCES user(UserID)
+    FOREIGN KEY (UserID) REFERENCES userTable(UserID)
 );
 
 CREATE TABLE IF NOT EXISTS publicForumReply(
     ForumID INT NOT NULL,
     ReplyID INT AUTO_INCREMENT,
-    ReplyContent VARCHAR(65535) NOT NULL,
+    ReplyContent TEXT NOT NULL,
     UserID INT NOT NULL,
     ReplyTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (ReplyID),
     FOREIGN KEY (ForumID) REFERENCES publicForum(ForumID),
-    FOREIGN KEY (UserID) REFERENCES user(UserID)
+    FOREIGN KEY (UserID) REFERENCES userTable(UserID)
 );
 -- create table if not exists course_forum();
 
