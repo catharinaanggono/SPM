@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "9a0675e9-195e-4855-8927-b56e0ffd5d91",
+		"name": "cloudTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "testCreateUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"TestName4\",\r\n    \"usertype\":\"trainer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.140.60.132:5000/user",
+					"protocol": "http",
+					"host": [
+						"3",
+						"140",
+						"60",
+						"132"
+					],
+					"port": "5000",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
