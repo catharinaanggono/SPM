@@ -15,15 +15,13 @@ class User(db.Model):
     __tablename__ = 'userTable'
  
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(1000), nullable=False)
-    type = db.Column(db.String(1000), nullable=False)
+    username = db.Column(db.String(1000), nullable=False)
+    usertype = db.Column(db.String(1000), nullable=False)
 
  
-    def __init__(self, name, type):
-        self.name = name
-        self.type = type
-        pass
-        
+    def __init__(self, username, usertype):
+        self.username = username
+        self.usertype = usertype        
  
     def json(self):
         return {"id": self.id}
@@ -36,23 +34,16 @@ def create_user():
     data = request.get_json()
     user = User(**data)
 
-    try:
-        db.session.add(user)
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 500,
-                "message": "An error occurred creating the record."
-            }
-        ), 500
- 
+    
+    db.session.add(user)
+    db.session.commit()
+     
     return jsonify(
         {
             "code": 201,
             "message": "User has been created" 
         }
     ), 201
-
+    
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
