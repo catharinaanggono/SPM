@@ -13,8 +13,13 @@ class User(db.Model):
     __tablename__ = 'userTable'
  
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(1000), nullable=False)
+    type = db.Column(db.String(1000), nullable=False)
+
  
-    def __init__(self):
+    def __init__(self, name, type):
+        self.name = name
+        self.type = type
         pass
         
  
@@ -22,13 +27,12 @@ class User(db.Model):
         return {"id": self.id}
 
 
-@app.route("/user", methods=['GET'])
+@app.route("/user", methods=['POST'])
 def create_user():
     
  
     data = request.get_json()
     user = User(**data)
-    nric = data['nric']
 
     try:
         db.session.add(user)
@@ -37,7 +41,7 @@ def create_user():
         return jsonify(
             {
                 "code": 500,
-                "message": "An error occurred creating the patient record."
+                "message": "An error occurred creating the record."
             }
         ), 500
  
