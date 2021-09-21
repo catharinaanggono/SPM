@@ -100,6 +100,8 @@
           <div class="row">
             <div class="col-md-12 text-left section-heading probootstrap-animate">
               <h1>Account</h1>
+              <p id='name'></p>
+              <p ></p>
             </div>
           </div>
         </div>
@@ -124,16 +126,29 @@
         </div>
       </section> -->
 
-
-      
       
       <section class="probootstrap-section">
-        <div class="container" >
+        <div class="container">
           
 
-          <div class="row" id='user_details'>
+          <div class="row" id="user_details">
             <div class="col-md-3 col-sm-6">
-              <div class="probootstrap-teacher text-center probootstrap-animate">
+                <figure class="media">
+                  <img src="img/person_1.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+                </figure>
+                <div class="text">
+                  <h3>Chris Worth</h3>
+                  <p>Physical Education</p>
+                  <ul class="probootstrap-footer-social">
+                    <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+                    <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+                    <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+                    <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
                 <figure class="media">
                   <img src="img/person_1.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
                 </figure>
@@ -507,38 +522,103 @@
           if (this.readyState == 4 && this.status == 200) {
 
             var data = JSON.parse(this.responseText);
-            var user_details = (data.data.user_details)
-            console.log(user_details)
-            for (i in user_details){
-              var userid = user_details[i].UserID;
-              var name = user_details[i].UserName;
-              var type = user_details[i].UserType;
+            console.log(data.data.learner_courses)
+            console.log(data.data.user_details)
+
+            learner_course_obj = data.data.learner_courses;
+            user_details_list = data.data.user_details
+
+            // to retrieve the user details from the list
+            if(user_details_list.length){
+              for(user in user_details_list){
+                var userid = user_details_list[user].UserID;
+                var name = user_details_list[user].UserName;
+                var type = user_details_list[user].UserType;
+              }
             }
 
-            document.getElementById("user_details").innerHTML += `
-            <div class="col-md-3 col-sm-6">
-              <div class="probootstrap-teacher text-center probootstrap-animate">
-                <figure class="media">
-                  <img src="img/person_1.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
-                </figure>
-                <div class="text">
-                  <h3>${name}</h3>
-                  <p>${userid}</p>
-                  <p>${type}</p>
-                  <ul class="probootstrap-footer-social">
-                    <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
-                    <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
-                    <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
-                    <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
-                  </ul>
-                </div>
-              </div>`
+            //to see if the status is completed and come out with the list of completed courses
+            completed_courses = [];
+            for (i in learner_course_obj){
+              if(learner_course_obj[i].Status == "completed"){
+                completed_courses.push(learner_course_obj[i].CourseID) 
+              }
+            }
+            
+            //send the course list to the get_coursetitle function
+            var course_title = get_coursetitle(completed_courses)
 
+            //to put the name, id, usertype under the Account word
+            document.getElementById("name").innerHTML = `Hi, ${name} <br> UserID: ${userid} <br> Position: ${type}`
+
+
+            
           } 
       };
-      request.open("GET", "http://localhost:5002/user/1", false);
+      request.open("GET", "http://localhost:5002/user/1", true);
       request.send();
 
+
+
+      function get_coursetitle(id){
+        var send_value = {
+          CourseID: id
+        }
+        var request = new XMLHttpRequest();
+
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+              var data = JSON.parse(this.responseText);
+              var course_list = data.data.courses
+              console.log(course_list)
+
+              for(obj in course_list){
+                var badge = course_list[obj].Badge;
+                var title = course_list[obj].CourseTitle;
+                
+              // to create more cards with the courses that is completed
+              document.getElementById("user_details").innerHTML += `           asasasa
+              <div class="col-md-3 col-sm-6">
+                  <figure class="media">
+                    <img src="img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+                  </figure>
+                  <div class="text">
+                    <h3>${title}</h3>
+                    <p>Physical Education</p>
+                    <ul class="probootstrap-footer-social">
+                      <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+                      <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+                      <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+                      <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+                    </ul>
+                  </div>
+              </div>`
+              }
+            }
+        };
+        request.open("POST", "http://localhost:5003/courses")
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(send_value))
+      }
+
+      // `<img src="img/${badge}"> <br> ${title}`
+      // aaaaaaaa<div class="col-md-3 col-sm-6">
+      //             <div class="probootstrap-teacher text-center probootstrap-animate">
+      //               <figure class="media">
+      //                 <img src="img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+      //               </figure>
+      //               <div class="text">
+      //                 <h3>${title}</h3>
+      //                 <p>Physical Education</p>
+      //                 <ul class="probootstrap-footer-social">
+      //                   <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+      //                   <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+      //                   <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+      //                   <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+      //                 </ul>
+      //               </div>
+      //             </div>
     </script>
 
   </body>
