@@ -41,6 +41,8 @@ CREATE table if not exists class(
     StartDate DATE NOT NULL,
     EndDate DATE NOT NULL,
     ClassSize INT NOT NULL,
+    RegistrationStartDate DATE NOT NULL,
+    RegistrationEndDate DATE NOT NULL,
     PRIMARY KEY (ClassID),
     FOREIGN KEY (CourseID) REFERENCES course(CourseID)
 );
