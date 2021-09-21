@@ -640,5 +640,80 @@
     <script src="js/main.min.js"></script>
     <script src="js/custom.js"></script>
 
+    <script>
+      var courseList = []
+      var request = new XMLHttpRequest
+      request.onreadystatechange = function(){
+        if (this.status == 200 && this.readyState == 4){
+          var json = JSON.parse(this.responseText)
+          var data = json.data
+          courseList.push(data.courses)
+        }
+      }
+      request.open('GET', 'http://localhost:5001/courses')
+      request.send()
+
+      var completedList = []
+      var request_completed = new XMLHttpRequest
+      request_completed.onreadystatechange = function(){
+        if (this.status == 200 && this.readyState == 4){
+          var json = JSON.parse(this.responseText)
+          var data = json.data
+          completedList.push(data)
+        }
+        else{
+        }
+      }
+      request_completed.open("GET", 'http://localhost:5002/user/prereq/1') // CHANGE 1 TO UserID
+      request_completed.send()
+
+
+      var coursesShown = []
+      for (var course in courseList){
+        if (!completedList.includes(course)){
+          coursesShown.push(course)
+        }
+      }
+
+      var coursesPrereq = {} // Objects of courses as keys with list of their prereqs as values
+      request_prereq = new XMLHttpRequest
+      request_prereq.onreadystatechange = function(){
+        if (this.status == 200 && this.readyState == 4){
+          var json = JSON.parse(this.responseText)
+          var data = json['data']
+          for (prereq in data['prereqList']){
+            if (prereq['CourseID'] in coursesPrereq){
+              coursesPrereq[prereq['CourseID']].push(prereq['PrereqID'])
+            }
+            else{
+              coursesPrereq[prereq['CourseID']] = [prereq['PrereqID']]
+            }
+          }
+        }
+      }
+      request_prereq.open('GET', 'http://localhost:5001/courseprereq')
+      request_prereq.send()
+
+      var notEligible = []
+      for (var course in coursesPrereq){
+        for (prereq in coursesPrereq[course]){
+          if (!completedList.includes(prereq)){
+            notEligible.push(course)
+          }
+        }
+      }
+
+      /*
+
+      Steps to take:
+
+      1. get all courses -- stored in courseList
+      2. Check for courses completed (so that it won't be shown and to filter out prereqs)
+        a. store completed in completedList
+        b. store prereqs in coursesPrereq --> an object with CourseID as keys and list of prereqs as values
+      3. Filter courses by prerqes --> store in notEligible
+
+      */
+    </script>
   </body>
 </html>

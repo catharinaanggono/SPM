@@ -64,7 +64,7 @@ class UserCourses(db.Model):
 
 @app.route('/user/prereq/<string:UserID>')
 def get_acct_prereqs(UserID):
-    user = UserCourses.query.filter_by(LearnerID = UserID).all()
+    user = UserCourses.query.filter_by(LearnerID = UserID, Status='completed').all()
     if len(user):
         return jsonify({
             "code": 200,

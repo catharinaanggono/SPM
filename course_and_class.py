@@ -38,7 +38,7 @@ def get_all_courses():
             "data": {
                 "courses": [each_course.json() for each_course in courses]
             }
-        })
+        }), 200
     return jsonify({
         "code": 404,
         "message": "There are no courses."
