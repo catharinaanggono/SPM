@@ -101,7 +101,7 @@
             <div class="col-md-12 text-left section-heading probootstrap-animate">
               <h1>Account</h1>
               <p id='name'></p>
-              <p id='user_details'></p>
+              <p ></p>
             </div>
           </div>
         </div>
@@ -131,9 +131,24 @@
         <div class="container">
           
 
-          <div class="row">
+          <div class="row" id="user_details">
             <div class="col-md-3 col-sm-6">
-              <div class="probootstrap-teacher text-center probootstrap-animate">
+                <figure class="media">
+                  <img src="img/person_1.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+                </figure>
+                <div class="text">
+                  <h3>Chris Worth</h3>
+                  <p>Physical Education</p>
+                  <ul class="probootstrap-footer-social">
+                    <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+                    <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+                    <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+                    <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
                 <figure class="media">
                   <img src="img/person_1.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
                 </figure>
@@ -540,7 +555,7 @@
             
           } 
       };
-      request.open("GET", "http://localhost:5001/user/1", true);
+      request.open("GET", "http://localhost:5002/user/1", true);
       request.send();
 
 
@@ -563,27 +578,22 @@
                 var title = course_list[obj].CourseTitle;
                 
               // to create more cards with the courses that is completed
-              document.getElementById("user_details").innerHTML += `<img src="img/${badge}"> <br> ${title}`
-              
-              
-              // `<div class="row">
-              //   <div class="col-md-3 col-sm-6">
-              //     <div class="probootstrap-teacher text-center probootstrap-animate">
-              //       <figure class="media">
-              //         <img src="img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
-              //       </figure>
-              //       <div class="text">
-              //         <h3>${title}</h3>
-              //         <p>Physical Education</p>
-              //         <ul class="probootstrap-footer-social">
-              //           <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
-              //           <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
-              //           <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
-              //           <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
-              //         </ul>
-              //       </div>
-              //     </div>
-              //   </div>`
+              document.getElementById("user_details").innerHTML += `           asasasa
+              <div class="col-md-3 col-sm-6">
+                  <figure class="media">
+                    <img src="img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+                  </figure>
+                  <div class="text">
+                    <h3>${title}</h3>
+                    <p>Physical Education</p>
+                    <ul class="probootstrap-footer-social">
+                      <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+                      <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+                      <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+                      <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+                    </ul>
+                  </div>
+              </div>`
               }
             }
         };
@@ -592,7 +602,23 @@
         request.send(JSON.stringify(send_value))
       }
 
-
+      // `<img src="img/${badge}"> <br> ${title}`
+      // aaaaaaaa<div class="col-md-3 col-sm-6">
+      //             <div class="probootstrap-teacher text-center probootstrap-animate">
+      //               <figure class="media">
+      //                 <img src="img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+      //               </figure>
+      //               <div class="text">
+      //                 <h3>${title}</h3>
+      //                 <p>Physical Education</p>
+      //                 <ul class="probootstrap-footer-social">
+      //                   <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+      //                   <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+      //                   <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+      //                   <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+      //                 </ul>
+      //               </div>
+      //             </div>
     </script>
 
   </body>

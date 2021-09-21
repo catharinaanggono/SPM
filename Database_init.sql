@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS coursePrereq(
 CREATE TABLE IF NOT EXISTS LearnerCourse(
     LearnerID INT NOT NULL,
     CourseID INT NOT NULL,
-    Status TEXT NOT NULL,
+    Status TEXT NOT NULL, -- completed, fail, ongoing
     PRIMARY KEY (LearnerID, CourseID),
     FOREIGN KEY (LearnerID) REFERENCES userTable(UserID),
     FOREIGN KEY (CourseID) REFERENCES course(CourseID)
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS classLearner(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
     LearnerID INT NOT NULL,
-    ApplicationStatus TEXT NOT NULL,
+    ApplicationStatus TEXT NOT NULL, -- applied, enrolled, rejected
     PRIMARY KEY (ClassID, CourseID, LearnerID),
     FOREIGN KEY (CourseID, ClassID) REFERENCES class(CourseID, ClassID),
     FOREIGN KEY (LearnerID) REFERENCES userTable(UserID) 
