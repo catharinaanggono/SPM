@@ -37,17 +37,16 @@ class course(db.Model):
 def get_course():
 
     data = request.get_json()
-    print(data)
-    for i in data:
-        for j in data[i]:
-            courseid = j
-            course_output = course.query.filter_by(CourseID = courseid).all()
-            return jsonify({
-                "code": 200,
-                "data": {
-                    "courses": [course.json() for course in course_output]
-                }
-            })
+    print(data['CourseID'])
+    
+    course_output = course.query.filter(course.CourseID.in_(data['CourseID']))
+
+    return jsonify({
+        "code": 200,
+        "data": {
+            "courses": [course.json() for course in course_output]
+        }
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5003, debug=True)
