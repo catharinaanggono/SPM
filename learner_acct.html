@@ -6,7 +6,6 @@
     <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
-    
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="css/styles-merged.css">
     <link rel="stylesheet" href="css/style.min.css">
@@ -132,7 +131,8 @@
           
 
           <div class="row" id="user_details">
-            <div class="col-md-3 col-sm-6">
+            <!-- <div class="col-md-3" >
+              <div class="probootstrap-teacher text-center probootstrap-animate">
                 <figure class="media">
                   <img src="img/person_1.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
                 </figure>
@@ -147,24 +147,8 @@
                   </ul>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="col-md-3 col-sm-6">
-                <figure class="media">
-                  <img src="img/person_1.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
-                </figure>
-                <div class="text">
-                  <h3>Chris Worth</h3>
-                  <p>Physical Education</p>
-                  <ul class="probootstrap-footer-social">
-                    <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
-                    <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
-                    <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
-                    <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <!-- <div class="col-md-3 col-sm-6">
               <div class="probootstrap-teacher text-center probootstrap-animate">
                 <figure class="media">
                   <img src="img/person_5.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
@@ -181,6 +165,7 @@
                 </div>
               </div>
             </div>
+            <!-- 
             <div class="clearfix visible-sm-block visible-xs-block"></div>
             <div class="col-md-3 col-sm-6">
               <div class="probootstrap-teacher text-center probootstrap-animate">
@@ -570,7 +555,9 @@
             if (this.readyState == 4 && this.status == 200) {
 
               var data = JSON.parse(this.responseText);
+              console.log(data)
               var course_list = data.data.courses
+              console.log("HERE")
               console.log(course_list)
 
               for(obj in course_list){
@@ -578,8 +565,9 @@
                 var title = course_list[obj].CourseTitle;
                 
               // to create more cards with the courses that is completed
-              document.getElementById("user_details").innerHTML += `           asasasa
-              <div class="col-md-3 col-sm-6">
+              document.getElementById("user_details").innerHTML += `
+              <div class="col-md-3">
+                <div class="probootstrap-teacher text-center">
                   <figure class="media">
                     <img src="img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
                   </figure>
@@ -593,8 +581,10 @@
                       <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
                     </ul>
                   </div>
+                </div>
               </div>`
               }
+              
             }
         };
         request.open("POST", "http://localhost:5003/courses")

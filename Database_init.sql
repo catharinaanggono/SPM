@@ -237,8 +237,9 @@ CREATE TABLE IF NOT EXISTS publicForumReply(
 
 use one_stop_lms;
 
-insert into course(CourseTitle, CourseDescription, Badge) values ('SPM', 'This is a software project management module that will kill you and your social life', 'File.pdf');
+insert into course(CourseTitle, CourseDescription, Badge) values ('SPM', 'This is a software project management module that will kill you and your social life', 'python_badge.png');
 insert into userTable(UserName, UserType) values ('Jhonny', 'Senior Engineer');
 insert into userTable(UserName, UserType) values ('Brenda', 'Junior Engineer');
-insert into class(CourseID, StartDate, EndDate, ClassSize) values (1, '2021-10-20 09:00:00', '2022-02-20 09:00:00', 50);
+insert into class(CourseID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize) values (1, '2021-10-20 09:00:00', '2022-02-20 09:00:00', '2021-10-01 09:00:00', '2021-10-18 09:00:00', 50);
 insert into classTrainer(CourseID, ClassID, TrainerID) values (1, 1, 1);
+insert into LearnerCourse(CourseID, LearnerID, Status) values (1, 1, "completed");
