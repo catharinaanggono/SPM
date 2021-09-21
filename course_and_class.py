@@ -20,14 +20,16 @@ class course(db.Model):
     CourseID = db.Column(db.Integer, primary_key=True)
     CourseTitle = db.Column(db.String(50), nullable=False)
     CourseDescription = db.Column(db.String(65535), nullable=False)
+    Badge = db.Column(db.String(65535), nullable=False)
 
-    def __init__(self, CourseID, CourseTitle, CourseDescription):
+    def __init__(self, CourseID, CourseTitle, CourseDescription, Badge):
         self.CourseID = CourseID
         self.CourseTitle = CourseTitle
         self.CourseDescription = CourseDescription
+        self.Badge = Badge
 
     def json(self):
-        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription}
+        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge}
 
 @app.route('/courses')
 def get_all_courses():
