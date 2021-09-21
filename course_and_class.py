@@ -67,15 +67,21 @@ class course_class(db.Model):
     ClassID = db.Column(db.Integer, primary_key=True)
     StartDate = db.Column(db.DateTime, nullable=False)
     EndDate = db.Column(db.DateTime, nullable=False)
+    RegistrationStartDate = db.Column(db.DateTime, nullable=False)
+    RegistrationEndDate = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, CourseID, ClassID, TrainerID, StartDate, EndDate):
+
+    def __init__(self, CourseID, ClassID, TrainerID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate):
         self.CourseID = CourseID
         self.ClassID = ClassID
+        self.TrainerID = TrainerID
         self.StartDate = StartDate
         self.EndDate = EndDate
+        self.RegistrationEndDate = RegistrationEndDate
+        self.RegistrationStartDate = RegistrationStartDate
 
     def json(self):
-        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate}
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "TrainerID": self.TrainerID, "StartDate": self.StartDate, "EndDate": self.EndDate, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate}
 
 @app.route('/classes')
 def get_all_classes():
