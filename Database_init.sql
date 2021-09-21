@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS coursePrereq(
 CREATE TABLE IF NOT EXISTS LearnerCourse(
     LearnerID INT NOT NULL,
     CourseID INT NOT NULL,
-    Status TEXT NOT NULL,
+    Status TEXT NOT NULL, -- completed, fail, ongoing
     PRIMARY KEY (LearnerID, CourseID),
     FOREIGN KEY (LearnerID) REFERENCES userTable(UserID),
     FOREIGN KEY (CourseID) REFERENCES course(CourseID)
@@ -38,20 +38,27 @@ CREATE TABLE IF NOT EXISTS LearnerCourse(
 CREATE table if not exists class(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL AUTO_INCREMENT,
-    TrainerID INT NOT NULL,
     StartDate DATE NOT NULL,
     EndDate DATE NOT NULL,
     ClassSize INT NOT NULL,
     PRIMARY KEY (ClassID),
-    FOREIGN KEY (TrainerID) REFERENCES userTable(UserID),
     FOREIGN KEY (CourseID) REFERENCES course(CourseID)
+);
+
+CREATE TABLE IF NOT EXISTS classTrainer(
+    CourseID INT NOT NULL,
+    ClassID INT NOT NULL,
+    TrainerID INT NOT NULL,
+    PRIMARY KEY (ClassID, TrainerID),
+    FOREIGN KEY (CourseID, ClassID) REFERENCES class(CourseID, ClassID),
+    FOREIGN KEY (TrainerID) REFERENCES userTable(UserID)
 );
 
 CREATE TABLE IF NOT EXISTS classLearner(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
     LearnerID INT NOT NULL,
-    ApplicationStatus TEXT NOT NULL,
+    ApplicationStatus TEXT NOT NULL, -- applied, enrolled, rejected
     PRIMARY KEY (ClassID, CourseID, LearnerID),
     FOREIGN KEY (CourseID, ClassID) REFERENCES class(CourseID, ClassID),
     FOREIGN KEY (LearnerID) REFERENCES userTable(UserID) 
@@ -225,3 +232,11 @@ CREATE TABLE IF NOT EXISTS publicForumReply(
 -- student_courses(
 --     sid, cid, passed?
 -- ) #test
+
+use one_stop_lms;
+
+insert into course(CourseTitle, CourseDescription, Badge) values ('SPM', 'This is a software project management module that will kill you and your social life', 'File.pdf');
+insert into userTable(UserName, UserType) values ('Jhonny', 'Senior Engineer');
+insert into userTable(UserName, UserType) values ('Brenda', 'Junior Engineer');
+insert into class(CourseID, StartDate, EndDate, ClassSize) values (1, '2021-10-20 09:00:00', '2022-02-20 09:00:00', 50);
+insert into classTrainer(CourseID, ClassID, TrainerID) values (1, 1, 1);
