@@ -712,6 +712,13 @@
         a. store completed in completedList
         b. store prereqs in coursesPrereq --> an object with CourseID as keys and list of prereqs as values
       3. Filter courses by prerqes --> store in notEligible
+      4. Get classes per course -- NOT DONE (Create a dictionary of courses --> Make query to classes --> Include each class into its corresponding course dictionary)
+      5. Check Registration date -- NOT DONE (For each class in course dictionary from no. 4, check their registration date, if expired, remove from dictionary)
+      6. Check if they have applied previously -- NOT DONE (Make a call to classLearner table (for this particular user) --> For each class in course dictionary from no. 4
+                                                            --> check if this student applied based on class ID --> remove from dictionary or mark to grey out if yes)
+      7. Check class size -- NOT DONE (Make a call to classLearner table (query.all()) --> make a dictionary of courses with a value of dictionary with class as keys and total num. of rows as values
+                                      (e.g., {course: {class: classSize}}) --> check with each classes in no. 4 dictionary --> if classSize in no. 4 dict == classSize in dict made just now --> mark to grey out)
+      8. List out the modified dictionary in no. 4 into the UI.
 
       */
     </script>
