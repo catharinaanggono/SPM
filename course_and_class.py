@@ -30,24 +30,14 @@ class course(db.Model):
         self.CourseTitle = CourseTitle
         self.CourseDescription = CourseDescription
         self.Badge = Badge
+        
 
     def json(self):
-        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge}
+        if not hasattr(self, 'classList'):
+            self.classList = []
+        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge, "classes": self.classList}
 
-@app.route('/courses')
-def get_all_courses():
-    courses = course.query.all()
-    if len(courses):
-        return jsonify({
-            "code": 200,
-            "data": {
-                "courses": [each_course.json() for each_course in courses]
-            }
-        }), 200
-    return jsonify({
-        "code": 404,
-        "message": "There are no courses."
-    }), 404
+
 
 @app.route('/courses/<string:CourseID>')
 def get_course(CourseID):
@@ -74,17 +64,16 @@ class course_class(db.Model):
     RegistrationEndDate = db.Column(db.DateTime, nullable=False)
 
 
-    def __init__(self, CourseID, ClassID, TrainerID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate):
+    def __init__(self, CourseID, ClassID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate):
         self.CourseID = CourseID
         self.ClassID = ClassID
-        self.TrainerID = TrainerID
         self.StartDate = StartDate
         self.EndDate = EndDate
         self.RegistrationEndDate = RegistrationEndDate
         self.RegistrationStartDate = RegistrationStartDate
 
     def json(self):
-        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "TrainerID": self.TrainerID, "StartDate": self.StartDate, "EndDate": self.EndDate, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate}
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate}
 
 @app.route('/classes')
 def get_all_classes():
@@ -114,6 +103,13 @@ def get_class(ClassID):
             "message": "Class doesn't exist"
         }), 404
 
+# @app.route('/classespercourse/<string:CourseID>')
+# def get_class_per_course(CourseID):
+#     classes = course_class.query.filter_by(CourseID = CourseID)
+#     return jsonify({
+#         "code": 200,
+#         "data": [each_class.json() for each_class in classes]
+#     })
 class course_prereq(db.Model):
     __tablename__ = 'coursePrereq'
 
@@ -140,6 +136,28 @@ def get_prereq():
     return jsonify({
         "code": 404,
         "message": "There are no prerequisites"
+    }), 404
+
+@app.route('/courses')
+def get_all_courses():
+    courses = course.query.all()
+    for a_course in courses:
+        CourseID = a_course.CourseID
+        classes = course_class.query.filter_by(CourseID = CourseID)
+        class_list = [a_class.json() for a_class in classes]
+        a_course.classList = class_list
+    
+    print(a_course.classList)
+    if len(courses):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "courses": [each_course.json() for each_course in courses]
+            }
+        }), 200
+    return jsonify({
+        "code": 404,
+        "message": "There are no courses."
     }), 404
 
 if __name__ == '__main__':
