@@ -155,9 +155,7 @@
                   <!-- for checkbox -->
                   <br>
                   <br>
-                  <div>
-                    <span>List of engineers</span>
-                  </div>
+                  <span>List of engineers</span>
                   <br>
                   <table id='engineerlist'>
                     <tr>
@@ -176,7 +174,6 @@
                       </td> -->
 
                   </table>
-                  
                   <br>
                   <br>
                   <br>
@@ -285,6 +282,7 @@
     <script src="js/custom.js"></script>
 
     <script>
+      localStorage.clear()
       //to retrieve data from database for user details
       var request = new XMLHttpRequest();
 
@@ -304,7 +302,7 @@
                 var name = user_list[i].UserName;
                 var userType = user_list[i].UserType;
                 document.getElementById("engineerlist").innerHTML += `<tr><td>
-                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name} class='checked' onclick='checked_name(${id},${name}, ${userType})'">
+                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${userType}" onchange='checked_name(this)'">
                                                                         <label for="${name}">${name}</label>
                                                                       </td>
                                                                       <td>
@@ -314,30 +312,58 @@
                                                                       </td></tr>`
               }
             }
-
           } 
       };
       request.open("GET", "http://localhost:5002/user", false);
       request.send();
 
       //to move checked name into selected section
-      function checked_name(id, name, type){
-        // console.log("checked name")
-        // var user_list = JSON.parse(localStorage.getItem("userlist")).data.user;
-        // console.log(user_list)
+      function checked_name(checkbox){
+        console.log("checked name")
+        var user_list_local = JSON.parse(localStorage.getItem("userlist")).data.user;
 
-        console.log(document.getElementById(id).checked)
+        if(localStorage.getItem("user_list_checked") != null){
+          var user_list_local = JSON.parse(localStorage.getItem("user_list_checked"));
+        }
+        console.log(typeof(user_list_local))
 
-
+        //check if checkbox is checked, and will insert it into the selected section
+        if(checkbox.checked == true){
+          console.log(checkbox)
+          var id = checkbox.id;
+          var name = checkbox.name;
+          var type = checkbox.className;
+          document.getElementById("selected").innerHTML += `<tr><td>
+                                                            <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${type}" checked">
+                                                            <label for="${name}">${name}</label>
+                                                            </td>
+                                                            <td>
+                                                              ${type}
+                                                            </td><td>
+                                                              ${id}
+                                                            </td></tr>`
+          //remove the checked user_list from the user_list and store it in localstorage
+          for(i in user_list_local){
+            if(user_list_local[i].UserID == id){
+              user_list_local.splice(i,1)
+              console.log(user_list_local)
+              localStorage.setItem("user_list_checked", JSON.stringify(user_list_local))
+              // console.log(JSON.parse(localStorage.getItem("user_list_checked")))
+            }
+          }
+        }
       }
 
       //to search names 
       function search(){
         document.getElementById("engineerlist").innerHTML = "";
 
-
-        console.log("search name")
         var user_list = JSON.parse(localStorage.getItem("userlist")).data.user;
+
+        if(localStorage.getItem("user_list_checked") != null){
+          var user_list = JSON.parse(localStorage.getItem("user_list_checked"));
+        }
+
         console.log(user_list)
 
         var searched_name = document.getElementById("name").value;
@@ -353,7 +379,7 @@
                 var name = user_list[i].UserName;
                 var userType = user_list[i].UserType;
                 document.getElementById("engineerlist").innerHTML += `<tr><td>
-                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name} class='checked' onchange='checked_name()'">
+                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${userType}" onchange='checked_name(this)'">
                                                                         <label for="${name}">${name}</label>
                                                                       </td>
                                                                       <td>
@@ -372,14 +398,14 @@
 
             if(name.includes(searched_name)){
               document.getElementById("engineerlist").innerHTML += `<tr><td>
-                                                                          <input type="checkbox" id="${id}" name="${name}" value="${name} class='checked' onchange='checked_name()'">
-                                                                          <label for="${name}">${name}</label>
-                                                                        </td>
-                                                                        <td>
-                                                                          ${userType}
-                                                                        </td><td>
-                                                                          ${id}
-                                                                        </td></tr>`
+                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${userType}" onchange='checked_name(this)'">
+                                                                        <label for="${name}">${name}</label>
+                                                                      </td>
+                                                                      <td>
+                                                                        ${userType}
+                                                                      </td><td>
+                                                                        ${id}
+                                                                      </td></tr>`
             }
           }
         }
