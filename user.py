@@ -53,7 +53,7 @@ def get_all():
         return jsonify({
             "code": 200,
             "data":{
-                "course": [user.json() for user in users]
+                "user": [user.json() for user in users]
             }
         })
     return jsonify({

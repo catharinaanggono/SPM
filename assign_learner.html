@@ -151,7 +151,7 @@
                     </div>
                   </form> -->
 
-                  <input type="text" class="form-control" id="name" name="name" placeholder="Search">
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Search" onkeyup="search()">
                   <!-- for checkbox -->
                   <br>
                   <br>
@@ -276,9 +276,8 @@
           if (this.readyState == 4 && this.status == 200) {
 
             var data = JSON.parse(this.responseText);
-            var user_list = data.data.course;
+            var user_list = data.data.user;
             console.log(user_list)
-            console.log(typeof(user_list))
             localStorage.setItem("userlist", JSON.stringify(data));
 
             for(i in user_list){
@@ -306,9 +305,56 @@
       request.send();
 
       function search(){
+        document.getElementById("engineerlist").innerHTML = "";
+
+
         console.log("here")
-        var user_list = JSON.parse(localStorage.getItem("userlist"));
+        var user_list = JSON.parse(localStorage.getItem("userlist")).data.user;
         console.log(user_list)
+
+        var searched_name = document.getElementById("name").value;
+        console.log(searched_name)
+
+        //see if the there is any text on the search bar
+        if(searched_name.length == 0){
+          for(i in user_list){
+              //to retrive the first 5 names on the list
+              if(i <= 4){
+                console.log(user_list[i])
+                var id = user_list[i].UserID;
+                var name = user_list[i].UserName;
+                var userType = user_list[i].UserType;
+                document.getElementById("engineerlist").innerHTML += `<tr><td>
+                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name}">
+                                                                        <label for="${name}">${name}</label>
+                                                                      </td>
+                                                                      <td>
+                                                                        ${userType}
+                                                                      </td><td>
+                                                                        ${id}
+                                                                      </td></tr>`
+              }
+            }
+        }else{
+            //if there is any text on the search bar, then find names that includes the letter typed into the search bar
+            for(i in user_list){
+            var id = user_list[i].UserID;
+            var name = user_list[i].UserName;
+            var userType = user_list[i].UserType;
+
+            if(name.includes(searched_name)){
+              document.getElementById("engineerlist").innerHTML += `<tr><td>
+                                                                          <input type="checkbox" id="${id}" name="${name}" value="${name}">
+                                                                          <label for="${name}">${name}</label>
+                                                                        </td>
+                                                                        <td>
+                                                                          ${userType}
+                                                                        </td><td>
+                                                                          ${id}
+                                                                        </td></tr>`
+            }
+          }
+        }
       }
     </script>
   </body>
