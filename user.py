@@ -46,6 +46,22 @@ class LearnerCourse(db.Model):
     def json(self):
         return{"LearnerID": self.LearnerID, "CourseID": self.CourseID, "Status": self.Status}
 
+@app.route('/user')
+def get_all():
+    users = User.query.all()
+    if len(users):
+        return jsonify({
+            "code": 200,
+            "data":{
+                "course": [user.json() for user in users]
+            }
+        })
+    return jsonify({
+        "code":400,
+        "message":"There are no user"
+    }), 404
+
+
 @app.route('/user/<string:UserID>')
 def get_acct_details(UserID):
     user = User.query.filter_by(UserID = UserID).all()
@@ -61,6 +77,8 @@ def get_acct_details(UserID):
         "code": 404,
         "message": "There are no such user"
     }), 404
+
+
 
 
 class UserCourses(db.Model):
