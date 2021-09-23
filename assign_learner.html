@@ -185,7 +185,6 @@
                       <th>Position</th>
                       <th>UserID</th>
                     </tr>
-
                       <!-- <span class="solid" ></span> -->
                       <!-- <td>
                         <input type="checkbox" id="1" name="wellson" value="Wellson">
@@ -320,6 +319,8 @@
       //to move checked name into selected section
       function checked_name(checkbox){
         console.log("checked name")
+
+        //to check if there is any existing userlist in localstorage
         var user_list_local = JSON.parse(localStorage.getItem("userlist")).data.user;
 
         if(localStorage.getItem("user_list_checked") != null){
@@ -354,10 +355,11 @@
         }
       }
 
-      //to search names 
+      //function to search names 
       function search(){
         document.getElementById("engineerlist").innerHTML = "";
 
+        //to check if there is any existing userlist in localstorage
         var user_list = JSON.parse(localStorage.getItem("userlist")).data.user;
 
         if(localStorage.getItem("user_list_checked") != null){
@@ -366,6 +368,7 @@
 
         console.log(user_list)
 
+        //get the words from search bar
         var searched_name = document.getElementById("name").value;
         console.log(searched_name)
 
