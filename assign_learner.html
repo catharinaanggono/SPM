@@ -180,9 +180,25 @@
                   <br>
                   <br>
                   <br>
-                  <span onclick="search()">Selected engineers</span>
+                  <span>Selected engineers</span>
                   <br>
-                  <span class="solid" id='selected'></span>
+                  <table id='selected'>
+                    <tr>
+                      <th>Name</th>
+                      <th>Position</th>
+                      <th>UserID</th>
+                    </tr>
+
+                      <!-- <span class="solid" ></span> -->
+                      <!-- <td>
+                        <input type="checkbox" id="1" name="wellson" value="Wellson">
+                        <label for="wellson"> Wellson</label><br>
+                      </td>
+                      <td>
+                        Junior Engineer
+                      </td> -->
+
+                  </table>
                 </div>
               </div>
             </div>
@@ -288,7 +304,7 @@
                 var name = user_list[i].UserName;
                 var userType = user_list[i].UserType;
                 document.getElementById("engineerlist").innerHTML += `<tr><td>
-                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name}">
+                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name} class='checked' onclick='checked_name(${id},${name}, ${userType})'">
                                                                         <label for="${name}">${name}</label>
                                                                       </td>
                                                                       <td>
@@ -304,11 +320,23 @@
       request.open("GET", "http://localhost:5002/user", false);
       request.send();
 
+      //to move checked name into selected section
+      function checked_name(id, name, type){
+        // console.log("checked name")
+        // var user_list = JSON.parse(localStorage.getItem("userlist")).data.user;
+        // console.log(user_list)
+
+        console.log(document.getElementById(id).checked)
+
+
+      }
+
+      //to search names 
       function search(){
         document.getElementById("engineerlist").innerHTML = "";
 
 
-        console.log("here")
+        console.log("search name")
         var user_list = JSON.parse(localStorage.getItem("userlist")).data.user;
         console.log(user_list)
 
@@ -325,7 +353,7 @@
                 var name = user_list[i].UserName;
                 var userType = user_list[i].UserType;
                 document.getElementById("engineerlist").innerHTML += `<tr><td>
-                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name}">
+                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name} class='checked' onchange='checked_name()'">
                                                                         <label for="${name}">${name}</label>
                                                                       </td>
                                                                       <td>
@@ -344,7 +372,7 @@
 
             if(name.includes(searched_name)){
               document.getElementById("engineerlist").innerHTML += `<tr><td>
-                                                                          <input type="checkbox" id="${id}" name="${name}" value="${name}">
+                                                                          <input type="checkbox" id="${id}" name="${name}" value="${name} class='checked' onchange='checked_name()'">
                                                                           <label for="${name}">${name}</label>
                                                                         </td>
                                                                         <td>
@@ -356,6 +384,8 @@
           }
         }
       }
+
+
     </script>
   </body>
 </html>
