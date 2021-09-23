@@ -277,6 +277,9 @@
 
             var data = JSON.parse(this.responseText);
             var user_list = data.data.course;
+            console.log(user_list)
+            console.log(typeof(user_list))
+            localStorage.setItem("userlist", JSON.stringify(data));
 
             for(i in user_list){
               //to retrive the first 5 names on the list
@@ -304,6 +307,8 @@
 
       function search(){
         console.log("here")
+        var user_list = JSON.parse(localStorage.getItem("userlist"));
+        console.log(user_list)
       }
     </script>
   </body>
