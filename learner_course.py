@@ -2,11 +2,14 @@ from flask import Flask, json, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:root@localhost:3306/one_stop_lms"
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("dbURL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_POOL_TIMEOUT'] = 86400
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
