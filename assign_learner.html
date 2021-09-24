@@ -23,6 +23,14 @@
         text-align: left;
         padding: 8px;
       }
+
+      #remove{
+          background:#FF2E2E; 
+          border:#FF2E2E;
+          padding: 5px 10px;
+          font-size:10px;
+
+      }
       </style>
     
 
@@ -178,12 +186,14 @@
                   <br>
                   <br>
                   <span>Selected engineers</span>
+                  
                   <br>
                   <table id='selected'>
                     <tr>
                       <th>Name</th>
                       <th>Position</th>
                       <th>UserID</th>
+                      <th><button id='remove' class="btn btn-primary btn-lg" value='Remove' onclick="deleteRow()">Remove</button></th>
                     </tr>
                       <!-- <span class="solid" ></span> -->
                       <!-- <td>
@@ -318,39 +328,50 @@
 
       //to move checked name into selected section
       function checked_name(checkbox){
-        console.log("checked name")
 
         //to check if there is any existing userlist in localstorage
         var user_list_local = JSON.parse(localStorage.getItem("userlist")).data.user;
 
-        if(localStorage.getItem("user_list_checked") != null){
-          var user_list_local = JSON.parse(localStorage.getItem("user_list_checked"));
+        if(localStorage.getItem("user_list_notchecked") != null){
+          var user_list_local = JSON.parse(localStorage.getItem("user_list_notchecked"));
         }
         console.log(typeof(user_list_local))
+        console.log(checkbox)
 
-        //check if checkbox is checked, and will insert it into the selected section
-        if(checkbox.checked == true){
+        var table = document.getElementById("engineerlist")
+        var row_count = table.rows.length;
+        for(let i=1; i<row_count; i++){
+          var trs = table.getElementsByTagName("tr")[i];
+          var td = trs.cells[0];
+          var checkbox = td.getElementsByTagName("input")[0];
           console.log(checkbox)
-          var id = checkbox.id;
-          var name = checkbox.name;
-          var type = checkbox.className;
-          document.getElementById("selected").innerHTML += `<tr><td>
-                                                            <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${type}" checked">
-                                                            <label for="${name}">${name}</label>
-                                                            </td>
-                                                            <td>
-                                                              ${type}
-                                                            </td><td>
-                                                              ${id}
-                                                            </td></tr>`
+
+          //check if checkbox is checked, and will insert it into the selected section
+          if(checkbox.checked == true){
+            var id = checkbox.id;
+            var name = checkbox.name;
+            var type = checkbox.className;
+            document.getElementById("selected").innerHTML += `<tr><td>
+                                                              <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${type}" ">
+                                                              <label for="${name}">${name}</label>
+                                                              </td>
+                                                              <td>
+                                                                ${type}
+                                                              </td><td>
+                                                                ${id}
+                                                              </td>
+                                                              </tr>`
+            //delete row that was selected
+            table.deleteRow(i)                                                  
           //remove the checked user_list from the user_list and store it in localstorage
           for(i in user_list_local){
             if(user_list_local[i].UserID == id){
               user_list_local.splice(i,1)
               console.log(user_list_local)
-              localStorage.setItem("user_list_checked", JSON.stringify(user_list_local))
-              // console.log(JSON.parse(localStorage.getItem("user_list_checked")))
+              localStorage.setItem("user_list_notchecked", JSON.stringify(user_list_local))
+              // console.log(JSON.parse(localStorage.getItem("user_list_notchecked")))
             }
+          }
           }
         }
       }
@@ -362,8 +383,8 @@
         //to check if there is any existing userlist in localstorage
         var user_list = JSON.parse(localStorage.getItem("userlist")).data.user;
 
-        if(localStorage.getItem("user_list_checked") != null){
-          var user_list = JSON.parse(localStorage.getItem("user_list_checked"));
+        if(localStorage.getItem("user_list_notchecked") != null){
+          var user_list = JSON.parse(localStorage.getItem("user_list_notchecked"));
         }
 
         console.log(user_list)
@@ -415,6 +436,42 @@
       }
 
 
+      //function to remove selected names
+      function deleteRow(){
+        var table = document.getElementById("selected");
+        var row_count = table.rows.length;
+        console.log(row_count)
+
+        //getting userlist of engineers that are not selected from the localstorage 
+        var user_list_local = JSON.parse(localStorage.getItem("user_list_notchecked"));
+        console.log(user_list_local)
+        
+        //to get the checkbox from the data table of selected engineers
+        for(let i=1; i<row_count; i++){
+          var trs = table.getElementsByTagName("tr")[i];
+          var td = trs.cells[0];
+          var checkbox = td.getElementsByTagName("input")[0];
+          console.log(checkbox.className)
+
+          //check if the checkbox is checked, if yes, then it will append to the userlist of engineers that are not selected and remove the line
+          //actually used a recursion lmao
+          //https://stackoverflow.com/questions/43911414/how-to-select-all-checkboxes-from-table-using-javascript
+          if(checkbox.checked == true){
+            var obj = {"UserID": checkbox.id, "UserName": checkbox.name, "UserType": checkbox.className}
+            user_list_local.push(obj)
+            table.deleteRow(i)
+            row_count --;
+            i--;
+          }
+          console.log(user_list_local)
+
+          //sort the userlist after appending the deleted selected engineers
+          user_list_local.sort(function(a, b) {
+              return parseFloat(a.UserID) - parseFloat(b.UserID);
+          });
+          localStorage.setItem("user_list_notchecked", JSON.stringify(user_list_local))
+        }
+      }
     </script>
   </body>
 </html>
