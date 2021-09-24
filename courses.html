@@ -16,6 +16,11 @@
       <script src="js/vendor/html5shiv.min.js"></script>
       <script src="js/vendor/respond.min.js"></script>
     <![endif]-->
+
+    <script>
+      localStorage.id = 1
+    </script>
+
   </head>
   <body>
 
@@ -721,6 +726,16 @@
       8. List out the modified dictionary in no. 4 into the UI.
 
       */
+
+      // LEARNER'S ENROLLED COURSES
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200){
+          var data = JSON.parse(this.responseText);
+          var UserID = localStorage.id;
+        }
+      }
     </script>
   </body>
 </html>
