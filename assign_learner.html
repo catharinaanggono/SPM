@@ -335,8 +335,6 @@
         if(localStorage.getItem("user_list_notchecked") != null){
           var user_list_local = JSON.parse(localStorage.getItem("user_list_notchecked"));
         }
-        console.log(typeof(user_list_local))
-        console.log(checkbox)
 
         var table = document.getElementById("engineerlist")
         var row_count = table.rows.length;
@@ -344,7 +342,7 @@
           var trs = table.getElementsByTagName("tr")[i];
           var td = trs.cells[0];
           var checkbox = td.getElementsByTagName("input")[0];
-          console.log(checkbox)
+          //console.log(checkbox)
 
           //check if checkbox is checked, and will insert it into the selected section
           if(checkbox.checked == true){
@@ -440,18 +438,18 @@
       function deleteRow(){
         var table = document.getElementById("selected");
         var row_count = table.rows.length;
-        console.log(row_count)
+        //console.log(row_count)
 
         //getting userlist of engineers that are not selected from the localstorage 
         var user_list_local = JSON.parse(localStorage.getItem("user_list_notchecked"));
-        console.log(user_list_local)
+        //console.log(user_list_local)
         
         //to get the checkbox from the data table of selected engineers
         for(let i=1; i<row_count; i++){
           var trs = table.getElementsByTagName("tr")[i];
           var td = trs.cells[0];
           var checkbox = td.getElementsByTagName("input")[0];
-          console.log(checkbox.className)
+          //console.log(checkbox.className)
 
           //check if the checkbox is checked, if yes, then it will append to the userlist of engineers that are not selected and remove the line
           //actually used a recursion lmao
