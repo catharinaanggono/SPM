@@ -155,8 +155,8 @@
 
                 <div id="enrolled-courses" class="tab-pane fade in active">
                   
-                  <div class="row">
-                    <div class="col-md-6">
+                  <div class="row" id="enrolled-courses-content">
+                    <!-- <div class="col-md-6">
                       <div class="probootstrap-service-2 probootstrap-animate">
                         <div class="image">
                           <div class="image-bg">
@@ -215,7 +215,7 @@
                         </div>
                       </div>
         
-                    </div>
+                    </div> -->
                   </div>
 
                   <!-- END row -->
@@ -729,13 +729,39 @@
 
       // LEARNER'S ENROLLED COURSES
       var request = new XMLHttpRequest();
+      var UserID = localStorage.id;
 
       request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200){
           var data = JSON.parse(this.responseText);
-          var UserID = localStorage.id;
+          var learner_ongoing_courses = data.data.learner_courses;
+          console.log(learner_ongoing_courses)
+          for (var each_course in learner_ongoing_courses){
+            var ClassID = learner_ongoing_courses[each_course].ClassID;
+            var CourseID = learner_ongoing_courses[each_course].CourseID;
+            var CourseTitle = learner_ongoing_courses[each_course].CourseTitle;
+            var ClassStartDate = learner_ongoing_courses[each_course].ClassStartDate;
+            var ClassEndDate = learner_ongoing_courses[each_course].ClassEndDate;
+            var LearnerID = learner_ongoing_courses[each_course].LearnerID;
+            var Status = learner_ongoing_courses[each_course].Status;
+            console.log("course")
+            document.getElementById('enrolled-courses-content').innerHTML += `
+            <div class="col-md-6">
+              <div class="probootstrap-service-2 probootstrap-animate">                
+                <div class="text" style='width: 100%'>
+                  <h3>${CourseTitle} - Class: ${ClassID}</h3><br>
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start Date: ${ClassStartDate}</span><br>
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> End Date: ${ClassEndDate}</span><br><br>
+                  <p>Progress: #pending<br> 
+                    Section 4 out of 12</p>
+                </div>
+              </div>
+              </div>`
+          }
         }
-      }
+      };
+      request.open('GET', 'http://localhost:5002/learner_ongoing_courses/' + UserID, false);
+      request.send();
     </script>
   </body>
 </html>

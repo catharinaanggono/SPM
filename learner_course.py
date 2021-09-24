@@ -30,9 +30,12 @@ class LearnerCourse(db.Model):
         self.Status = Status
     
     def json(self):
-        if not hasattr(self, 'course_class_id'):
+        if not hasattr(self, 'course_class_id') and not hasattr(self, 'course_title') and not hasattr(self, 'class_start_date') and not hasattr(self, 'class_end_date'):
             self.course_class_id = ''
-        return{"LearnerID": self.LearnerID, "CourseID": self.CourseID, "ClassID": self.course_class_id, "Status": self.Status}
+            self.course_title = ''
+            self.class_start_date = ''
+            self.class_end_date = ''
+        return{"LearnerID": self.LearnerID, "CourseID": self.CourseID, "CourseTitle": self.course_title, "ClassID": self.course_class_id,  "ClassStartDate": self.class_start_date, "ClassEndDate": self.class_end_date, "Status": self.Status}
 
 class classLearner(db.Model):
     __tablename__ = 'classLearner'
@@ -51,6 +54,45 @@ class classLearner(db.Model):
     def json(self):
         return{"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus}
 
+class course(db.Model):
+    __tablename__ = 'course'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    CourseTitle = db.Column(db.String(50), nullable=False)
+    CourseDescription = db.Column(db.String(65535), nullable=False)
+    Badge = db.Column(db.String(65535), nullable=False)
+
+    def __init__(self, CourseID, CourseTitle, CourseDescription, Badge):
+        self.CourseID = CourseID
+        self.CourseTitle = CourseTitle
+        self.CourseDescription = CourseDescription
+        self.Badge = Badge
+
+    def json(self):
+        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge}
+
+class course_class(db.Model):
+    __tablename__ = 'class'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    StartDate = db.Column(db.DateTime, nullable=False)
+    EndDate = db.Column(db.DateTime, nullable=False)
+    RegistrationStartDate = db.Column(db.DateTime, nullable=False)
+    RegistrationEndDate = db.Column(db.DateTime, nullable=False)
+
+
+    def __init__(self, CourseID, ClassID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.StartDate = StartDate
+        self.EndDate = EndDate
+        self.RegistrationEndDate = RegistrationEndDate
+        self.RegistrationStartDate = RegistrationStartDate
+
+    def json(self):
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate}
+
 @app.route("/learner_ongoing_courses/<string:UserID>")
 def get_leaner_ongoing_courses(UserID):
     Courses = LearnerCourse.query.filter_by(LearnerID = UserID, Status = 'Ongoing').all()
@@ -61,7 +103,12 @@ def get_leaner_ongoing_courses(UserID):
             CourseID = a_course.CourseID
             print(CourseID)
             a_class_list = classLearner.query.filter_by(LearnerID = UserID, CourseID = CourseID).first()
+            a_class_details = course_class.query.filter_by(ClassID = a_class_list.ClassID).first()
+            a_course_title = course.query.filter_by(CourseID = CourseID).first()
+            a_course.course_title = a_course_title.CourseTitle
             a_course.course_class_id = a_class_list.ClassID 
+            a_course.class_start_date = a_class_details.StartDate
+            a_course.class_end_date = a_class_details.EndDate 
             print(a_class_list)
             print("LearnerID", a_course.LearnerID)
             print('EACH COURSE CLASS ID', a_course.course_class_id)
