@@ -4,7 +4,6 @@ from os import environ
 from flask_cors import CORS
 from dotenv import load_dotenv
 from datetime import datetime
-
 load_dotenv()
 
 app = Flask(__name__)
@@ -36,7 +35,11 @@ class course(db.Model):
     def json(self):
         if not hasattr(self, 'classList'):
             self.classList = []
-        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge, "classList": self.classList}
+        if not hasattr(self, 'GreyOut'):
+            self.GreyOut = False
+        if not hasattr(self, 'prereqList'):
+            self.prereqList = []
+        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge, "classList": self.classList, "GreyOut": self.GreyOut, 'prereqList': self.prereqList}
 
 
 
@@ -62,8 +65,8 @@ class course_class(db.Model):
     StartDate = db.Column(db.DateTime, nullable=False)
     EndDate = db.Column(db.DateTime, nullable=False)
     ClassSize = db.Column(db.Integer, nullable = False)
-    RegistrationStartDate = db.Column(db.DateTime, nullable=False)
-    RegistrationEndDate = db.Column(db.DateTime, nullable=False)
+    RegistrationStartDate = db.Column(db.Date, nullable=False)
+    RegistrationEndDate = db.Column(db.Date, nullable=False)
 
 
     def __init__(self, CourseID, ClassID, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate):
@@ -79,7 +82,12 @@ class course_class(db.Model):
     def json(self):
         if not hasattr(self, 'GreyOut'):
             self.GreyOut = False
-        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate, "GreyOut": self.GreyOut}
+        if not hasattr(self, 'RemainingSlot'):
+            self.RemainingSlot = False
+
+        if not hasattr(self, 'TrainerList'):
+            self.TrainerList = False
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate, "GreyOut": self.GreyOut, "RemainingSlot": self.RemainingSlot, "TrainerList": self.TrainerList}
 
 @app.route('/classes')
 def get_all_classes():
@@ -182,6 +190,46 @@ class LearnerCourse(db.Model):
     def json(self):
         return{"LearnerID": self.LearnerID, "CourseID": self.CourseID, "Status": self.Status}
 
+# Checking for trainers in classes
+
+class TrainerClass(db.Model):
+    __tablename__ = 'classTrainer'
+
+    CourseID = db.Column(db.Integer)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    TrainerID = db.Column(db.Integer, primary_key=True)
+
+    def __init__(self, CourseID, ClassID, TrainerID):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.TrainerID = TrainerID
+    
+    def json(self):
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "TrainerID": self.TrainerID}
+
+# Getting Trainer Names
+
+# CREATE TABLE IF NOT EXISTS userTable(
+#     UserID INT NOT NULL AUTO_INCREMENT,
+#     UserName TEXT NOT NULL,
+#     UserType TEXT NOT NULL,
+#     PRIMARY KEY (UserID)
+# );
+
+class User(db.Model):
+    __tablename__ = 'userTable'
+
+    UserID = db.Column(db.Integer, primary_key=True)
+    UserName = db.Column(db.Integer)
+    UserType = db.Column(db.Integer)
+
+    def __init__(self, UserID, UserName, UserType):
+        self.UserID = UserID
+        self.UserName = UserName
+        self.UserType = UserType
+    
+    def json(self):
+        return {"UserID": self.UserID, "UserName": self.UserName, "UserType": self.UserType}
 
 @app.route('/courses-all/<string:UserID>')
 def get_all_courses(UserID):
@@ -196,31 +244,43 @@ def get_all_courses(UserID):
         if a_class.ApplicationStatus == 'enrolled': # check if user already enrolled
             enrolled_courses.append(a_class.CourseID)
     courses = course.query.filter(course.CourseID not in enrolled_courses)
-    x = 1
     class_per_course = []
     for a_course in courses:
         shown_classes = []
+        prereqList = []
         if a_course.CourseID not in enrolled_courses:
             CourseID = a_course.CourseID
             course_prereqs = course_prereq.query.filter_by(CourseID = CourseID)
             for a_prereq in course_prereqs:
+                prereqName = course.query.filter_by(CourseID = a_prereq.PrereqID).first().CourseTitle
+                prereqList.append(prereqName)
                 if a_prereq.PrereqID not in prereq_courses:
-                    x = 0
+                    a_course.GreyOut = True
+            a_course.prereqList = prereqList
             now = datetime.date(datetime.today())
             classes = course_class.query.filter(CourseID == a_course.CourseID, now < course_class.RegistrationEndDate, now > course_class.RegistrationStartDate) # check registration date
             for a_class in classes:
-                if x == 0:
-                    a_class.GreyOut = True
+                currentTrainers = TrainerClass.query.filter_by(CourseID = a_class.CourseID).filter_by(ClassID = a_class.ClassID)
+                trainerList = []
+                if currentTrainers.count() > 0:
+                    for a_trainer in currentTrainers:
+                        trainerInfo = a_trainer.json()
+                        trainerObj = User.query.filter(User.UserID == trainerInfo['TrainerID'])
+                        for item in trainerObj:
+                            trainerName = item.json()['UserName']
+                        trainerList.append(trainerName)
+                
                 currentlyEnrolled = ClassTaken.query.filter(CourseID == CourseID, a_class.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus == "enrolled") # check remaining class sizes
                 totalEnrolled = currentlyEnrolled.count()
                 if totalEnrolled < a_class.ClassSize and a_class.CourseID == a_course.CourseID:
+                    a_class.RemainingSlot = a_class.ClassSize - totalEnrolled
+                    a_class.TrainerList = trainerList
                     shown_classes.append(a_class)
+                trainerList = []
             class_per_course.append([a_course, shown_classes])
-        x = 1
     actual_courses = [] 
     # By logic, the step from here below is not needed, but SQLAlchemy magic works in a very weird way :).. -- Each course may have been reset to its default values, so classList is gone except for the last course, so I had to repopulate myself courses myself.
     for i in range(0, len(class_per_course)):
-        print(class_per_course[i][1])
         class_per_course[i][0].classList = [each_class.json() for each_class in class_per_course[i][1]]
         actual_courses.append(class_per_course[i][0])
     if courses.count():
