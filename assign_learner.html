@@ -158,33 +158,38 @@
                       <input type="submit" class="btn btn-primary btn-lg" id="submit" name="submit" value="Send Message">
                     </div>
                   </form> -->
+                  
 
                   <input type="text" class="form-control" id="name" name="name" placeholder="Search" onkeyup="search()">
-                  <!-- for checkbox -->
-                  <br>
                   <br>
                   <span>List of engineers</span>
                   <br>
-                  <table id='engineerlist'>
-                    <tr>
-                      <th>Name</th>
-                      <th>Position</th>
-                      <th>UserID</th>
-                    </tr>
-
-                      <!-- <span class="solid" ></span> -->
-                      <!-- <td>
-                        <input type="checkbox" id="1" name="wellson" value="Wellson">
-                        <label for="wellson"> Wellson</label><br>
-                      </td>
-                      <td>
-                        Junior Engineer
-                      </td> -->
-
-                  </table>
+                  <!-- scroll page  -->
+                  <div id="div1" style="height: 300px;position:relative;">
+                    <div id="div2" style="max-height:100%;overflow:auto;">
+                      <div id="div3" style="height:1500px;">
+                        <table id='engineerlist'>
+                          <tr>
+                            <th>Name</th>
+                            <th>Position</th>
+                            <th>UserID</th>
+                          </tr>
+                          <!-- <span class="solid" ></span> -->
+                          <!-- <td>
+                            <input type="checkbox" id="1" name="wellson" value="Wellson">
+                            <label for="wellson"> Wellson</label><br>
+                          </td>
+                          <td>
+                            Junior Engineer
+                          </td> -->
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                
                   <br>
                   <br>
-                  <br>
+                 
                   <span>Selected engineers</span>
                   
                   <br>
@@ -293,6 +298,10 @@
     <script>
       localStorage.clear()
       //to retrieve data from database for user details
+      //need to change the CourseID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! HEREEEEEEEEEEEEEEEE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      var send_value = {
+        CourseID: 4
+      }
       var request = new XMLHttpRequest();
 
       request.onreadystatechange = function () {
@@ -304,27 +313,25 @@
             localStorage.setItem("userlist", JSON.stringify(data));
 
             for(i in user_list){
-              //to retrive the first 5 names on the list
-              if(i <= 4){
-                console.log(user_list[i])
-                var id = user_list[i].UserID;
-                var name = user_list[i].UserName;
-                var userType = user_list[i].UserType;
-                document.getElementById("engineerlist").innerHTML += `<tr><td>
-                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${userType}" onchange='checked_name(this)'">
-                                                                        <label for="${name}">${name}</label>
-                                                                      </td>
-                                                                      <td>
-                                                                        ${userType}
-                                                                      </td><td>
-                                                                        ${id}
-                                                                      </td></tr>`
-              }
+              //console.log(user_list[i])
+              var id = user_list[i].UserID;
+              var name = user_list[i].UserName;
+              var userType = user_list[i].UserType;
+              document.getElementById("engineerlist").innerHTML += `<tr><td>
+                                                                      <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${userType}" onchange='checked_name(this)'">
+                                                                      <label for="${name}">${name}</label>
+                                                                    </td>
+                                                                    <td>
+                                                                      ${userType}
+                                                                    </td><td>
+                                                                      ${id}
+                                                                    </td></tr>`
             }
           } 
       };
-      request.open("GET", "http://localhost:5002/user", false);
-      request.send();
+      request.open("POST", "http://localhost:5200/HrAssign")
+      request.setRequestHeader("Content-type", "application/json");
+      request.send(JSON.stringify(send_value))
 
       //to move checked name into selected section
       function checked_name(checkbox){
@@ -336,11 +343,15 @@
           var user_list_local = JSON.parse(localStorage.getItem("user_list_notchecked"));
         }
 
+        //to get the input element inside the <td>
         var table = document.getElementById("engineerlist")
         var row_count = table.rows.length;
-        for(let i=1; i<row_count; i++){
+        console.log(row_count)
+        for(let i=1; i<row_count-1; i++){
+          //console.log(i)
           var trs = table.getElementsByTagName("tr")[i];
           var td = trs.cells[0];
+          //console.log(td)
           var checkbox = td.getElementsByTagName("input")[0];
           //console.log(checkbox)
 
@@ -394,22 +405,19 @@
         //see if the there is any text on the search bar
         if(searched_name.length == 0){
           for(i in user_list){
-              //to retrive the first 5 names on the list
-              if(i <= 4){
-                console.log(user_list[i])
-                var id = user_list[i].UserID;
-                var name = user_list[i].UserName;
-                var userType = user_list[i].UserType;
-                document.getElementById("engineerlist").innerHTML += `<tr><td>
-                                                                        <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${userType}" onchange='checked_name(this)'">
-                                                                        <label for="${name}">${name}</label>
-                                                                      </td>
-                                                                      <td>
-                                                                        ${userType}
-                                                                      </td><td>
-                                                                        ${id}
-                                                                      </td></tr>`
-              }
+            //console.log(user_list[i])
+            var id = user_list[i].UserID;
+            var name = user_list[i].UserName;
+            var userType = user_list[i].UserType;
+            document.getElementById("engineerlist").innerHTML += `<tr><td>
+                                                                    <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${userType}" onchange='checked_name(this)'">
+                                                                    <label for="${name}">${name}</label>
+                                                                  </td>
+                                                                  <td>
+                                                                    ${userType}
+                                                                  </td><td>
+                                                                    ${id}
+                                                                  </td></tr>`
             }
         }else{
             //if there is any text on the search bar, then find names that includes the letter typed into the search bar
