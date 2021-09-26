@@ -36,7 +36,7 @@ class course(db.Model):
     def json(self):
         if not hasattr(self, 'classList'):
             self.classList = []
-        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge, "classes": self.classList}
+        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge, "classList": self.classList}
 
 
 
@@ -197,7 +197,9 @@ def get_all_courses(UserID):
             enrolled_courses.append(a_class.CourseID)
     courses = course.query.filter(course.CourseID not in enrolled_courses)
     x = 1
+    class_per_course = []
     for a_course in courses:
+        shown_classes = []
         if a_course.CourseID not in enrolled_courses:
             CourseID = a_course.CourseID
             course_prereqs = course_prereq.query.filter_by(CourseID = CourseID)
@@ -205,23 +207,27 @@ def get_all_courses(UserID):
                 if a_prereq.PrereqID not in prereq_courses:
                     x = 0
             now = datetime.date(datetime.today())
-            shown_classes = []
-            classes = course_class.query.filter(CourseID == CourseID, now < course_class.RegistrationEndDate, now > course_class.RegistrationStartDate) # check registration date
+            classes = course_class.query.filter(CourseID == a_course.CourseID, now < course_class.RegistrationEndDate, now > course_class.RegistrationStartDate) # check registration date
             for a_class in classes:
                 if x == 0:
                     a_class.GreyOut = True
                 currentlyEnrolled = ClassTaken.query.filter(CourseID == CourseID, a_class.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus == "enrolled") # check remaining class sizes
                 totalEnrolled = currentlyEnrolled.count()
-                if totalEnrolled < a_class.ClassSize:
+                if totalEnrolled < a_class.ClassSize and a_class.CourseID == a_course.CourseID:
                     shown_classes.append(a_class)
-            class_list = [a_class.json() for a_class in shown_classes]
-            a_course.classList = class_list
+            class_per_course.append([a_course, shown_classes])
         x = 1
+    actual_courses = [] 
+    # By logic, the step from here below is not needed, but SQLAlchemy magic works in a very weird way :).. -- Each course may have been reset to its default values, so classList is gone except for the last course, so I had to repopulate myself courses myself.
+    for i in range(0, len(class_per_course)):
+        print(class_per_course[i][1])
+        class_per_course[i][0].classList = [each_class.json() for each_class in class_per_course[i][1]]
+        actual_courses.append(class_per_course[i][0])
     if courses.count():
         return jsonify({
             "code": 200,
             "data": {
-                "courses": [each_course.json() for each_course in courses]
+                "courses": [each_course.json() for each_course in actual_courses]
             }
         }), 200
     return jsonify({
