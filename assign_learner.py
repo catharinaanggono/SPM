@@ -32,6 +32,48 @@ class User(db.Model):
     def json(self):
         return{"UserID": self.UserID, "UserName": self.UserName, "UserType": self.UserType}
 
+class classLearner(db.Model):
+    __tablename__ = 'classLearner'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    LearnerID = db.Column(db.Integer, primary_key=True)
+    ApplicationStatus = db.Column(db.String(200), nullable=False)
+
+
+    def __init__ (self, CourseID, ClassID, LearnerID, ApplicationStatus):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.LearnerID = LearnerID
+        self.ApplicationStatus = ApplicationStatus
+    
+    def json(self):
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus}
+
+class Class(db.Model):
+    __tablename__ = 'class'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    StartDate = db.Column(db.DateTime, nullable=False)
+    EndDate = db.Column(db.DateTime, nullable=False)
+    ClassSize = db.Column(db.Integer, nullable=False)
+    RegistrationStartDate = db.Column(db.DateTime, nullable=False)
+    RegistrationEndDate = db.Column(db.DateTime, nullable=False)
+
+
+    def __init__(self, CourseID, ClassID, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.StartDate = StartDate
+        self.EndDate = EndDate
+        self.ClassSize = ClassSize
+        self.RegistrationEndDate = RegistrationEndDate
+        self.RegistrationStartDate = RegistrationStartDate
+
+    def json(self):
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate}
+
 
 class prereq(db.Model):
     __tablename__ = 'coursePrereq'
@@ -66,9 +108,9 @@ def get_learner():
     data = request.get_json()
     #print(data['CourseID'])
 
-    #i am assuming i can get the assigning courseID from previous pages
+    #i am assuming i can get the assigning courseID from previous pages!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11111111111111
     prereqIDs = prereq.query.filter_by(CourseID = data['CourseID']).all()
-    print(prereqIDs)
+    #print(prereqIDs)
 
     #to get the prereq IDs of the course that is being assigned
     prereqID_list = []
@@ -110,14 +152,60 @@ def get_learner():
         }), 404
 
 
+@app.route('/assign_learners', methods=['POST'])
+def assign_learners():
+    data = request.get_json()
+    print(data)
+
+    class_details = Class.query.filter_by(ClassID = data['ClassID'][0]).all()
+    #number of learner in the class currently
+    num_learner = len(classLearner.query.filter_by(ClassID = data['ClassID'][0]).all())
+    
+    #number of learner being assigned by HR
+    num_assigned_learner = len(data['data'])
+
+    class_details_dict = [attribute.json() for attribute in class_details]
+    #the size of the class 
+    class_size = class_details_dict[0]['ClassSize']
+
+    # print(class_size)
+    # print(num_learner)
+    # print(num_assigned_learner)
+
+    #number of availability in the class
+    class_availability = class_size - num_learner
 
 
+    exist_learner = []
+    for k in data['data']:
+        check = classLearner.query.filter((classLearner.CourseID == k[0]) & (classLearner.ClassID == k[1]) & (classLearner.LearnerID == k[2]))
+        if(check):
+            for person in check:
+                exist_learner.append(person.json())
+    if(len(exist_learner) > 0):
+        return jsonify({
+        "code": 500,
+        "data": exist_learner,
+        "message": "An error occured while adding course, the following learner has already been assigned to this class"
+        }), 500
 
 
+    output = []
+    if (class_availability - num_assigned_learner) > 0:
+        for i in data['data']:
+            upload_data = {'CourseID': i[0], 'ClassID': i[1], 'LearnerID': i[2], 'ApplicationStatus': i[3]}
+            upload = classLearner(**upload_data)
+            db.session.add(upload)
+            db.session.commit()
+            output.append(upload_data)
+            return jsonify({
+            "code": 200,
+            "data": output,
+            "message": "Engineers has been successfully applied for the course"
+            }), 200
+                
 
-
-
-
+   
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5200, debug=True)
 
