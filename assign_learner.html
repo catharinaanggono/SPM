@@ -315,7 +315,7 @@
       //to retrieve data from database for user details
       //need to change the CourseID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! HEREEEEEEEEEEEEEEEE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       var send_value = {
-        CourseID: 4
+        CourseID: 1
       }
       var request = new XMLHttpRequest();
 
@@ -377,8 +377,7 @@
             var name = checkbox.name;
             var type = checkbox.className;
             document.getElementById("selected").innerHTML += `<tr><td>
-                                                              <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${type}" ">
-                                                              <label for="${name}">${name}</label>
+                                                              <div id="${id}" name="${name}" value="${name}" class="${type}"> ${name}</div>
                                                               </td>
                                                               <td>
                                                                 ${type}
@@ -507,8 +506,10 @@
         var user_list_local = JSON.parse(localStorage.getItem("user_list_notchecked"));
         //console.log(user_list_local)
         
+        console.log(data)
         //get all the variables from data
-        var obj = {"UserID": data.id, "UserName": data.name, "UserType": data.className}
+        var obj = {"UserID": data.id, "UserName": data.getAttribute('value'), "UserType": data.className}
+        console.log(obj)
         user_list_local.push(obj)
 
         //sort the localstorage into ordered value
@@ -525,13 +526,52 @@
 
       function assign(){
 
-        
+        var table = document.getElementById("selected")
+        var row_count = table.rows.length;
 
+      //to get the all the selected engineers data from the data table of selected engineers
+        //var selected_engineers = []
+        var courseid_list = []
+        var classid_list = []
+        var learnerid_list = []
+        var status_list = []
+        for(let i=1; i<row_count; i++){
+          var trs = table.getElementsByTagName("tr")[i];
+          var td = trs.cells[0];
+          var details = td.getElementsByTagName("div")[0];
+          //console.log(details.id)
+          //console.log(details.getAttribute('value'))
+          //console.log(details.className)
 
+          //var obj = {'UserID': details.id, 'UserName': details.getAttribute('value'), 'UserType': details.className}
+          //selected_engineers.push(obj)
+          courseid_list.push(1)
+          classid_list.push(1)
+          learnerid_list.push(details.id)
+          status_list.push("Applied")
+        }
 
+        //please chage the courseid and classid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        var send_value = {
+          CourseID: courseid_list, 
+          ClassID: classid_list,
+          LearnerID: learnerid_list,
+          ApplicationStatus: status_list
+        }
 
+        var request = new XMLHttpRequest();
 
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
 
+              //var data = JSON.parse(this.responseText);
+              //console.log(data)
+              
+            }
+        };
+        request.open("POST", "http://localhost:5200/assign_learners")
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(send_value))
       }
 
 
