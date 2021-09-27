@@ -198,14 +198,12 @@ def assign_learners():
             db.session.add(upload)
             db.session.commit()
             output.append(upload_data)
-            return jsonify({
-            "code": 200,
-            "data": output,
-            "message": "Engineers has been successfully applied for the course"
-            }), 200
+        return jsonify({
+        "code": 200,
+        "data": output,
+        "message": "Engineers has been successfully applied for the course"
+        }), 200
                 
-
-   
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5200, debug=True)
 
