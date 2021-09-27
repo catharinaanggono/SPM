@@ -24,9 +24,21 @@
         padding: 8px;
       }
 
+      img{
+        max-width:5%;
+        max-height:5%;
+      }
+
       #remove{
           background:#FF2E2E; 
           border:#FF2E2E;
+          padding: 5px 10px;
+          font-size:10px;
+
+      }
+      #add{
+          background:#49D292; 
+          border:#49D292;
           padding: 5px 10px;
           font-size:10px;
 
@@ -198,7 +210,10 @@
                       <th>Name</th>
                       <th>Position</th>
                       <th>UserID</th>
-                      <th><button id='remove' class="btn btn-primary btn-lg" value='Remove' onclick="deleteRow()">Remove</button></th>
+                      <th>
+                        <!-- <button id='remove' class="btn btn-primary btn-lg" value='Remove' onclick="deleteRow()">Remove</button> -->
+                        <button id='add' class="btn btn-primary btn-lg" value='Assign' onclick="assign()">Assign</button>
+                      </th>
                     </tr>
                       <!-- <span class="solid" ></span> -->
                       <!-- <td>
@@ -300,7 +315,7 @@
       //to retrieve data from database for user details
       //need to change the CourseID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! HEREEEEEEEEEEEEEEEE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       var send_value = {
-        CourseID: 4
+        CourseID: 1
       }
       var request = new XMLHttpRequest();
 
@@ -346,10 +361,11 @@
         //to get the input element inside the <td>
         var table = document.getElementById("engineerlist")
         var row_count = table.rows.length;
-        console.log(row_count)
-        for(let i=1; i<row_count-1; i++){
+        //console.log(row_count)
+        for(let i=1; i<row_count; i++){
           //console.log(i)
           var trs = table.getElementsByTagName("tr")[i];
+          //console.log(trs)
           var td = trs.cells[0];
           //console.log(td)
           var checkbox = td.getElementsByTagName("input")[0];
@@ -361,13 +377,15 @@
             var name = checkbox.name;
             var type = checkbox.className;
             document.getElementById("selected").innerHTML += `<tr><td>
-                                                              <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${type}" ">
-                                                              <label for="${name}">${name}</label>
+                                                              <div id="${id}" name="${name}" value="${name}" class="${type}"> ${name}</div>
                                                               </td>
                                                               <td>
                                                                 ${type}
                                                               </td><td>
                                                                 ${id}
+                                                              </td>
+                                                              <td>
+                                                                <img src='img/cross.png' onclick='remove(document.getElementById(${id}), this)'>
                                                               </td>
                                                               </tr>`
             //delete row that was selected
@@ -387,7 +405,11 @@
 
       //function to search names 
       function search(){
-        document.getElementById("engineerlist").innerHTML = "";
+        document.getElementById("engineerlist").innerHTML = `<tr>
+                                                              <th>Name</th>
+                                                              <th>Position</th>
+                                                              <th>UserID</th>
+                                                              </tr>`;
 
         //to check if there is any existing userlist in localstorage
         var user_list = JSON.parse(localStorage.getItem("userlist")).data.user;
@@ -442,42 +464,130 @@
       }
 
 
-      //function to remove selected names
-      function deleteRow(){
-        var table = document.getElementById("selected");
-        var row_count = table.rows.length;
-        //console.log(row_count)
+      // //function to remove selected names
+      // function deleteRow(){
+      //   var table = document.getElementById("selected");
+      //   var row_count = table.rows.length;
+      //   //console.log(row_count)
 
+      //   //getting userlist of engineers that are not selected from the localstorage 
+      //   var user_list_local = JSON.parse(localStorage.getItem("user_list_notchecked"));
+      //   //console.log(user_list_local)
+        
+      //   //to get the checkbox from the data table of selected engineers
+      //   for(let i=1; i<row_count; i++){
+      //     var trs = table.getElementsByTagName("tr")[i];
+      //     var td = trs.cells[0];
+      //     var checkbox = td.getElementsByTagName("input")[0];
+      //     //console.log(checkbox.className)
+
+      //     //check if the checkbox is checked, if yes, then it will append to the userlist of engineers that are not selected and remove the line
+      //     //actually used a recursion lmao
+      //     //https://stackoverflow.com/questions/43911414/how-to-select-all-checkboxes-from-table-using-javascript
+      //     if(checkbox.checked == true){
+      //       var obj = {"UserID": checkbox.id, "UserName": checkbox.name, "UserType": checkbox.className}
+      //       user_list_local.push(obj)
+      //       table.deleteRow(i)
+      //       row_count --;
+      //       i--;
+      //     }
+      //     console.log(user_list_local)
+
+      //     //sort the userlist after appending the deleted selected engineers
+      //     user_list_local.sort(function(a, b) {
+      //         return parseFloat(a.UserID) - parseFloat(b.UserID);
+      //     });
+      //     localStorage.setItem("user_list_notchecked", JSON.stringify(user_list_local))
+      //   }
+      // }
+
+      function remove(data, rw){
         //getting userlist of engineers that are not selected from the localstorage 
         var user_list_local = JSON.parse(localStorage.getItem("user_list_notchecked"));
         //console.log(user_list_local)
         
-        //to get the checkbox from the data table of selected engineers
+        console.log(data)
+        //get all the variables from data
+        var obj = {"UserID": data.id, "UserName": data.getAttribute('value'), "UserType": data.className}
+        console.log(obj)
+        user_list_local.push(obj)
+
+        //sort the localstorage into ordered value
+        user_list_local.sort(function(a, b) {
+              return parseFloat(a.UserID) - parseFloat(b.UserID);
+        });
+        localStorage.setItem("user_list_notchecked", JSON.stringify(user_list_local))
+
+        //remove the current row
+        var row = rw.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+      }
+
+
+      function assign(){
+
+        var table = document.getElementById("selected")
+        var row_count = table.rows.length;
+
+      //to get the all the selected engineers data from the data table of selected engineers
+        //var selected_engineers = []
+        var courseid_list = []
+        var classid_list = []
+        var learnerid_list = []
+        var status_list = []
+
+        var learner_details = []
         for(let i=1; i<row_count; i++){
           var trs = table.getElementsByTagName("tr")[i];
           var td = trs.cells[0];
-          var checkbox = td.getElementsByTagName("input")[0];
-          //console.log(checkbox.className)
+          var details = td.getElementsByTagName("div")[0];
+          //console.log(details.id)
+          //console.log(details.getAttribute('value'))
+          //console.log(details.className)
 
-          //check if the checkbox is checked, if yes, then it will append to the userlist of engineers that are not selected and remove the line
-          //actually used a recursion lmao
-          //https://stackoverflow.com/questions/43911414/how-to-select-all-checkboxes-from-table-using-javascript
-          if(checkbox.checked == true){
-            var obj = {"UserID": checkbox.id, "UserName": checkbox.name, "UserType": checkbox.className}
-            user_list_local.push(obj)
-            table.deleteRow(i)
-            row_count --;
-            i--;
-          }
-          console.log(user_list_local)
+          //var obj = {'UserID': details.id, 'UserName': details.getAttribute('value'), 'UserType': details.className}
+          //selected_engineers.push(obj)
 
-          //sort the userlist after appending the deleted selected engineers
-          user_list_local.sort(function(a, b) {
-              return parseFloat(a.UserID) - parseFloat(b.UserID);
-          });
-          localStorage.setItem("user_list_notchecked", JSON.stringify(user_list_local))
+          //[CourseID, ClassID, LearnerID, ApplicationStatus]
+          learner_details.push([1,1, details.id, "Applied"])
+
+          // courseid_list.push(1)
+          // classid_list.push(1)
+          // learnerid_list.push(details.id)
+          // status_list.push("Applied")
         }
+
+        //please chage the courseid and classid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        var send_value = {
+          CourseID: '1',
+          ClassID: '1',
+          data: learner_details
+        }
+
+        var request = new XMLHttpRequest();
+
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+              var data = JSON.parse(this.responseText);
+              console.log(data.message)
+              console.log(data.data)
+              
+            }else if (this.readyState == 4 && this.status == 500) {
+
+              var data = JSON.parse(this.responseText);
+              console.log(data.message)
+              console.log(data.data)
+
+            }
+        };
+        request.open("POST", "http://localhost:5200/assign_learners")
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(send_value))
       }
+
+
+
     </script>
   </body>
 </html>
