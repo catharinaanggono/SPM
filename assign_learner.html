@@ -535,6 +535,8 @@
         var classid_list = []
         var learnerid_list = []
         var status_list = []
+
+        var learner_details = []
         for(let i=1; i<row_count; i++){
           var trs = table.getElementsByTagName("tr")[i];
           var td = trs.cells[0];
@@ -545,18 +547,21 @@
 
           //var obj = {'UserID': details.id, 'UserName': details.getAttribute('value'), 'UserType': details.className}
           //selected_engineers.push(obj)
-          courseid_list.push(1)
-          classid_list.push(1)
-          learnerid_list.push(details.id)
-          status_list.push("Applied")
+
+          //[CourseID, ClassID, LearnerID, ApplicationStatus]
+          learner_details.push([1,1, details.id, "Applied"])
+
+          // courseid_list.push(1)
+          // classid_list.push(1)
+          // learnerid_list.push(details.id)
+          // status_list.push("Applied")
         }
 
         //please chage the courseid and classid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         var send_value = {
-          CourseID: courseid_list, 
-          ClassID: classid_list,
-          LearnerID: learnerid_list,
-          ApplicationStatus: status_list
+          CourseID: '1',
+          ClassID: '1',
+          data: learner_details
         }
 
         var request = new XMLHttpRequest();
@@ -564,9 +569,16 @@
         request.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
-              //var data = JSON.parse(this.responseText);
-              //console.log(data)
+              var data = JSON.parse(this.responseText);
+              console.log(data.message)
+              console.log(data.data)
               
+            }else if (this.readyState == 4 && this.status == 500) {
+
+              var data = JSON.parse(this.responseText);
+              console.log(data.message)
+              console.log(data.data)
+
             }
         };
         request.open("POST", "http://localhost:5200/assign_learners")

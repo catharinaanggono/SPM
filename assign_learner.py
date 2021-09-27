@@ -162,40 +162,50 @@ def assign_learners():
     num_learner = len(classLearner.query.filter_by(ClassID = data['ClassID'][0]).all())
     
     #number of learner being assigned by HR
-    num_assigned_learner = len(data['LearnerID'])
+    num_assigned_learner = len(data['data'])
 
     class_details_dict = [attribute.json() for attribute in class_details]
     #the size of the class 
     class_size = class_details_dict[0]['ClassSize']
 
-    print(class_size)
-    print(num_learner)
-    print(num_assigned_learner)
+    # print(class_size)
+    # print(num_learner)
+    # print(num_assigned_learner)
 
     #number of availability in the class
     class_availability = class_size - num_learner
 
+
+    exist_learner = []
+    for k in data['data']:
+        check = classLearner.query.filter((classLearner.CourseID == k[0]) & (classLearner.ClassID == k[1]) & (classLearner.LearnerID == k[2]))
+        if(check):
+            for person in check:
+                exist_learner.append(person.json())
+    if(len(exist_learner) > 0):
+        return jsonify({
+        "code": 500,
+        "data": exist_learner,
+        "message": "An error occured while adding course, the following learner has already been assigned to this class"
+        }), 500
+
+
+    output = []
     if (class_availability - num_assigned_learner) > 0:
-        print("havent finish yet")
+        for i in data['data']:
+            upload_data = {'CourseID': i[0], 'ClassID': i[1], 'LearnerID': i[2], 'ApplicationStatus': i[3]}
+            upload = classLearner(**upload_data)
+            db.session.add(upload)
+            db.session.commit()
+            output.append(upload_data)
+            return jsonify({
+            "code": 200,
+            "data": output,
+            "message": "Engineers has been successfully applied for the course"
+            }), 200
+                
 
-
-        # try:
-        #     db.session.add(upload)
-        #     db.session.commit()
-        #     print(100)
-        # except:
-        #     return jsonify({
-        #     "code": 500,
-        #     "message": "An error occured while adding course"
-        # }), 500
-
-
-    return ''
-
-
-
-
-
+   
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5200, debug=True)
 
