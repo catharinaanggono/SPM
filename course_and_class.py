@@ -84,10 +84,11 @@ class course_class(db.Model):
             self.GreyOut = False
         if not hasattr(self, 'RemainingSlot'):
             self.RemainingSlot = False
-
         if not hasattr(self, 'TrainerList'):
             self.TrainerList = False
-        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate, "GreyOut": self.GreyOut, "RemainingSlot": self.RemainingSlot, "TrainerList": self.TrainerList}
+        if not hasattr(self, 'Status'):
+            self.Status = ''
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate, "GreyOut": self.GreyOut, "RemainingSlot": self.RemainingSlot, "TrainerList": self.TrainerList, "Status": self.Status}
 
 @app.route('/classes')
 def get_all_classes():
@@ -235,7 +236,7 @@ class User(db.Model):
 def get_all_courses(UserID):
     enrolled_courses = []
     takenClasses = ClassTaken.query.filter_by(LearnerID = UserID)
-
+    applied_courses = []
     prereq_courses = []
     takenPrereq = LearnerCourse.query.filter_by(LearnerID = UserID)
     for prereq in takenPrereq:
@@ -243,6 +244,8 @@ def get_all_courses(UserID):
     for a_class in takenClasses:
         if a_class.ApplicationStatus == 'enrolled': # check if user already enrolled
             enrolled_courses.append(a_class.CourseID)
+        elif a_class.ApplicationStatus == 'applied':
+            applied_courses.append([a_class.CourseID, a_class.ClassID])
     courses = course.query.filter(course.CourseID not in enrolled_courses)
     class_per_course = []
     for a_course in courses:
@@ -260,6 +263,9 @@ def get_all_courses(UserID):
             now = datetime.date(datetime.today())
             classes = course_class.query.filter(CourseID == a_course.CourseID, now < course_class.RegistrationEndDate, now > course_class.RegistrationStartDate) # check registration date
             for a_class in classes:
+                '''
+                CHECK IF ALREADY APPLIED --> GREY OUT AND SHOW 'APPLIED'
+                '''
                 currentTrainers = TrainerClass.query.filter_by(CourseID = a_class.CourseID).filter_by(ClassID = a_class.ClassID)
                 trainerList = []
                 if currentTrainers.count() > 0:
@@ -269,7 +275,9 @@ def get_all_courses(UserID):
                         for item in trainerObj:
                             trainerName = item.json()['UserName']
                         trainerList.append(trainerName)
-                
+                if [a_class.CourseID, a_class.ClassID] in applied_courses:
+                    a_class.GreyOut = True
+                    a_class.Status = 'applied'
                 currentlyEnrolled = ClassTaken.query.filter(CourseID == CourseID, a_class.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus == "enrolled") # check remaining class sizes
                 totalEnrolled = currentlyEnrolled.count()
                 if totalEnrolled < a_class.ClassSize and a_class.CourseID == a_course.CourseID:
@@ -294,6 +302,33 @@ def get_all_courses(UserID):
         "code": 404,
         "message": "There are no courses."
     }), 404
+
+@app.route('/self-enrol', methods=['POST'])
+def self_enrol():
+    data = request.get_json()
+    userID = data['UserID']
+    courseID = data['CourseID']
+    classID = data['ClassID']
+    apply_class = ClassTaken(courseID, classID, userID, 'applied')
+    # try:
+    db.session.add(apply_class)
+    db.session.commit()
+    # except:
+    #    return jsonify(
+    #        {
+    #             "code": 500,
+    #             "message": "An error occurred in applying to class."
+    #        }
+    #    ), 500
+ 
+    return jsonify(
+        {
+            "code": 201,
+            "message": "Applied to class sucessfully",
+            "data": apply_class.json()
+        }
+    ), 201
+    pass
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)

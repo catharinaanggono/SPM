@@ -653,28 +653,13 @@
     <script src="js/custom.js"></script>
 
     <script>
-      
+      var UserID = localStorage.id;
       var request = new XMLHttpRequest();
       request.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200){
           var data = JSON.parse(this.responseText).data.courses
           console.log(data)
-          document.getElementById('accordion').innerHTML += `
-          <div class="card">
-            <div class="card-header" id="headingThree">
-              <h5 class="mb-0">
-                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  Collapsible G
-                </button>
-              </h5>
-            </div>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-              <div class="card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-              </div>
-            </div>
-          </div>
-            `
+          
           for (course in data){
             console.log(course)
             collapsibleID = data[course].CourseID + data[course].CourseTitle
@@ -683,6 +668,10 @@
             greyout = data[course].GreyOut
             prereqList = data[course].prereqList
             prereqHTML = 'Pre-requisities: '
+            prereqCompletedHTML = ''
+            if (greyout){
+              prereqCompletedHTML = 'style="color:red;"'
+            }
             if (prereqList.length == 0){
               prereqHTML += 'None'
             }
@@ -705,6 +694,7 @@
               pointer = 'auto'
               opacity = 1
             }
+            
             document.getElementById('accordion').innerHTML += `
             <div class="card" style='pointer-events: ${pointer}; opacity:${opacity}'>
               <div class="card-header" id="heading-${collapsibleID}">
@@ -715,7 +705,7 @@
                         <br>
                         <p>${courseDescription}</p>
                         <br>
-                        <p> ${prereqHTML} </p>
+                        <p ${prereqCompletedHTML}> ${prereqHTML} </p>
                       </div>
                       <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#${collapsibleID}" aria-expanded="false" aria-controls="${collapsibleID}">
                           Show Classes
@@ -734,6 +724,9 @@
                 seniorEngineer = aClass.TrainerList
                 availability = aClass.RemainingSlot
                 startDate = new Date(aClass.StartDate)
+                classGreyout = aClass.GreyOut
+                applicationStatus = aClass.Status
+                console.log(applicationStatus)
                 var date = startDate.getDate();
                 var month = startDate.getMonth(); //Be careful! January is 0 not 1
                 var year = startDate.getFullYear();
@@ -759,9 +752,19 @@
                     </tr>`
                   }
                 }
+                styleHTML = ''
+                if (classGreyout){
+                  styleHTML += 'pointer-events: none; opacity: 0.4'
+                }
+                appliedHTML = ''
+                disabled = ''
+                if (applicationStatus == 'applied'){
+                  appliedHTML += '<tr> <td style="padding-bottom:20px"> <b> Already Applied </b> </td> </tr>'
+                  disabled = 'disabled'
+                }
                 document.getElementById(`${collapsibleID}`).innerHTML += `
                 
-                <div class="card-body">
+                <div class="card-body" style="${styleHTML}">
                   <span style='width:100%'> <b> ${classID} </b> </span>
                   </br>
                   </br>
@@ -780,8 +783,9 @@
                     <tr>
                       <td style='width:50%;padding-top:30px;'>  </td>
                     </tr>
+                    ${appliedHTML}
                   </table>
-                  </br>
+                  <button type="button" class="btn btn-primary" ${disabled} onclick="enrolClass(${data[course].CourseID}, ${aClass.ClassID}, ${UserID})"> Enrol </button>
                   <hr>
                 </div>
 
@@ -802,8 +806,32 @@
           }
         }
       }
-      request.open('GET', 'http://localhost:5001/courses-all/2')
+      request.open('GET', 'http://localhost:5001/courses-all/' + UserID)
       request.send()
+
+      function enrolClass(CourseID, ClassID, UserID){
+        console.log("called")
+        var request = new XMLHttpRequest();
+        var send_value = {CourseID: CourseID, ClassID: ClassID, UserID: UserID}
+        request.onreadystatechange = function(){
+          let x = false
+          if (this.status == 201 && this.readyState == 4){
+            x = true
+            if (x){
+            response = JSON.parse(this.responseText)
+            window.alert(response.message)
+            location.reload();
+            }
+            else{
+              window.alert('Something went wrong. Please try again.')
+            }
+          }
+          
+        }
+        request.open('POST', 'http://localhost:5001/self-enrol')
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(send_value))
+      }
 
       /*
 
@@ -826,7 +854,6 @@
 
       // LEARNER'S ENROLLED COURSES
       var request = new XMLHttpRequest();
-      var UserID = localStorage.id;
 
       request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200){
