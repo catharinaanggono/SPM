@@ -87,7 +87,7 @@ def create_course():
     return jsonify(
         {
             "code": 201,
-            "message": "Success!"
+            "message": "Course is successfully created"
         }
     ), 201        
 
