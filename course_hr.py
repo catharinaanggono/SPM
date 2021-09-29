@@ -25,19 +25,31 @@ class Course(db.Model):
     CourseDescription = db.Column(db.String(65535), nullable=False)
     Badge = db.Column(db.String(65535), nullable=False)
 
-    def __init__(self, CourseTitle, CourseDescription, Badge):
+    def __init__(self, CourseTitle, CourseDescription, Badge, prereqList):
         # self.CourseID = CourseID
         self.CourseTitle = CourseTitle
         self.CourseDescription = CourseDescription
         self.Badge = Badge
-    
-    def __repr__(self):
-        return self.CourseID
+        self.prereqList = []
 
     def json(self):
-        if not hasattr(self, 'classList'):
-            self.classList = []
-        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge, "classes": self.classList}
+        if not hasattr(self, 'prereqList'):
+            self.prereqList = []
+        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge, "prereqList": self.prereqList}
+
+class CoursePrereq(db.Model):
+    __tablename__ = 'coursePrereq'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    PrereqID = db.Column(db.Integer, primary_key=True)
+    Status = db.Column(db.String(200), primary_key=True)
+
+    def __init__(self, CourseID, PrereqID):
+        self.CourseID = CourseID
+        self.PrereqID = PrereqID
+    
+    def json(self):
+        return{"CourseID": self.CourseID, "PrereqID": self.PrereqID}
 
 
 
@@ -58,20 +70,26 @@ def get_course(CourseID):
 def create_course():
     data = request.get_json()
     course = Course(**data)
-    # print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     print(data)
     CourseTitle = data['CourseTitle']
     CourseDescription = data['CourseDescription']
+    prereqList = data['prereqList']
 
     db.session.add(course)
     db.session.commit()
+
+    for prereq in prereqList:
+        coursePrereq = CoursePrereq(course.CourseID, prereq)
+        print(coursePrereq)
+        db.session.add(coursePrereq)
+        db.session.commit()
      
     return jsonify(
         {
             "code": 201,
-            "message": 
+            "message": "Success!"
         }
-    ), 201
+    ), 201        
 
 
 
