@@ -28,6 +28,7 @@ class course(db.Model):  # create entities
         self.CourseID = CourseID
         self.CourseTitle = CourseTitle
         self.CourseDescription = CourseDescription
+        self.Badge = Badge
 
     def json(self):
         return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge}
