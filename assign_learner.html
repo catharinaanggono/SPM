@@ -203,7 +203,8 @@
                   <br>
                  
                   <span>Selected engineers</span>
-                  
+                  <br>
+                  <span id='error' style="color: #FF2E2E;"></span>
                   <br>
                   <table id='selected' style="width: 100%;">
                     <tr>
@@ -529,6 +530,7 @@
       // }
 
       function remove(data, rw){
+
         //getting userlist of engineers that are not selected from the localstorage 
         var user_list_local = JSON.parse(localStorage.getItem("user_list_notchecked"));
         //console.log(user_list_local)
@@ -605,11 +607,31 @@
               console.log(data.data)
               
             }else if (this.readyState == 4 && this.status == 500) {
-
+              //error 500 if there some selected learners has already been enrolled into the class before
+              document.getElementById("error").innerHTML = ""
               var data = JSON.parse(this.responseText);
-              console.log(data.message)
-              console.log(data.data)
+              var msg = data.message
+              var engineer_enrolled_list = data.data
 
+              //console.log(msg)
+              //console.log(engineer_enrolled_list)
+
+              document.getElementById("error").innerHTML = 'Learners with the follow ID(s) has already been enrolled into this class: '
+
+              for(i in engineer_enrolled_list){
+                var id  = engineer_enrolled_list[i].LearnerID;
+                //check if the id is the last one in the list, if yes, then don't have to add another comma
+                if(i != engineer_enrolled_list.length-1){
+                  document.getElementById("error").innerHTML += `${id}, `
+                }else{
+                  document.getElementById("error").innerHTML += `${id} `
+                }
+              }
+            }else{
+              document.getElementById("error").innerHTML = ""
+              var data = JSON.parse(this.responseText);
+              var msg = data.message
+              document.getElementById("error").innerHTML = `${msg}`
             }
         };
         request.open("POST", "http://localhost:5200/assign_learners")
