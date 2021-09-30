@@ -278,10 +278,11 @@ def get_all_courses(UserID):
                 if [a_class.CourseID, a_class.ClassID] in applied_courses:
                     a_class.GreyOut = True
                     a_class.Status = 'applied'
-                currentlyEnrolled = ClassTaken.query.filter(CourseID == CourseID, a_class.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus == "enrolled") # check remaining class sizes
+                currentlyEnrolled = ClassTaken.query.filter(CourseID == a_class.CourseID, ClassTaken.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus == "enrolled") # check remaining class sizes
                 totalEnrolled = currentlyEnrolled.count()
                 if totalEnrolled < a_class.ClassSize and a_class.CourseID == a_course.CourseID:
                     a_class.RemainingSlot = a_class.ClassSize - totalEnrolled
+                    print(a_class.RemainingSlot)
                     a_class.TrainerList = trainerList
                     shown_classes.append(a_class)
                 trainerList = []
