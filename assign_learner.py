@@ -203,6 +203,11 @@ def assign_learners():
         "data": output,
         "message": "Engineers has been successfully applied for the course"
         }), 200
+    else:
+        return jsonify({
+        "code": 500,
+        "message": "There is no enough slot for the class"
+        }), 500
                 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5200, debug=True)

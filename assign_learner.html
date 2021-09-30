@@ -205,7 +205,7 @@
                   <span>Selected engineers</span>
                   
                   <br>
-                  <table id='selected'>
+                  <table id='selected' style="width: 100%;">
                     <tr>
                       <th>Name</th>
                       <th>Position</th>
@@ -348,6 +348,29 @@
       request.setRequestHeader("Content-type", "application/json");
       request.send(JSON.stringify(send_value))
 
+      function engineer(engineer_list){
+        document.getElementById("engineerlist").innerHTML = `<tr>
+                                                              <th>Name</th>
+                                                              <th>Position</th>
+                                                              <th>UserID</th>
+                                                              </tr>`;
+        for(i in engineer_list){
+          //console.log(engineer_list[i])
+          var id = engineer_list[i].UserID;
+          var name = engineer_list[i].UserName;
+          var userType = engineer_list[i].UserType;
+          document.getElementById("engineerlist").innerHTML += `<tr><td>
+                                                                  <input type="checkbox" id="${id}" name="${name}" value="${name}" class="${userType}" onchange='checked_name(this)'">
+                                                                  <label for="${name}">${name}</label>
+                                                                </td>
+                                                                <td>
+                                                                  ${userType}
+                                                                </td><td>
+                                                                  ${id}
+                                                                </td></tr>`
+        }
+      }
+
       //to move checked name into selected section
       function checked_name(checkbox){
 
@@ -385,12 +408,16 @@
                                                                 ${id}
                                                               </td>
                                                               <td>
-                                                                <img src='img/cross.png' onclick='remove(document.getElementById(${id}), this)'>
+                                                                <button id='remove' class="btn btn-primary btn-lg" onclick='remove(document.getElementById(${id}), this)'>Remove</button>
                                                               </td>
                                                               </tr>`
             //delete row that was selected
-            table.deleteRow(i)                                                  
-          //remove the checked user_list from the user_list and store it in localstorage
+            table.deleteRow(i)
+            row_count --;
+            i = i -1;
+            
+
+          //remove the checked user from the user_list and store it in localstorage
           for(i in user_list_local){
             if(user_list_local[i].UserID == id){
               user_list_local.splice(i,1)
@@ -506,10 +533,10 @@
         var user_list_local = JSON.parse(localStorage.getItem("user_list_notchecked"));
         //console.log(user_list_local)
         
-        console.log(data)
+        //console.log(data)
         //get all the variables from data
         var obj = {"UserID": data.id, "UserName": data.getAttribute('value'), "UserType": data.className}
-        console.log(obj)
+        //console.log(obj)
         user_list_local.push(obj)
 
         //sort the localstorage into ordered value
@@ -518,9 +545,13 @@
         });
         localStorage.setItem("user_list_notchecked", JSON.stringify(user_list_local))
 
+        engineer(user_list_local)
+
         //remove the current row
         var row = rw.parentNode.parentNode;
         row.parentNode.removeChild(row);
+
+
       }
 
 
@@ -549,7 +580,7 @@
           //selected_engineers.push(obj)
 
           //[CourseID, ClassID, LearnerID, ApplicationStatus]
-          learner_details.push([1,1, details.id, "Applied"])
+          learner_details.push([1,1, details.id, "enrolled"])
 
           // courseid_list.push(1)
           // classid_list.push(1)
