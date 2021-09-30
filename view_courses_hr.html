@@ -24,6 +24,21 @@
       .greyout{
         pointer-events: none;
       }
+
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td, th {
+        text-align: left;
+      }
+
+      .search {
+        text-align: center;
+      }
+
     </style>
   </head>
   <body>
@@ -108,7 +123,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12 text-left section-heading probootstrap-animate">
-              <h1>Our Courses</h1>
+              <h1>Courses</h1>
             </div>
           </div>
         </div>
@@ -118,9 +133,41 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12">
-              <div class="probootstrap-flex-block">
+              <!--<div class="probootstrap-flex-block">-->
                 <div class="probootstrap-text probootstrap-animate">
-                  <div class="text-uppercase probootstrap-uppercase">Featured Course</div>
+                  <!--<div class="text-uppercase probootstrap-uppercase">All Courses</div>-->
+
+                  <div class="search">
+                    <input name="searchbox" type="text" size="80" placeholder="Search Courses (Name/ ID)" style="text-align: center;">
+                  </div>
+
+                  <br><br>
+
+                  <p style="float: right;"><a href="#" class="btn btn-primary">Create</a></p>
+
+                  <br>
+                  <h3>List of Courses</h3>
+                  <!--<div class="text-uppercase probootstrap-uppercase">List of Courses</div>-->
+                  <br>
+
+                  <!--scrolling text-->
+                  <div id="div1" style="height: 300px;position:relative;">
+                    <div id="div2" style="max-height:100%;overflow:auto;">
+                      <div id="div3" style="height:1500px;">
+                        <table id='engineerlist'>
+                          <tr><div style="font-weight: 200;"></div>
+                            <td>Courses</td>
+                            <td>CourseID</td>
+
+                            <th> </th>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+
+
                   <h3>Chemical Engineering</h3>
                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis explicabo veniam labore ratione illo vero voluptate a deserunt incidunt odio aliquam commodi blanditiis voluptas error non rerum temporibus optio accusantium!</p>
                   <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">2,928 students enrolled</span></p>
