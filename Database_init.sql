@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS classLearner(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
     LearnerID INT NOT NULL,
-    ApplicationStatus TEXT NOT NULL, -- applied, enrolled, rejected
+    ApplicationStatus TEXT NOT NULL, -- applied, enrolled, rejected, failed, ongoing, completed
     PRIMARY KEY (ClassID, CourseID, LearnerID),
     FOREIGN KEY (CourseID, ClassID) REFERENCES class(CourseID, ClassID),
     FOREIGN KEY (LearnerID) REFERENCES userTable(UserID) 
