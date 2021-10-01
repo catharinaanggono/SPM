@@ -238,9 +238,10 @@ def get_all_courses(UserID):
     takenClasses = ClassTaken.query.filter_by(LearnerID = UserID)
     applied_courses = []
     prereq_courses = []
-    takenPrereq = LearnerCourse.query.filter_by(LearnerID = UserID)
+    takenPrereq = ClassTaken.query.filter(ClassTaken.ApplicationStatus == 'completed', ClassTaken.LearnerID == UserID)
     for prereq in takenPrereq:
         prereq_courses.append(prereq.CourseID)
+    print(prereq_courses)
     for a_class in takenClasses:
         if a_class.ApplicationStatus == 'enrolled': # check if user already enrolled
             enrolled_courses.append(a_class.CourseID)
