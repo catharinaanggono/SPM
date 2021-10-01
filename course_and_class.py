@@ -238,7 +238,7 @@ def get_all_courses(UserID):
     takenClasses = ClassTaken.query.filter_by(LearnerID = UserID)
     applied_courses = []
     prereq_courses = []
-    takenPrereq = LearnerCourse.query.filter_by(LearnerID = UserID)
+    takenPrereq = ClassTaken.query.filter(ClassTaken.ApplicationStatus == 'completed', ClassTaken.LearnerID == UserID)
     for prereq in takenPrereq:
         prereq_courses.append(prereq.CourseID)
     for a_class in takenClasses:
@@ -246,47 +246,46 @@ def get_all_courses(UserID):
             enrolled_courses.append(a_class.CourseID)
         elif a_class.ApplicationStatus == 'applied':
             applied_courses.append([a_class.CourseID, a_class.ClassID])
-    courses = course.query.filter(course.CourseID not in enrolled_courses)
+    courses = course.query.filter(~course.CourseID.in_(enrolled_courses), ~course.CourseID.in_(prereq_courses)) # '~' refers to not (a negate function)
     class_per_course = []
     for a_course in courses:
+        print(a_course.CourseID)
         shown_classes = []
         prereqList = []
-        if a_course.CourseID not in enrolled_courses:
-            CourseID = a_course.CourseID
-            course_prereqs = course_prereq.query.filter_by(CourseID = CourseID)
-            for a_prereq in course_prereqs:
-                prereqName = course.query.filter_by(CourseID = a_prereq.PrereqID).first().CourseTitle
-                prereqList.append(prereqName)
-                if a_prereq.PrereqID not in prereq_courses:
-                    a_course.GreyOut = True
-            a_course.prereqList = prereqList
-            now = datetime.date(datetime.today())
-            classes = course_class.query.filter(CourseID == a_course.CourseID, now < course_class.RegistrationEndDate, now > course_class.RegistrationStartDate) # check registration date
-            for a_class in classes:
-                '''
-                CHECK IF ALREADY APPLIED --> GREY OUT AND SHOW 'APPLIED'
-                '''
-                currentTrainers = TrainerClass.query.filter_by(CourseID = a_class.CourseID).filter_by(ClassID = a_class.ClassID)
-                trainerList = []
-                if currentTrainers.count() > 0:
-                    for a_trainer in currentTrainers:
-                        trainerInfo = a_trainer.json()
-                        trainerObj = User.query.filter(User.UserID == trainerInfo['TrainerID'])
-                        for item in trainerObj:
-                            trainerName = item.json()['UserName']
-                        trainerList.append(trainerName)
-                if [a_class.CourseID, a_class.ClassID] in applied_courses:
-                    a_class.GreyOut = True
-                    a_class.Status = 'applied'
-                currentlyEnrolled = ClassTaken.query.filter(CourseID == a_class.CourseID, ClassTaken.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus == "enrolled") # check remaining class sizes
-                totalEnrolled = currentlyEnrolled.count()
-                if totalEnrolled < a_class.ClassSize and a_class.CourseID == a_course.CourseID:
-                    a_class.RemainingSlot = a_class.ClassSize - totalEnrolled
-                    print(a_class.RemainingSlot)
-                    a_class.TrainerList = trainerList
-                    shown_classes.append(a_class)
-                trainerList = []
-            class_per_course.append([a_course, shown_classes])
+        CourseID = a_course.CourseID
+        course_prereqs = course_prereq.query.filter_by(CourseID = CourseID)
+        for a_prereq in course_prereqs:
+            prereqName = course.query.filter_by(CourseID = a_prereq.PrereqID).first().CourseTitle
+            prereqList.append(prereqName)
+            if a_prereq.PrereqID not in prereq_courses:
+                a_course.GreyOut = True
+        a_course.prereqList = prereqList
+        now = datetime.date(datetime.today())
+        classes = course_class.query.filter(CourseID == a_course.CourseID, now < course_class.RegistrationEndDate, now > course_class.RegistrationStartDate) # check registration date
+        for a_class in classes:
+            '''
+            CHECK IF ALREADY APPLIED --> GREY OUT AND SHOW 'APPLIED'
+            '''
+            currentTrainers = TrainerClass.query.filter_by(CourseID = a_class.CourseID).filter_by(ClassID = a_class.ClassID)
+            trainerList = []
+            if currentTrainers.count() > 0:
+                for a_trainer in currentTrainers:
+                    trainerInfo = a_trainer.json()
+                    trainerObj = User.query.filter(User.UserID == trainerInfo['TrainerID'])
+                    for item in trainerObj:
+                        trainerName = item.json()['UserName']
+                    trainerList.append(trainerName)
+            if [a_class.CourseID, a_class.ClassID] in applied_courses:
+                a_class.GreyOut = True
+                a_class.Status = 'applied'
+            currentlyEnrolled = ClassTaken.query.filter(CourseID == a_class.CourseID, ClassTaken.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus == "enrolled") # check remaining class sizes
+            totalEnrolled = currentlyEnrolled.count()
+            if totalEnrolled < a_class.ClassSize and a_class.CourseID == a_course.CourseID:
+                a_class.RemainingSlot = a_class.ClassSize - totalEnrolled
+                a_class.TrainerList = trainerList
+                shown_classes.append(a_class)
+            trainerList = []
+        class_per_course.append([a_course, shown_classes])
     actual_courses = [] 
     # By logic, the step from here below is not needed, but SQLAlchemy magic works in a very weird way :).. -- Each course may have been reset to its default values, so classList is gone except for the last course, so I had to repopulate myself courses myself.
     for i in range(0, len(class_per_course)):
