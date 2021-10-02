@@ -38,11 +38,11 @@ CREATE TABLE IF NOT EXISTS LearnerCourse(
 CREATE table if not exists class(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL AUTO_INCREMENT,
-    StartDate DATE NOT NULL,
+    StartDate DATETIME NOT NULL,
     EndDate DATE NOT NULL,
     ClassSize INT NOT NULL,
-    RegistrationStartDate DATE NOT NULL,
-    RegistrationEndDate DATE NOT NULL,
+    RegistrationStartDate DATETIME NOT NULL,
+    RegistrationEndDate DATETIME NOT NULL,
     PRIMARY KEY (ClassID),
     FOREIGN KEY (CourseID) REFERENCES course(CourseID)
 );
