@@ -25,17 +25,17 @@ class Course(db.Model):
     CourseDescription = db.Column(db.String(65535), nullable=False)
     Badge = db.Column(db.String(65535), nullable=False)
 
-    def __init__(self, CourseTitle, CourseDescription, Badge, prereqList):
+    def __init__(self, CourseTitle, CourseDescription, Badge):
         # self.CourseID = CourseID
         self.CourseTitle = CourseTitle
         self.CourseDescription = CourseDescription
         self.Badge = Badge
-        self.prereqList = []
+        # self.prereqList = []
 
-    def json(self):
-        if not hasattr(self, 'prereqList'):
-            self.prereqList = []
-        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge, "prereqList": self.prereqList}
+    # def json(self):
+    #     if not hasattr(self, 'prereqList'):
+    #         self.prereqList = []
+    #     return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge, "prereqList": self.prereqList}
 
 class CoursePrereq(db.Model):
     __tablename__ = 'coursePrereq'
@@ -50,6 +50,31 @@ class CoursePrereq(db.Model):
     
     def json(self):
         return{"CourseID": self.CourseID, "PrereqID": self.PrereqID}
+
+class Class(db.Model):
+    __tablename__ = 'class'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    ClassSize = db.Column(db.Integer, nullable=False)
+    StartDate = db.Column(db.DateTime, nullable=False)
+    EndDate = db.Column(db.DateTime, nullable=False)
+    RegistrationStartDate = db.Column(db.DateTime, nullable=False)
+    RegistrationEndDate = db.Column(db.DateTime, nullable=False)
+
+
+    def __init__(self, ClassID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize):
+        # self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.ClassSize = ClassSize
+        self.StartDate = StartDate
+        self.EndDate = EndDate
+        self.RegistrationEndDate = RegistrationEndDate
+        self.RegistrationStartDate = RegistrationStartDate
+
+    def json(self):
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "ClassSize": self.ClassSize, "StartDate": self.StartDate, "EndDate": self.EndDate, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate}
+
 
 
 
@@ -69,20 +94,23 @@ def get_course(CourseID):
 @app.route("/create_course", methods=["POST"])
 def create_course():
     data = request.get_json()
-    course = Course(**data)
     print(data)
     CourseTitle = data['CourseTitle']
     CourseDescription = data['CourseDescription']
+    Badge = data['Badge']
     prereqList = data['prereqList']
+    course = Course(CourseTitle, CourseDescription, Badge)
 
     db.session.add(course)
     db.session.commit()
+
 
     for prereq in prereqList:
         coursePrereq = CoursePrereq(course.CourseID, prereq)
         print(coursePrereq)
         db.session.add(coursePrereq)
-        db.session.commit()
+
+    db.session.commit()
      
     return jsonify(
         {
@@ -91,6 +119,25 @@ def create_course():
         }
     ), 201        
 
+
+@app.route("/create_class", methods=["POST"])
+def create_class():
+    data = request.get_json()
+    cl = Class(**data)
+    print(data)
+    ClassSize = data['ClassSize']
+    StartDate = data['StartDate']
+    EndDate = data['EndDate']
+
+    db.session.add(cl)
+    db.session.commit()
+     
+    return jsonify(
+        {
+            "code": 201,
+            "message": "Class is successfully created"
+        }
+    ), 201       
 
 
     # if (course.query.filter_by(CourseTitle=CourseTitle).first()):
