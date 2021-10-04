@@ -1,9 +1,10 @@
-from flask import Flask, json, request, jsonify
+from flask import Flask, json, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
 from dotenv import load_dotenv
 from datetime import datetime
+import os
 load_dotenv()
 
 app = Flask(__name__)
@@ -42,6 +43,52 @@ class course(db.Model):
         return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge, "classList": self.classList, "GreyOut": self.GreyOut, 'prereqList': self.prereqList}
 
 
+class SectionMaterial(db.Model):
+    __tablename__ = 'sectionMaterial'
+
+    CourseID = db.Column(db.Integer)
+    ClassID = db.Column(db.Integer)
+    SectionID = db.Column(db.Integer)
+    MaterialID = db.Column(db.Integer, primary_key=True)
+    MaterialContent = db.Column(db.Text)
+    '''
+    CourseID INT NOT NULL,
+    ClassID INT NOT NULL,
+    SectionID INT NOT NULL,
+    MaterialID INT NOT NULL AUTO_INCREMENT,
+    MaterialContent TEXT NOT NULL,
+    '''
+
+    def __init__(self, CourseID, ClassID, SectionID, MaterialID, MaterialContent):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.SectionID = SectionID
+        self.MaterialID = MaterialID
+        self.MaterialContent = MaterialContent
+
+    def create_path(self):
+
+        course_path = 'course_material/' + str(self.CourseID)
+        class_path = 'course_material/' + str(self.CourseID) + '/' + str(self.ClassID)
+        section_path = 'course_material/' + str(self.CourseID) + '/' + str(self.ClassID) + '/' + str(self.SectionID)
+
+        course_path_exists = os.path.isdir(course_path)
+        class_path_exists = os.path.isdir(class_path)
+        section_path_exists = os.path.isdir(section_path)
+
+        if not course_path_exists:
+            os.mkdir(course_path)
+
+        if not class_path_exists:
+            os.mkdir(class_path)
+
+        if not section_path_exists:
+            os.mkdir(section_path)
+            
+
+    
+    
+    
 
 @app.route('/courses/<string:CourseID>')
 def get_course(CourseID):
@@ -89,6 +136,24 @@ class course_class(db.Model):
         if not hasattr(self, 'Status'):
             self.Status = ''
         return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate, "GreyOut": self.GreyOut, "RemainingSlot": self.RemainingSlot, "TrainerList": self.TrainerList, "Status": self.Status}
+
+@app.route('/uploader/<string:CourseID>/<string:ClassID>/<string:SectionID>', methods = ['GET', 'POST'])
+def upload_file(CourseID, ClassID, SectionID):
+
+    # How to get courseid, classid, sectionid from page?
+
+    # see flask render_template()
+
+   if request.method == 'POST':
+      f = request.files.getlist("file")
+      for a_file in f:
+          # 1. make an object out of each file with a_file.filename as MaterialContent
+          # 2. call create_path() for the first object
+          # 3. Insert the file into course_material/
+          # 4. Make a call to database to record the file
+          path = 'course_material/' + None # Will change None to path for CourseID, ClassID, and SectionID
+          a_file.save(path + a_file.filename)
+      return 'file uploaded successfully'
 
 @app.route('/classes')
 def get_all_classes():
@@ -329,6 +394,14 @@ def self_enrol():
         }
     ), 201
     pass
+
+
+'''testing render_template'''
+
+@app.route('/test-render-template/<CourseID>/<ClassID>/<SectionID>')
+def test_template(CourseID, ClassID, SectionID):
+    return render_template('about.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
