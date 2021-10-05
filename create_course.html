@@ -6,12 +6,20 @@
     <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
+
+    
+    <!-- <link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/> -->
+
     
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="css/styles-merged.css">
     <link rel="stylesheet" href="css/style.min.css">
     <link rel="stylesheet" href="css/custom.css">
-    <link href="bootstrap-tokenfield.css" type="text/css" rel="stylesheet">
+
+    <!-- Include Twitter Bootstrap and jQuery: -->
+    <!-- <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/> -->
+    
+
 
     <!-- Font Awesome -->
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"> -->
@@ -130,29 +138,27 @@
         <div class="container">
             <form>
                 <div class="form-group">
-                  <label for="courseform">Course Name</label>
-                  <input type="text" class="form-control" id="courseform" placeholder="Course Name">
+                  <label for="courseform">Course Title</label>
+                  <input type="text" class="form-control" id="courseTitle" placeholder="Course Title">
                 </div>
 
                 <div class="form-group">
                   <label for="courseform">Course Description</label>
-                  <textarea class="form-control" id="courseform" rows="3" placeholder="Course Description"></textarea>
+                  <textarea class="form-control" id="courseDesc" rows="3" placeholder="Course Description"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="courseform">Prereq</label>
-                    <input type="text" class="form-control" id="tokenfield" />
-                    <select class="select" multiple data-mdb-filter="true">
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                        <option value="4">Four</option>
-                        <option value="5">Five</option>
-                        <option value="6">Six</option>
-                        <option value="7">Seven</option>
-                        <option value="8">Eight</option>
-                        <option value="9">Nine</option>
-                        <option value="10">Ten</option>
+                    <div class="example">
+                      
+                      <select class="form-select" multiple aria-label="multiple select example" id="prereq" size="5">
+                        
                       </select>
+
+                      <!-- <select id="prereq" multiple="multiple">
+                        
+                      </select> -->
+                      
+                  </div>
 
                 </div>
 
@@ -171,7 +177,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12">
-              <a href="#" role="button" class="btn btn-primary btn-lg btn-ghost probootstrap-animate" data-animate-effect="fadeInLeft">Create</a>
+              <a href="#" role="button" class="btn btn-primary btn-lg btn-ghost probootstrap-animate" data-animate-effect="fadeInLeft" onclick="create_course()">Create</a>
             </div>
           </div>
         </div>
@@ -239,30 +245,100 @@
     </div>
     <!-- END wrapper -->
     
-
-    <script type="text/javascript" src="bootstrap-tokenfield.min.js" charset="UTF-8"></script>
-
+    <!-- <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script> -->
+ 
+    <!-- Include the plugin's CSS and JS: -->
+    <!-- <script type="text/javascript" src="js/bootstrap-multiselect.js"></script> -->
+    
     <script src="js/scripts.min.js"></script>
     <script src="js/main.min.js"></script>
     <script src="js/custom.js"></script>
 
-    <!-- JQuery -->
-<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-<!-- Bootstrap tooltips -->
-<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script> -->
-<!-- Bootstrap core JavaScript -->
-<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
-<!-- MDB core JavaScript -->
-<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script> -->
-
+  
+    
     <script>
-     $('#tokenfield').tokenfield({
-  autocomplete: {
-    source: ['red','blue','green','yellow','violet','brown','purple','black','white'],
-    delay: 100
-  },
-  showAutocompleteOnFocus: true
-})
+
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+          var courses = JSON.parse(this.responseText).data.courses;
+          console.log("###################")
+          console.log(courses)
+
+          var prereq_input = '';
+          
+
+          for(course of courses){
+            let courseID = course.CourseID;
+            let courseTitle = course.CourseTitle;
+
+            prereq_input += "<option value='" + courseID + "'>" + courseTitle + " </option>"
+
+          }            
+          
+          document.getElementById("prereq").innerHTML += prereq_input
+
+        }
+
+      };
+      request.open("GET", "http://localhost:5005/courses")
+      request.send();
+
+
+      function create_course(){
+
+        var courseTitle = document.getElementById("courseTitle").value;
+        var courseDesc = document.getElementById("courseDesc").value;
+        var prereq = $('#prereq').val();
+        console.log("###############")
+        console.log(courseTitle)
+        console.log(courseDesc)
+        console.log(prereq)
+
+        // var msg = [];
+
+        // if(courseTitle.length <= 0){
+        //   msg.push("Please fill in the course title");
+        // }
+        // if(courseDesc.length <= 0){
+        //   msg.push("Please fill in the course description");
+        // }
+
+        var send_value = {
+          CourseTitle: courseTitle,
+          CourseDescription: courseDesc,
+          Badge: "python_badge.png",
+          prereqList: prereq
+        }
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+              var data = JSON.parse(this.responseText);
+              console.log(data)
+              
+            }
+        };
+        // console.log(JSON.stringify(send_value))
+        request.open("POST", "http://localhost:5005/create_course")
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(send_value))
+
+
+        }
+
+      
     </script>
+
+<!-- <script type="text/javascript">
+  $(document).ready(function() {
+      $('#prereq').multiselect({
+          enableHTML: true
+      });
+  });
+</script> -->
   </body>
 </html>
