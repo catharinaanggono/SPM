@@ -59,11 +59,10 @@ class SectionMaterial(db.Model):
     MaterialContent TEXT NOT NULL,
     '''
 
-    def __init__(self, CourseID, ClassID, SectionID, MaterialID, MaterialContent):
+    def __init__(self, CourseID, ClassID, SectionID, MaterialContent):
         self.CourseID = CourseID
         self.ClassID = ClassID
         self.SectionID = SectionID
-        self.MaterialID = MaterialID
         self.MaterialContent = MaterialContent
 
     def create_path(self):
@@ -85,9 +84,64 @@ class SectionMaterial(db.Model):
         if not section_path_exists:
             os.mkdir(section_path)
             
+@app.route('/uploader/<string:CourseID>/<string:ClassID>/<string:SectionID>', methods = ['POST'])
+def add_material(CourseID, ClassID, SectionID):
+    data = request.get_json()
+    for a_link in data:
+        material_content = a_link['content']
+        section_material = SectionMaterial(CourseID, ClassID, SectionID, material_content)
+        db.session.add(section_material)
+    try:
+        db.session.commit()
+    except:
+        return {
+            'code': 500,
+            'message': 'Upload Links Failed'
+        }
+    return {
+        'code': 201,
+        'message': 'Upload Links Sucessful'
+    }
 
+@app.route('/uploader-file/<string:CourseID>/<string:ClassID>/<string:SectionID>', methods = ['POST'])
+def add_material(CourseID, ClassID, SectionID):
+    files = request.files.getlist('file')
+    for file in files:
+        section_material = SectionMaterial(CourseID, ClassID, SectionID, file.filename)
+        section_material.create_path()
+        file.save('course_material/{}/{}/{}/{}'.format(CourseID, ClassID, SectionID, file.filename))
+        db.session.add(section_material)
+    try:
+        db.session.commit()
+    except:
+        return {
+            'code': 500,
+            'message': 'Upload Files Failed'
+        }
+    return {
+        'code': 201,
+        'message': 'Upload Files Sucessful'
+    }
+
+
+def upload_file(CourseID, ClassID, SectionID):
+
+    # How to get courseid, classid, sectionid from page?
+
+    # see flask render_template()
+
+   if request.method == 'POST':
+      f = request.files.getlist("file")
+      for a_file in f:
+          # 1. make an object out of each file with a_file.filename as MaterialContent
+          # 2. call create_path() for the first object
+          # 3. Insert the file into course_material/
+          # 4. Make a call to database to record the file
+          path = 'course_material/' + None # Will change None to path for CourseID, ClassID, and SectionID
+          a_file.save(path + a_file.filename)
+      return 'file uploaded successfully'
     
-    
+
     
 
 @app.route('/courses/<string:CourseID>')
@@ -137,23 +191,7 @@ class course_class(db.Model):
             self.Status = ''
         return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate, "GreyOut": self.GreyOut, "RemainingSlot": self.RemainingSlot, "TrainerList": self.TrainerList, "Status": self.Status}
 
-@app.route('/uploader/<string:CourseID>/<string:ClassID>/<string:SectionID>', methods = ['GET', 'POST'])
-def upload_file(CourseID, ClassID, SectionID):
 
-    # How to get courseid, classid, sectionid from page?
-
-    # see flask render_template()
-
-   if request.method == 'POST':
-      f = request.files.getlist("file")
-      for a_file in f:
-          # 1. make an object out of each file with a_file.filename as MaterialContent
-          # 2. call create_path() for the first object
-          # 3. Insert the file into course_material/
-          # 4. Make a call to database to record the file
-          path = 'course_material/' + None # Will change None to path for CourseID, ClassID, and SectionID
-          a_file.save(path + a_file.filename)
-      return 'file uploaded successfully'
 
 @app.route('/classes')
 def get_all_classes():
@@ -400,7 +438,7 @@ def self_enrol():
 
 @app.route('/test-render-template/<CourseID>/<ClassID>/<SectionID>')
 def test_template(CourseID, ClassID, SectionID):
-    return render_template('about.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
+    return render_template('add-section-material.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
 
 
 if __name__ == '__main__':
