@@ -20,7 +20,11 @@
     <script>
       localStorage.id = 1
     </script>
-
+    <style>
+      .greyout{
+        pointer-events: none;
+      }
+    </style>
   </head>
   <body>
 
@@ -227,21 +231,24 @@
                 </div>
                 <div id="browse-courses" class="tab-pane fade">
                   <div class="row">
-                    <div class="col-sm-12">
-                      <div class="probootstrap-service-2 probootstrap-animate">
-                        <div class="text">
-                          <h3>Application Design</h3>
-                          <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
-                          <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">30 slots available</span></p>
-                        </div>
-                        
-                        <div style='text-align: center; margin: auto;'>
-                          <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start: July 10, 2017</span><br>
-                          <span class="probootstrap-meta"><i class="icon-calendar2"></i> End: July 10, 2017</span>
-                        </div>
-                        
+                      
+
+                      <div id="accordion">
+                        <!-- <div class="card">
+                          <div class="card-header" id="headingThree">
+                            <h5 class="mb-0">
+                              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Collapsible Group Item #3
+                              </button>
+                            </h5>
+                          </div>
+                          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div class="card-body">
+                              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                            </div>
+                          </div>
+                        </div> -->
                       </div>
-                    </div>
                   </div>
         
                   <div class="row">
@@ -646,66 +653,184 @@
     <script src="js/custom.js"></script>
 
     <script>
-      var courseList = []
-      var request = new XMLHttpRequest
-      request.onreadystatechange = function(){
-        if (this.status == 200 && this.readyState == 4){
-          var json = JSON.parse(this.responseText)
-          var data = json.data
-          courseList.push(data.courses)
-        }
-      }
-      request.open('GET', 'http://localhost:5001/courses')
-      request.send()
-
-      var completedList = []
-      var request_completed = new XMLHttpRequest
-      request_completed.onreadystatechange = function(){
-        if (this.status == 200 && this.readyState == 4){
-          var json = JSON.parse(this.responseText)
-          var data = json.data
-          completedList.push(data)
-        }
-        else{
-        }
-      }
-      request_completed.open("GET", 'http://localhost:5002/user/prereq/1') // CHANGE 1 TO UserID
-      request_completed.send()
-
-
-      var coursesShown = []
-      for (var course in courseList){
-        if (!completedList.includes(course)){
-          coursesShown.push(course)
-        }
-      }
-
-      var coursesPrereq = {} // Objects of courses as keys with list of their prereqs as values
-      request_prereq = new XMLHttpRequest
-      request_prereq.onreadystatechange = function(){
-        if (this.status == 200 && this.readyState == 4){
-          var json = JSON.parse(this.responseText)
-          var data = json['data']
-          for (prereq in data['prereqList']){
-            if (prereq['CourseID'] in coursesPrereq){
-              coursesPrereq[prereq['CourseID']].push(prereq['PrereqID'])
+      var UserID = localStorage.id;
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200){
+          var data = JSON.parse(this.responseText).data.courses
+          console.log(data)
+          
+          for (course in data){
+            console.log(course)
+            collapsibleID = data[course].CourseID + data[course].CourseTitle
+            courseTitle = data[course].CourseTitle
+            courseDescription = data[course].CourseDescription     
+            greyout = data[course].GreyOut
+            prereqList = data[course].prereqList
+            prereqHTML = 'Pre-requisities: '
+            prereqCompletedHTML = ''
+            if (greyout){
+              prereqCompletedHTML = 'style="color:red;"'
+            }
+            if (prereqList.length == 0){
+              prereqHTML += 'None'
             }
             else{
-              coursesPrereq[prereq['CourseID']] = [prereq['PrereqID']]
+              for (prereq in prereqList){
+                if (prereq < prereqList.length - 1){
+                  prereqHTML += prereqList[prereq] + ', '
+                }
+                else{
+                  prereqHTML += prereqList[prereq]
+                }
+              }
+            }
+            console.log(greyout)
+            if (greyout){
+              pointer = 'none'
+              opacity = 0.6
+            }
+            else{
+              pointer = 'auto'
+              opacity = 1
+            }
+            
+            document.getElementById('accordion').innerHTML += `
+            <div class="card" style='pointer-events: ${pointer}; opacity:${opacity}'>
+              <div class="card-header" id="heading-${collapsibleID}">
+                <h5 class="mb-0">
+                    <div class="probootstrap-service-2">
+                      <div class="text">
+                        <h3> <b> ${courseTitle} </b> </h3>
+                        <br>
+                        <p>${courseDescription}</p>
+                        <br>
+                        <p ${prereqCompletedHTML}> ${prereqHTML} </p>
+                      </div>
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#${collapsibleID}" aria-expanded="false" aria-controls="${collapsibleID}">
+                          Show Classes
+                      </button>
+                    </div>
+                    
+                </h5>
+              </div>
+              <div id="${collapsibleID}" class="collapse" aria-labelledby="heading-${collapsibleID}" data-parent="#accordion">
+              </div>
+            </div>
+            `
+            if (data[course].classList.length > 0){
+              for (aClass of data[course].classList){
+                classID = "Class " + aClass.ClassID
+                seniorEngineer = aClass.TrainerList
+                availability = aClass.RemainingSlot
+                startDate = new Date(aClass.StartDate)
+                classGreyout = aClass.GreyOut
+                applicationStatus = aClass.Status
+                console.log(applicationStatus)
+                var date = startDate.getDate();
+                var month = startDate.getMonth(); //Be careful! January is 0 not 1
+                var year = startDate.getFullYear();
+                var startDateString = date + "/" +(month + 1) + "/" + year;
+
+                endDate = new Date(aClass.EndDate)
+                var date = endDate.getDate();
+                var month = endDate.getMonth(); //Be careful! January is 0 not 1
+                var year = endDate.getFullYear();
+                var endDateString = date + "/" +(month + 1) + "/" + year;
+                classPeriod = startDateString + ' - ' + endDateString
+                trainerHTML = ''
+                for (let i = 0; i < seniorEngineer.length; i++){
+                  if (i == 0){
+                    trainerHTML += `<tr>
+                      <td style='width:50%' rowspan="${seniorEngineer.length}"> Senior Engineer </td>
+                      <td style='width:50%'> ${seniorEngineer[i]} </td>
+                    </tr>`
+                  }
+                  else{
+                    trainerHTML += `<tr>
+                      <td style='width:50%'> ${seniorEngineer[i]} </td>
+                    </tr>`
+                  }
+                }
+                styleHTML = ''
+                if (classGreyout){
+                  styleHTML += 'pointer-events: none; opacity: 0.4'
+                }
+                appliedHTML = ''
+                disabled = ''
+                if (applicationStatus == 'applied'){
+                  appliedHTML += '<tr> <td style="padding-bottom:20px"> <b> Already Applied </b> </td> </tr>'
+                  disabled = 'disabled'
+                }
+                document.getElementById(`${collapsibleID}`).innerHTML += `
+                
+                <div class="card-body" style="${styleHTML}">
+                  <span style='width:100%'> <b> ${classID} </b> </span>
+                  </br>
+                  </br>
+                  <table style='width:100%'>
+                    ${trainerHTML}
+
+                    <tr>
+                      <td style='width:50%'> Period </td>
+                      <td style='width:50%'> ${classPeriod} </td>
+                    </tr>
+
+                    <tr>
+                      <td style='width:50%'> Availability </td>
+                      <td style='width:50%'> ${availability + '/' + aClass.ClassSize} </td>
+                    </tr>
+                    <tr>
+                      <td style='width:50%;padding-top:30px;'>  </td>
+                    </tr>
+                    ${appliedHTML}
+                  </table>
+                  <button type="button" class="btn btn-primary" ${disabled} onclick="enrolClass(${data[course].CourseID}, ${aClass.ClassID}, ${UserID})"> Enrol </button>
+                  <hr>
+                </div>
+
+                `
+              }
+            }
+            else{
+              document.getElementById(`${collapsibleID}`).innerHTML += `
+                
+                <div class="card-body">
+                  NO CLASSES AVAILABLE FOR THIS COURSE
+                  </br>
+                  </br>
+                </div>
+
+                `
             }
           }
         }
       }
-      request_prereq.open('GET', 'http://localhost:5001/courseprereq')
-      request_prereq.send()
+      request.open('GET', 'http://localhost:5001/courses-all/' + UserID)
+      request.send()
 
-      var notEligible = []
-      for (var course in coursesPrereq){
-        for (prereq in coursesPrereq[course]){
-          if (!completedList.includes(prereq)){
-            notEligible.push(course)
+      function enrolClass(CourseID, ClassID, UserID){
+        console.log("called")
+        var request = new XMLHttpRequest();
+        var send_value = {CourseID: CourseID, ClassID: ClassID, UserID: UserID}
+        request.onreadystatechange = function(){
+          let x = false
+          if (this.status == 201 && this.readyState == 4){
+            x = true
+            if (x){
+            response = JSON.parse(this.responseText)
+            window.alert(response.message)
+            location.reload();
+            }
+            else{
+              window.alert('Something went wrong. Please try again.')
+            }
           }
+          
         }
+        request.open('POST', 'http://localhost:5001/self-enrol')
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(send_value))
       }
 
       /*
@@ -716,7 +841,7 @@
       2. Check for courses completed (so that it won't be shown and to filter out prereqs)
         a. store completed in completedList
         b. store prereqs in coursesPrereq --> an object with CourseID as keys and list of prereqs as values
-      3. Filter courses by prerqes --> store in notEligible
+      3. Filter courses by prereqs --> store in notEligible
       4. Get classes per course -- NOT DONE (Create a dictionary of courses --> Make query to classes --> Include each class into its corresponding course dictionary)
       5. Check Registration date -- NOT DONE (For each class in course dictionary from no. 4, check their registration date, if expired, remove from dictionary)
       6. Check if they have applied previously -- NOT DONE (Make a call to classLearner table (for this particular user) --> For each class in course dictionary from no. 4
@@ -729,7 +854,6 @@
 
       // LEARNER'S ENROLLED COURSES
       var request = new XMLHttpRequest();
-      var UserID = localStorage.id;
 
       request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200){

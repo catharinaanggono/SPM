@@ -525,11 +525,11 @@
             //to see if the status is completed and come out with the list of completed courses
             completed_courses = [];
             for (i in learner_course_obj){
-              if(learner_course_obj[i].Status == "completed"){
-                completed_courses.push(learner_course_obj[i].CourseID) 
+              if(learner_course_obj[i].ApplicationStatus == "completed"){
+                completed_courses.push({"CourseID":learner_course_obj[i].CourseID, "ClassID":learner_course_obj[i].ClassID}) 
               }
             }
-            
+            console.log(completed_courses)
             //send the course list to the get_coursetitle function
             var course_title = get_coursetitle(completed_courses)
 
@@ -540,14 +540,15 @@
             
           } 
       };
-      request.open("GET", "http://localhost:5002/user/1", true);
+      request.open("GET", "http://localhost:5002/user/1", true); //hardcoded userid!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       request.send();
 
 
 
-      function get_coursetitle(id){
+      function get_coursetitle(data){
+        console.log(data)
         var send_value = {
-          CourseID: id
+          data: data
         }
         var request = new XMLHttpRequest();
 
@@ -557,58 +558,48 @@
               var data = JSON.parse(this.responseText);
               console.log(data)
               var course_list = data.data.courses
-              console.log("HERE")
-              console.log(course_list)
+              var classes = data.data.classes
+              //console.log("HERE")
+              //console.log(course_list)
+              //console.log(classes)
 
-              for(obj in course_list){
-                var badge = course_list[obj].Badge;
-                var title = course_list[obj].CourseTitle;
-                
-              // to create more cards with the courses that is completed
-              document.getElementById("user_details").innerHTML += `
-              <div class="col-md-3">
-                <div class="probootstrap-teacher text-center">
-                  <figure class="media">
-                    <img src="img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
-                  </figure>
-                  <div class="text">
-                    <h3>${title}</h3>
-                    <p>Physical Education</p>
-                    <ul class="probootstrap-footer-social">
-                      <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
-                      <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
-                      <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
-                      <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
-                    </ul>
+
+              for(let i=0; i<classes.length; i++){
+                var badge = course_list[i].Badge;
+                var title = course_list[i].CourseTitle;
+                var end_date = new Date(classes[i].EndDate);
+
+                //console.log(course_list[i].CourseTitle)
+                //console.log(classes[i].ClassID)
+                //console.log(end_date.getDate(), end_date.getMonth(), end_date.getFullYear())
+
+                // to create more cards with the courses that is completed
+                document.getElementById("user_details").innerHTML += `
+                <div class="col-md-3">
+                  <div class="probootstrap-teacher text-center">
+                    <figure class="media">
+                      <img src="img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+                    </figure>
+                    <div class="text">
+                      <h3>${title}</h3>
+                      <p>Date of completion: ${end_date.getDate()}-${end_date.getMonth() + 1}-${end_date.getFullYear()}</p>
+                      <p>Physical Education</p>
+                      <ul class="probootstrap-footer-social">
+                        <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+                        <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+                        <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+                        <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              </div>`
+                </div>`
               }
-              
             }
-        };
+          };
         request.open("POST", "http://localhost:5003/courses")
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
       }
-
-      // `<img src="img/${badge}"> <br> ${title}`
-      // aaaaaaaa<div class="col-md-3 col-sm-6">
-      //             <div class="probootstrap-teacher text-center probootstrap-animate">
-      //               <figure class="media">
-      //                 <img src="img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
-      //               </figure>
-      //               <div class="text">
-      //                 <h3>${title}</h3>
-      //                 <p>Physical Education</p>
-      //                 <ul class="probootstrap-footer-social">
-      //                   <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
-      //                   <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
-      //                   <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
-      //                   <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
-      //                 </ul>
-      //               </div>
-      //             </div>
     </script>
 
   </body>
