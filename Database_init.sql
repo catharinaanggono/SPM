@@ -39,7 +39,7 @@ CREATE table if not exists class(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL AUTO_INCREMENT,
     StartDate DATETIME NOT NULL,
-    EndDate DATE NOT NULL,
+    EndDate DATETIME NOT NULL,
     ClassSize INT NOT NULL,
     RegistrationStartDate DATETIME NOT NULL,
     RegistrationEndDate DATETIME NOT NULL,
