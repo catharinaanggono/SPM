@@ -50,45 +50,23 @@ class CoursePrereq(db.Model):
     def json(self):
         return{"CourseID": self.CourseID, "PrereqID": self.PrereqID}
 
-class Class(db.Model):
-    __tablename__ = 'class'
 
-    CourseID = db.Column(db.Integer, primary_key=True)
-    ClassID = db.Column(db.Integer, primary_key=True)
-    ClassSize = db.Column(db.Integer, nullable=False)
-    StartDate = db.Column(db.DateTime, nullable=False)
-    EndDate = db.Column(db.DateTime, nullable=False)
-    RegistrationStartDate = db.Column(db.DateTime, nullable=False)
-    RegistrationEndDate = db.Column(db.DateTime, nullable=False)
+@app.route('/courses')
+def get_all_courses():
+    courses = Course.query.all()
+        
+    if len(courses):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "courses": [course.json() for course in courses]
+            }
+        }), 200
+    return jsonify({
+        "code": 404,
+        "message": "There are no courses."
+    }), 404
 
-
-    def __init__(self, ClassID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize):
-        # self.CourseID = CourseID
-        self.ClassID = ClassID
-        self.ClassSize = ClassSize
-        self.StartDate = StartDate
-        self.EndDate = EndDate
-        self.RegistrationEndDate = RegistrationEndDate
-        self.RegistrationStartDate = RegistrationStartDate
-
-    def json(self):
-        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "ClassSize": self.ClassSize, "StartDate": self.StartDate, "EndDate": self.EndDate, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate}
-
-
-
-
-# @app.route('/courses/<string:CourseID>')
-# def get_course(CourseID):
-#     if (Course.query.filter_by(CourseID=CourseID).first()):
-#         return jsonify({
-#             "code": 200,
-#             "message": "Course exists" 
-#         }), 201
-#     else:
-#         return jsonify({
-#             "code": 404,
-#             "message": "Course doesn't exist"
-#         }), 404
 
 @app.route("/create_course", methods=["POST"])
 def create_course():
@@ -117,42 +95,6 @@ def create_course():
             "message": "Course is successfully created"
         }
     ), 200
-
-@app.route('/courses')
-def get_all_courses():
-    courses = Course.query.all()
-        
-    if len(courses):
-        return jsonify({
-            "code": 200,
-            "data": {
-                "courses": [course.json() for course in courses]
-            }
-        }), 200
-    return jsonify({
-        "code": 404,
-        "message": "There are no courses."
-    }), 404
-
-
-# @app.route("/create_class", methods=["POST"])
-# def create_class():
-#     data = request.get_json()
-#     cl = Class(**data)
-#     print(data)
-#     ClassSize = data['ClassSize']
-#     StartDate = data['StartDate']
-#     EndDate = data['EndDate']
-
-#     db.session.add(cl)
-#     db.session.commit()
-     
-#     return jsonify(
-#         {
-#             "code": 201,
-#             "message": "Class is successfully created"
-#         }
-#     ), 201       
 
 
 if __name__ == '__main__':
