@@ -149,7 +149,7 @@
               <button onclick='addLink()'> Add More Links </button>
             </div>
           </div>
-          <button class='btn-primary'> Add Content </button>
+          <button class='btn-primary' onclick='submit()'> Add Content </button>
         </div>
       </section>
       
@@ -255,12 +255,40 @@
 
         for (let i = 1; i <= counter; i++){
           var link = document.getElementById(`link-${i}`).value
-          var title = document.getElementById(`title=${i}`).value
-          element = `<a href='${link}'> ${title} </a>`
-          linkList.push(element)
+          var title = document.getElementById(`title-${i}`).value
+          element = {'title': title, 'link': link}
+          if (link != ''){
+            linkList.push(element)
+          }
         }
         console.log(linkList)
+        if (linkList.length > 0){
+          request = new XMLHttpRequest()
+          request.onreadystatechange = function(){
+
+          }
+          request.open("POST", `http://localhost:5001/uploader/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}` )
+          request.setRequestHeader("Content-type", "application/json");
+          request.send(JSON.stringify(linkList))
+        }
+
+        // SENDING FILE
+        files = document.getElementById('file').files
+        formData = new FormData()
+        for (let i = 0; i < files.length; i++){
+          fileName = files.item(i).name
+          file = files.item(i)
+          formData.append(i, file, fileName)
+        }
+        console.log(formData)
+        request_file = new XMLHttpRequest()
+        
+        request_file.open("POST", `http://localhost:5001/uploader-file/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}`)
+        request_file.send(formData)
+      
       }
+
+
     </script>
   </body>
 </html>
