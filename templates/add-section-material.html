@@ -118,15 +118,6 @@
         <div class='container' id='input-form'>
           <div class='row'>
             <div class='col-md-3'>
-              <h3> Section Name: </h3>
-            </div>
-            <div class='col-md-6'>
-              <input type='text' id='section-name' size='50'> 
-            </div>
-          </div>
-
-          <div class='row'>
-            <div class='col-md-3'>
               <h3> Materials: </h3> 
             </div>
             <div class='col-md-6'>
@@ -287,17 +278,30 @@
         // SENDING FILE
         files = document.getElementById('file').files
         formData = new FormData()
+        var allowedFiles = ['pdf', 'mp4', 'docx', 'pptx', 'doc', 'ppt']
+        var allowed = true
         for (let i = 0; i < files.length; i++){
           fileName = files.item(i).name
-          file = files.item(i)
-          formData.append(i, file, fileName)
+          fileExtension = fileName.split('.')[fileName.length - 1]
+          if (!(allowedFiles.includes(fileExtension))){
+            allowed = false
+          }
         }
-        console.log(formData)
-        request_file = new XMLHttpRequest()
-        
-        request_file.open("POST", `http://localhost:5001/uploader-file/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}`)
-        request_file.send(formData)
-      
+        if (allowed){
+          for (let i = 0; i < files.length; i++){
+            fileName = files.item(i).name
+            file = files.item(i)
+            formData.append(i, file, fileName)
+          }
+          console.log(formData)
+          request_file = new XMLHttpRequest()
+          
+          request_file.open("POST", `http://localhost:5001/uploader-file/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}`)
+          request_file.send(formData)
+        }
+        else{
+          window.alert('Some files are not allowed, only ' + allowedFiles.join(', ') + ' are allowed.')
+        }
       }
 
 
