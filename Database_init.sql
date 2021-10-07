@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS section(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
     SectionID INT NOT NULL AUTO_INCREMENT,
+    SectionName TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (SectionID),
     FOREIGN KEY (CourseID) REFERENCES class(CourseID),
     FOREIGN KEY (ClassID) REFERENCES class(ClassID)
