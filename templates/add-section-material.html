@@ -149,7 +149,13 @@
               <button onclick='addLink()'> Add More Links </button>
             </div>
           </div>
-          <button class='btn-primary' onclick='submit()'> Add Content </button>
+        </div>
+        <div class='container'>
+          <div class='row'>
+            <div class='col-md-3'>
+              <button class='btn btn-primary' onclick='submit()'> Add Content </button>
+            </div>
+          </div>
         </div>
       </section>
       
@@ -239,17 +245,23 @@
       var counter = 1
       function addLink(){
         counter += 1
-        document.getElementById('input-form').innerHTML += ` <div class='row' style='margin-bottom:2em;'>
-            <div class='col-md-3'>
-              
-            </div>
-            <div class='col-md-9'>
-              <input type='text' placeholder='Title' id='title-${counter}'>
-              <input type='text' placeholder='Link' size='50' id='link-${counter}'>
-            </div>
-          </div>`
-      }
+        
+        var divNode = document.createElement('div')
+        divNode.className = "row"
+        divNode.style = "margin-bottom:2em;"
+        divNode.innerHTML += `
+          <div class='col-md-3'>
+            
+          </div>
+          <div class='col-md-9'>
+            <input type='text' placeholder='Title' id='title-${counter}'>
+            <input type='text' placeholder='Link' size='50' id='link-${counter}'>
+          </div>
+        `
+        document.getElementById('input-form').appendChild(divNode)
+        
 
+      }
       function submit(){
         var linkList = []
 
