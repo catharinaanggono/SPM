@@ -53,25 +53,47 @@ class classLearner(db.Model):
 
 @app.route('/learner_distribution_chart/<string:ClassID>')
 def distribution(ClassID):
+    #get all the learnerID using the classID
     learners = classLearner.query.filter_by(ClassID = ClassID).all()
+
+    #the list of learners ID in the class
     learnerIDs = []
+    course_status = []
     for learner in learners:
         learnerIDs.append(learner.json()['LearnerID'])
+        course_status.append(learner.json()['ApplicationStatus'])
+    
+    #______________________________________________________________________Distribution chart_____________________
 
-    #print(learnerIDs)
+    #filtering to get user type from the learnerID list
     users = User.query.filter(User.UserID.in_(learnerIDs))
 
-    output = {}
+
+    #output to get the number of usertype in the class
+    user_output = {}
     for user in users:
-        if user.json()['UserType'] in output:
-            output[user.json()['UserType']] += 1
+        if user.json()['UserType'] in user_output:
+            user_output[user.json()['UserType']] += 1
         else:
-            output[user.json()['UserType']] = 1
+            user_output[user.json()['UserType']] = 1
     # print(output)
+
+    #______________________________________________________________________Number of learners completed the course chart_____________________
+
+    status_output = {}
+    for status in course_status:
+        if status in status_output:
+            status_output[status] += 1
+        else:
+            status_output[status] = 1
+
+    print(status_output)
+    
     return jsonify({
         "code": 200,
         "data": {
-            "user_type_distribution": output,
+            "user_type_distribution": user_output,
+            "course_status": status_output
         }
     })
 

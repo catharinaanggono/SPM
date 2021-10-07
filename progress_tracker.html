@@ -152,7 +152,10 @@
                   </form>
                 </div> -->
                 <div>
-                  <canvas id="myChart"></canvas>
+                  <canvas id="distribution"></canvas>
+                </div>
+                <div>
+                  <canvas id="status"></canvas>
                 </div>
 
               </div>
@@ -248,16 +251,28 @@
         if (this.readyState == 4 && this.status == 200) {
 
           var data = JSON.parse(this.responseText);
-          var obj = data.data.user_type_distribution
+          
 
+          //to get data for the distribution chart
+          var obj_distribution = data.data.user_type_distribution
           var user_type = []
           var number_of_user = []
-          for(i in obj){
+          for(i in obj_distribution){
             user_type.push(i)
-            number_of_user.push(obj[i])
+            number_of_user.push(obj_distribution[i])
           }
 
-          var ctx = document.getElementById('myChart').getContext('2d');
+          //to get data for the status chart
+          var obj_status = data.data.course_status
+          var status_type = []
+          var status_count = []
+          for(k in obj_status){
+            status_type.push(k)
+            status_count.push(obj_status[k])
+          }
+
+          // chart for the engineer distribution
+          var ctx = document.getElementById('distribution').getContext('2d');
           var myChart = new Chart(ctx, {
               type: 'pie',
               data: {
@@ -296,6 +311,54 @@
                 }
               }
           });
+
+          //chart for how many learners has completed the course
+          var ctx = document.getElementById('status').getContext('2d');
+          var myChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                  labels: status_type,
+                  datasets: [{
+                      //label: 'Engineers Distribution',
+                      data: status_count,
+                      backgroundColor: [
+                          'rgba(255, 99, 132, 0.2)',
+                          'rgba(54, 162, 235, 0.2)',
+                          'rgba(255, 206, 86, 0.2)',
+                          'rgba(75, 192, 192, 0.2)',
+                          'rgba(153, 102, 255, 0.2)',
+                          'rgba(255, 159, 64, 0.2)'
+                      ],
+                      borderColor: [
+                          'rgba(255, 99, 132, 1)',
+                          'rgba(54, 162, 235, 1)',
+                          'rgba(255, 206, 86, 1)',
+                          'rgba(75, 192, 192, 1)',
+                          'rgba(153, 102, 255, 1)',
+                          'rgba(255, 159, 64, 1)'
+                      ],
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                plugins: {
+                  legend: {
+                      display: false
+                  },
+                  title: {
+                      display: true,
+                      text: 'Engineers Distribution'
+                  }
+                }
+              }
+          });
+
+
+
+
+
+
+
         } 
       };
       request.open("GET", "http://localhost:5003/learner_distribution_chart/1", true); //hardcoded classID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
