@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS finalQuizQuestionAnswer(
     FOREIGN KEY (CourseID) REFERENCES finalQuizQuestion(CourseID),
     FOREIGN KEY (QuizID) REFERENCES finalQuizQuestion(QuizID),
     FOREIGN KEY (QuestionID) REFERENCES finalQuizQuestion(QuestionID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS question(
     CourseID INT NOT NULL,
