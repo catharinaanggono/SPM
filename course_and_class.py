@@ -83,6 +83,9 @@ class SectionMaterial(db.Model):
 
         if not section_path_exists:
             os.mkdir(section_path)
+    
+    def json(self):
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialID": self.MaterialID, "MaterialContent": self.MaterialContent}
 
 def security_input_check(text):
     return True
@@ -218,9 +221,43 @@ class Section(db.Model):
         self.SectionName = SectionName
     
     def json(self):
-        if hasattr(self, "SectionMaterialList"):
+        if not hasattr(self, "SectionMaterialList"):
             self.SectionMaterialList = []
         return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionName": self.SectionName, "SectionMaterialList": self.SectionMaterialList}
+
+@app.route('/view-section/<string:CourseID>/<string:ClassID>')
+def show_section(CourseID, ClassID):
+    pass
+    sections = Section.query.filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).all()
+    sections_count = Section.query.filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).count()
+    '''
+    CourseID = db.Column(db.Integer)
+    ClassID = db.Column(db.Integer)
+    SectionID = db.Column(db.Integer)
+    MaterialID = db.Column(db.Integer, primary_key=True)
+    MaterialContent = db.Column(db.Text)
+    '''
+    section_list = []
+    print(sections)
+    for i in range(sections_count):
+        section_courseid = sections[i].CourseID
+        section_classid = sections[i].ClassID
+        section_sectionid = sections[i].SectionID
+        section_material_list = SectionMaterial.query.filter_by(SectionID = section_sectionid)
+        material_list = []
+        for a_material in section_material_list:
+            material_list.append(a_material)
+        section_list.append([sections[i], material_list])
+    actual_section = []
+    for i in range(len(section_list)):
+        section_list[i][0].SectionMaterialList = [section_mat.json() for section_mat in section_list[i][1]]
+        actual_section.append(section_list[i][0])    
+    if len(sections) > 0:
+        return {
+            "code": 200,
+            "data": [a_section.json() for a_section in actual_section]
+        }
+    
 
 @app.route('/uploader-section-name/<string:CourseID>/<string:ClassID>/<string:SectionID>', methods=['POST'])
 def update_section_name(CourseID, ClassID, SectionID):
