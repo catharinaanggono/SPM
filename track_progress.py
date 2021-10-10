@@ -50,6 +50,28 @@ class classLearner(db.Model):
     def json(self):
         return{"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus}
 
+class MaterialProgress(db.Model):
+    __tablename__ = 'MaterialProgress'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    SectionID = db.Column(db.Integer, primary_key=True)
+    MaterialID = db.Column(db.Integer, primary_key=True)
+    LearnerID = db.Column(db.Integer, primary_key=True)
+    STATUS = db.Column(db.Integer, nullable=False)
+
+
+    def __init__ (self, CourseID, ClassID, SectionID, MaterialID, LearnerID, STATUS):
+            self.CourseID = CourseID
+            self.ClassID = ClassID
+            self.SectionID = SectionID
+            self.MaterialID = MaterialID
+            self.LearnerID = LearnerID
+            self.STATUS = STATUS
+    
+    def json(self):
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialID": self.MaterialID, "LearnerID": self.LearnerID, "STATUS": self.STATUS}
+
 
 @app.route('/learner_distribution_chart/<string:ClassID>')
 def distribution(ClassID):
@@ -87,13 +109,35 @@ def distribution(ClassID):
         else:
             status_output[status] = 1
 
-    print(status_output)
+    #print(status_output)
+
+    #_____________________________________________________________________Number of completed sections in the class____________________________
     
+
+    sections = MaterialProgress.query.filter_by(ClassID = ClassID).all()
+
+    #section_output = {"Section1":{'completed':0, "imcomplete":0}, "Section2":{...}}
+
+    section_output = {}
+    for section in sections:
+        #print(section.json()['SectionID'])
+        if section.json()['SectionID'] in section_output:
+            if section.json()['STATUS'] == 1:
+                section_output[section.json()['SectionID']]['completed'] += 1
+            else:
+                section_output[section.json()['SectionID']]['incomplete'] += 1
+        else:
+            section_output[section.json()['SectionID']] = {'completed':0, 'incomplete':0}
+
+    #print(section_output)
+
+
     return jsonify({
         "code": 200,
         "data": {
             "user_type_distribution": user_output,
-            "course_status": status_output
+            "course_status": status_output,
+            "section_status": section_output
         }
     })
 

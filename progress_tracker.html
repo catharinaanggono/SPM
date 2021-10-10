@@ -151,13 +151,15 @@
                     </div>
                   </form>
                 </div> -->
-                <div>
-                  <canvas id="distribution"></canvas>
+                
+                <!-- style="position:absolute; top:60px; left:10px; width:500px; height:500px; -->
+                <div class="row">
+                  <div class="col-6" ><canvas id="distribution"></canvas></div>
+                  <div class="col-6"><canvas id="course_status"></canvas></div>
                 </div>
                 <div>
-                  <canvas id="status"></canvas>
+                  <canvas id="section_status"></canvas>
                 </div>
-
               </div>
             </div>
           </div>
@@ -262,7 +264,7 @@
             number_of_user.push(obj_distribution[i])
           }
 
-          //to get data for the status chart
+          //to get data for the course_status chart
           var obj_status = data.data.course_status
           var status_type = []
           var status_count = []
@@ -270,6 +272,21 @@
             status_type.push(k)
             status_count.push(obj_status[k])
           }
+
+          //to get data for the section_status chart
+          var obj_section_status = data.data.section_status
+          var section_label = []
+          var section_value = []
+          for(j in obj_section_status){
+            section_label.push("Section" + j)
+            let completed = obj_section_status[j]['completed']
+            let incomplete = obj_section_status[j]['incomplete']
+            section_value.push([completed, incomplete])
+          }
+
+          console.log(section_label)
+          console.log(section_value)
+
 
           // chart for the engineer distribution
           var ctx = document.getElementById('distribution').getContext('2d');
@@ -313,7 +330,7 @@
           });
 
           //chart for how many learners has completed the course
-          var ctx = document.getElementById('status').getContext('2d');
+          var ctx = document.getElementById('course_status').getContext('2d');
           var myChart = new Chart(ctx, {
               type: 'bar',
               data: {
@@ -347,14 +364,32 @@
                   },
                   title: {
                       display: true,
-                      text: 'Engineers Distribution'
+                      text: 'Learners Status'
                   }
                 }
               }
           });
 
-
-
+          //chart for section status
+          var ctx = document.getElementById('section_status').getContext('2d');
+          var myChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                  labels: section_label,
+                  datasets: getdata(section_value),
+              },
+              options: {
+                plugins: {
+                  legend: {
+                      display: false
+                  },
+                  title: {
+                      display: true,
+                      text: 'Learners Status'
+                  }
+                }
+              }
+          });
 
 
 
@@ -364,19 +399,45 @@
       request.open("GET", "http://localhost:5003/learner_distribution_chart/1", true); //hardcoded classID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       request.send();
 
+      function getdata(data){
+
+        backgroundColor = [
+                          'rgba(255, 99, 132, 0.2)',
+                          'rgba(54, 162, 235, 0.2)',
+                          'rgba(255, 206, 86, 0.2)',
+                          'rgba(75, 192, 192, 0.2)',
+                          'rgba(153, 102, 255, 0.2)',
+                          'rgba(255, 159, 64, 0.2)'
+                      ]
 
 
 
+        let status = ['completed', 'incomplete']
+        let data_list = [[], []] //the first list will be for completed and second will be incomplete
 
+        //i will be for the list array, while k will go more in depth into the array
+        //this is to help make the data into complete and incomplete. currently, the data is being mix
+        for(i=0; i<data.length; i++){
+          //console.log(data[i])
+          for(k=0; k<data[i].length; k++){
+            //console.log(data[i][k])
+            data_list[k].push(data[i][k])
+          }
+        //console.log(data_list)
+        }
 
-
-
-
-
-
-
-
-
+        //for the return value to the chart
+        output = []
+        for(j in data_list){
+          output.push({
+              label: status[j],
+              backgroundColor: backgroundColor[j],
+              data: data_list[j]
+          })
+        }
+        //console.log(output)
+        return output
+      }
 
     </script>
   </body>
