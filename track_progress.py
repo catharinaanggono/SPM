@@ -109,7 +109,7 @@ def distribution(ClassID):
         else:
             status_output[status] = 1
 
-    print(status_output)
+    #print(status_output)
 
     #_____________________________________________________________________Number of completed sections in the class____________________________
     
@@ -120,7 +120,7 @@ def distribution(ClassID):
 
     section_output = {}
     for section in sections:
-        print(section.json()['SectionID'])
+        #print(section.json()['SectionID'])
         if section.json()['SectionID'] in section_output:
             if section.json()['STATUS'] == 1:
                 section_output[section.json()['SectionID']]['completed'] += 1
@@ -129,7 +129,7 @@ def distribution(ClassID):
         else:
             section_output[section.json()['SectionID']] = {'completed':0, 'incomplete':0}
 
-    print(section_output)
+    #print(section_output)
 
 
     return jsonify({
