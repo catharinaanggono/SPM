@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS finalQuiz(
     QuizTitle VARCHAR(50) NOT NULL,
     QuizTimer INT NOT NULL,
     PRIMARY KEY (QuizID),
-    FOREIGN KEY (CourseID) REFERENCES course(CourseID),
+    FOREIGN KEY (CourseID) REFERENCES course(CourseID)
 );
 
 
