@@ -278,7 +278,7 @@
           var section_label = []
           var section_value = []
           for(j in obj_section_status){
-            section_label.push("Section" + j)
+            section_label.push("Section " + j)
             let completed = obj_section_status[j]['completed']
             let incomplete = obj_section_status[j]['incomplete']
             section_value.push([completed, incomplete])
@@ -385,7 +385,7 @@
                   },
                   title: {
                       display: true,
-                      text: 'Learners Status'
+                      text: 'Section Status'
                   }
                 }
               }
