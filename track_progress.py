@@ -72,6 +72,28 @@ class MaterialProgress(db.Model):
     def json(self):
         return{"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialID": self.MaterialID, "LearnerID": self.LearnerID, "STATUS": self.STATUS}
 
+class finalStudentQuizResult(db.Model):
+    __tablename__ = "finalStudentQuizResult"
+
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
+    LearnerID = db.Column(db.Integer, nullable=False)
+    Grade = db.Column(db.Integer, nullable=False)
+    AttemptID = db.Column(db.Integer, primary_key=True)
+
+    def __init__ (self, CourseID, ClassID, QuizID, LearnerID, Grade, AttemptID):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.QuizID = QuizID
+        self.LearnerID = LearnerID
+        self.Grade = Grade
+        self.AttemptID = AttemptID
+
+    def json(self):
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "QuizID": self.QuizID, "LearnerID": self.LearnerID, "Grade": self.Grade, "AttemptID": self.AttemptID}
+
+
 
 @app.route('/learner_distribution_chart/<string:ClassID>')
 def distribution(ClassID):
@@ -131,13 +153,34 @@ def distribution(ClassID):
 
     #print(section_output)
 
+    #_____________________________________________________________________Final quiz distribution____________________________
+    
+    final_grades = finalStudentQuizResult.query.filter_by(ClassID=ClassID).all()
+
+    #passing grade is 85%
+    #take highest result
+    #{'1': 73, '2':66, ....}
+
+    final_grade_output = {}
+    for final_grade in final_grades:
+        print(final_grade.json())
+        learnerid = final_grade.json()['LearnerID']
+        if learnerid in final_grade_output:
+            if final_grade_output[learnerid] < final_grade.json()['Grade']:
+                final_grade_output[learnerid] = final_grade.json()['Grade']
+        else:
+            final_grade_output[learnerid] = final_grade.json()['Grade']
+
+
+    print(final_grade_output)
 
     return jsonify({
         "code": 200,
         "data": {
             "user_type_distribution": user_output,
             "course_status": status_output,
-            "section_status": section_output
+            "section_status": section_output,
+            "final_grade":final_grade_output
         }
     })
 

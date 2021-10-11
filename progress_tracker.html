@@ -160,6 +160,9 @@
                 <div>
                   <canvas id="section_status"></canvas>
                 </div>
+                <div>
+                  <canvas id="final_grade_distribution"></canvas>
+                </div>
               </div>
             </div>
           </div>
@@ -284,9 +287,18 @@
             section_value.push([completed, incomplete])
           }
 
-          console.log(section_label)
-          console.log(section_value)
-
+          //to get data from the final grade quiz result
+          var obj_final_grade_quiz = data.data.final_grade
+          var final_grade_pass = []
+          var final_grade_fail = []
+          for(f in obj_final_grade_quiz){
+            let final_grade = obj_final_grade_quiz[f]
+            if(final_grade > 85){
+              final_grade_pass.push(final_grade)
+            }else{
+              final_grade_fail.push(final_grade)
+            }
+          }
 
           // chart for the engineer distribution
           var ctx = document.getElementById('distribution').getContext('2d');
@@ -391,6 +403,48 @@
               }
           });
 
+
+          //chart for the final grade distribution
+          var ctx = document.getElementById('final_grade_distribution').getContext('2d');
+          var myChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                  labels: ['Pass', 'Fail'],
+                  datasets: [
+                  {
+                      //label: 'Pass',
+                      data: [final_grade_pass.length,final_grade_fail.length],
+                      backgroundColor: [
+                          'rgba(255, 99, 132, 0.2)',
+                          'rgba(54, 162, 235, 0.2)',
+                          'rgba(255, 206, 86, 0.2)',
+                          'rgba(75, 192, 192, 0.2)',
+                          'rgba(153, 102, 255, 0.2)',
+                          'rgba(255, 159, 64, 0.2)'
+                      ],
+                      borderColor: [
+                          'rgba(255, 99, 132, 1)',
+                          'rgba(54, 162, 235, 1)',
+                          'rgba(255, 206, 86, 1)',
+                          'rgba(75, 192, 192, 1)',
+                          'rgba(153, 102, 255, 1)',
+                          'rgba(255, 159, 64, 1)'
+                      ],
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                plugins: {
+                  legend: {
+                      display: false
+                  },
+                  title: {
+                      display: true,
+                      text: 'Final Quiz'
+                  }
+                }
+              }
+          });
 
 
 
