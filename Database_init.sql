@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS finalStudentQuizResult(
     FOREIGN KEY (SectionID) REFERENCES finalQuiz(SectionID),
     FOREIGN KEY (QuizID) REFERENCES finalQuiz(QuizID),
     FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
-)
+);
 
 CREATE TABLE IF NOT EXISTS question(
     CourseID INT NOT NULL,
