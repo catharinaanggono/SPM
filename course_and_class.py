@@ -276,7 +276,7 @@ def add_material_link(CourseID, ClassID, SectionID):
         material_title = a_link['title']
         material_content_raw = a_link['link']
         if security_input_check(material_title) and security_input_check(material_content_raw):
-            material_content = '<a href="' + material_content_raw + '"> ' + material_title + '</a>'
+            material_content = '<a href="https://' + material_content_raw + '"> ' + material_title + '</a>'
             section_material = SectionMaterial(CourseID, ClassID, SectionID, material_content)
             db.session.add(section_material)
     try:
@@ -498,6 +498,9 @@ def self_enrol():
 def test_template(CourseID, ClassID, SectionID):
     return render_template('add-section-material.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
 
+@app.route('/view-section-material/<CourseID>/<ClassID>')
+def section_material_template(CourseID, ClassID):
+    return render_template('view-section-material-student.html', CourseID=CourseID, ClassID=ClassID)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
