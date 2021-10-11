@@ -282,7 +282,8 @@
         var allowed = true
         for (let i = 0; i < files.length; i++){
           fileName = files.item(i).name
-          fileExtension = fileName.split('.')[fileName.length - 1]
+          fileExtension = fileName.split('.')[fileName.split('.').length - 1]
+          console.log(fileExtension)
           if (!(allowedFiles.includes(fileExtension))){
             allowed = false
           }

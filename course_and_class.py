@@ -223,7 +223,7 @@ class Section(db.Model):
     def json(self):
         if not hasattr(self, "SectionMaterialList"):
             self.SectionMaterialList = []
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionName": self.SectionName, "SectionMaterialList": self.SectionMaterialList}
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID,"SectionName": self.SectionName, "SectionMaterialList": self.SectionMaterialList}
 
 @app.route('/view-section/<string:CourseID>/<string:ClassID>')
 def show_section(CourseID, ClassID):

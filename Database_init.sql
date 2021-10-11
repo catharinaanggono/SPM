@@ -134,6 +134,22 @@ CREATE TABLE IF NOT EXISTS finalQuizQuestionAnswer(
     FOREIGN KEY (QuestionID) REFERENCES finalQuizQuestion(QuestionID)
 );
 
+CREATE TABLE IF NOT EXISTS finalStudentQuizResult(
+    CourseID INT NOT NULL,
+    ClassID INT NOT NULL,
+    SectionID INT NOT NULL,
+    QuizID INT NOT NULL,
+    LearnerID INT NOT NULL,
+    Grade INT NOT NULL,
+    AttemptID INT NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (AttemptID),
+    FOREIGN KEY (CourseID) REFERENCES finalQuiz(CourseID),
+    FOREIGN KEY (ClassID) REFERENCES finalQuiz(ClassID),
+    FOREIGN KEY (SectionID) REFERENCES finalQuiz(SectionID),
+    FOREIGN KEY (QuizID) REFERENCES finalQuiz(QuizID),
+    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
+)
+
 CREATE TABLE IF NOT EXISTS question(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
@@ -172,7 +188,8 @@ CREATE TABLE IF NOT EXISTS studentQuizResult(
     QuizID INT NOT NULL,
     LearnerID INT NOT NULL,
     Grade INT NOT NULL,
-    PRIMARY KEY (CourseID, ClassID, SectionID, QuizID, LearnerID),
+    AttemptID INT NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (AttemptID),
     FOREIGN KEY (CourseID) REFERENCES quiz(CourseID),
     FOREIGN KEY (ClassID) REFERENCES quiz(ClassID),
     FOREIGN KEY (SectionID) REFERENCES quiz(SectionID),
