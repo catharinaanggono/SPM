@@ -136,6 +136,7 @@ CREATE TABLE IF NOT EXISTS finalQuizQuestionAnswer(
 
 CREATE TABLE IF NOT EXISTS finalStudentQuizResult(
     CourseID INT NOT NULL,
+    ClassID INT NOT NULL,
     QuizID INT NOT NULL,
     LearnerID INT NOT NULL,
     Grade INT NOT NULL,
@@ -143,6 +144,7 @@ CREATE TABLE IF NOT EXISTS finalStudentQuizResult(
     PRIMARY KEY (AttemptID),
     FOREIGN KEY (CourseID) REFERENCES finalQuiz(CourseID),
     FOREIGN KEY (QuizID) REFERENCES finalQuiz(QuizID),
+    FOREIGN KEY (ClassID) REFERENCES class(ClassID),
     FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
 );
 
