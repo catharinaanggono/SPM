@@ -502,6 +502,10 @@ def test_template(CourseID, ClassID, SectionID):
 def section_material_template(CourseID, ClassID):
     return render_template('view-section-material-student.html', CourseID=CourseID, ClassID=ClassID)
 
+@app.route('/view-material/<CourseID>/<ClassID>/<SectionID>/<url>')
+def view_material(CourseID, ClassID, SectionID, url):
+    return render_template('view-file.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID, url=url)
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
 
