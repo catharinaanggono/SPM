@@ -1,4 +1,5 @@
-from flask import Flask, json, request, jsonify, render_template
+from flask import Flask, json, request, jsonify, render_template, abort
+from flask.globals import session
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
@@ -224,6 +225,50 @@ class Section(db.Model):
         if not hasattr(self, "SectionMaterialList"):
             self.SectionMaterialList = []
         return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID,"SectionName": self.SectionName, "SectionMaterialList": self.SectionMaterialList}
+
+class StudentQuizResult(db.Model):
+    __tablename__ = 'studentQuizResult'
+
+    '''
+    CourseID INT NOT NULL,
+    ClassID INT NOT NULL,
+    SectionID INT NOT NULL,
+    QuizID INT NOT NULL,
+    LearnerID INT NOT NULL,
+    Grade INT NOT NULL,
+    AttemptID INT NOT NULL AUTO_INCREMENT,
+    '''
+
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
+    LearnerID = db.Column(db.Integer, nullable=False)
+    Grade = db.Column(db.Integer, nullable=False)
+    AttemptID = db.Column(db.Integer, primary_key=True)
+
+    def __init__(self, CourseID, ClassID, SectionID, QuizID, LearnerID, Grade):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.SectionID = SectionID
+        self.QuizID = QuizID
+        self.LearnerID = LearnerID
+        self.Grade = Grade
+
+    def json(self):
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizID": self.QuizID, "LearnerID": self.LearnerID, "Grade": self.Grade}
+    
+@app.route('/get-learner-quiz/<string:LearnerID>/<string:CourseID>/<string:ClassID>')
+def get_quiz_attempts(LearnerID, CourseID, ClassID):
+    sections = db.session.query(Section.SectionID).filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).all()
+    result = db.session.query(StudentQuizResult.SectionID).filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).filter_by(LearnerID = LearnerID).all()
+    allowed_sections = []
+    for a_section in sections:
+        if a_section not in result:
+            allowed_sections.append(a_section[0])
+            break
+   
+    return {'allowed_sections': allowed_sections}
 
 @app.route('/view-section/<string:CourseID>/<string:ClassID>')
 def show_section(CourseID, ClassID):
@@ -492,6 +537,7 @@ def self_enrol():
     pass
 
 
+
 '''testing render_template'''
 
 @app.route('/test-render-template/<CourseID>/<ClassID>/<SectionID>')
@@ -504,8 +550,12 @@ def section_material_template(CourseID, ClassID):
 
 @app.route('/view-material/<CourseID>/<ClassID>/<SectionID>/<url>')
 def view_material(CourseID, ClassID, SectionID, url):
-    return render_template('view-file.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID, url=url)
-
+    allowed_sections = get_quiz_attempts('1', CourseID, ClassID)['allowed_sections']
+    
+    if int(SectionID) in allowed_sections:
+        return render_template('view-file.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID, url=url)
+    else:
+        abort(403)
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
 
