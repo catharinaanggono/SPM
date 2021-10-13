@@ -151,9 +151,34 @@
                     </div>
                   </form>
                 </div> -->
-                
+                <div class="col-md-3 col-sm-6">
+                  <div class="probootstrap-teacher text-center probootstrap-animate">
+                    <canvas id="final_grade_distribution"></canvas>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                  <div class="probootstrap-teacher text-center probootstrap-animate">
+                    <canvas id="section_status"></canvas>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                  <div class="probootstrap-teacher text-center probootstrap-animate">
+                    <canvas id="distribution"></canvas>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                  <div class="probootstrap-teacher text-center probootstrap-animate">
+                    <canvas id="course_status"></canvas>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                  <div class="probootstrap-teacher text-center probootstrap-animate">
+                    <canvas id="section_grade" width="300"></canvas>
+                  </div>
+                </div>
+                </div>
                 <!-- style="position:absolute; top:60px; left:10px; width:500px; height:500px; -->
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col-6" ><canvas id="distribution"></canvas></div>
                   <div class="col-6"><canvas id="course_status"></canvas></div>
                 </div>
@@ -162,7 +187,7 @@
                 </div>
                 <div>
                   <canvas id="final_grade_distribution"></canvas>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -293,16 +318,43 @@
           var final_grade_fail = []
           for(f in obj_final_grade_quiz){
             let final_grade = obj_final_grade_quiz[f]
-            if(final_grade > 85){
+            if(final_grade >= 85){
               final_grade_pass.push(final_grade)
             }else{
               final_grade_fail.push(final_grade)
             }
           }
 
+          //to get data for the quiz result for each section
+          var obj_section_quiz_result = data.data.section_quiz_result
+          var sections_quiz = []
+          var section_quiz_pass = []
+          var section_quiz_fail = []
+          for(t in obj_section_quiz_result){
+            //console.log(t)
+            //to make a new item in the list according to section [0,1] --> 0 is for section 1; 1 is for section 2
+            sections_quiz.push("Section " + t)
+            section_quiz_pass.push(0)
+            section_quiz_fail.push(0)
+            let section_obj = obj_section_quiz_result[t]
+            //console.log("Section " + t)
+            for(section in section_obj){
+              //console.log(section)
+              result = section_obj[section]
+              //console.log(result)
+              if(result >= 85){
+                section_quiz_pass[t-1] += 1
+              }else{
+                section_quiz_fail[t-1] += 1
+              }
+            }
+          }
+          //console.log(section_quiz_pass)
+          ///console.log(section_quiz_fail)
+
           // chart for the engineer distribution
-          var ctx = document.getElementById('distribution').getContext('2d');
-          var myChart = new Chart(ctx, {
+          var ctx1 = document.getElementById('distribution').getContext('2d');
+          var myChart = new Chart(ctx1, {
               type: 'pie',
               data: {
                   labels: user_type,
@@ -342,8 +394,8 @@
           });
 
           //chart for how many learners has completed the course
-          var ctx = document.getElementById('course_status').getContext('2d');
-          var myChart = new Chart(ctx, {
+          var ctx2 = document.getElementById('course_status').getContext('2d');
+          var myChart = new Chart(ctx2, {
               type: 'bar',
               data: {
                   labels: status_type,
@@ -383,8 +435,8 @@
           });
 
           //chart for section status
-          var ctx = document.getElementById('section_status').getContext('2d');
-          var myChart = new Chart(ctx, {
+          var ctx3 = document.getElementById('section_status').getContext('2d');
+          var myChart = new Chart(ctx3, {
               type: 'bar',
               data: {
                   labels: section_label,
@@ -393,7 +445,7 @@
               options: {
                 plugins: {
                   legend: {
-                      display: false
+                      display: true
                   },
                   title: {
                       display: true,
@@ -405,8 +457,8 @@
 
 
           //chart for the final grade distribution
-          var ctx = document.getElementById('final_grade_distribution').getContext('2d');
-          var myChart = new Chart(ctx, {
+          var ctx4 = document.getElementById('final_grade_distribution').getContext('2d');
+          var myChart = new Chart(ctx4, {
               type: 'bar',
               data: {
                   labels: ['Pass', 'Fail'],
@@ -446,6 +498,47 @@
               }
           });
 
+          //chart for the amount of pass/fail for each section
+          var ctx5 = document.getElementById('section_grade').getContext('2d');
+          var chart = new Chart(ctx5, {
+          type: 'bar',
+          data: {
+              labels: sections_quiz, // responsible for how many bars are gonna show on the chart
+              // create 12 datasets, since we have 12 items
+              // data[0] = labels[0] (data for first bar - 'Standing costs') | data[1] = labels[1] (data for second bar - 'Running costs')
+              // put 0, if there is no data for the particular bar
+              datasets: [{
+                label: 'Pass',
+                data: section_quiz_pass,
+                backgroundColor: '#22aa99'
+              }, {
+                label: 'Fail',
+                data: section_quiz_fail,
+                backgroundColor: '#994499'
+              }]
+          },
+          options: {
+              responsive: false,
+              plugins: {
+                  legend: {
+                      display: true,
+                      position: 'right'
+                  },
+                  title: {
+                      display: true,
+                      text: 'Section Quiz Pass/Fail'
+                  }
+                },
+              scales: {
+                x: {
+                    stacked: true // this should be set to make the bars stacked
+                },
+                y: {
+                    stacked: true // this also..
+                }
+              }
+          }
+        });
 
 
         } 

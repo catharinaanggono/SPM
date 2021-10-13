@@ -93,7 +93,28 @@ class finalStudentQuizResult(db.Model):
     def json(self):
         return{"CourseID": self.CourseID, "ClassID": self.ClassID, "QuizID": self.QuizID, "LearnerID": self.LearnerID, "Grade": self.Grade, "AttemptID": self.AttemptID}
 
+class studentQuizResult(db.Model):
+    __tablename__ = "studentQuizResult"
 
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
+    LearnerID = db.Column(db.Integer, nullable=False)
+    Grade = db.Column(db.Integer, nullable=False)
+    AttemptID = db.Column(db.Integer, primary_key=True)
+
+    def __init__ (self, CourseID, ClassID, SectionID, QuizID, LearnerID, Grade, AttemptID):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.SectionID = SectionID
+        self.QuizID = QuizID
+        self.LearnerID = LearnerID
+        self.Grade = Grade
+        self.AttemptID = AttemptID
+
+    def json(self):
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizID": self.QuizID, "LearnerID": self.LearnerID, "Grade": self.Grade, "AttemptID": self.AttemptID}
 
 @app.route('/learner_distribution_chart/<string:ClassID>')
 def distribution(ClassID):
@@ -107,7 +128,7 @@ def distribution(ClassID):
         learnerIDs.append(learner.json()['LearnerID'])
         course_status.append(learner.json()['ApplicationStatus'])
     
-    #______________________________________________________________________Distribution chart_____________________
+    #______________________________________________________________________Engineers Distribution chart_____________________
 
     #filtering to get user type from the learnerID list
     users = User.query.filter(User.UserID.in_(learnerIDs))
@@ -133,7 +154,7 @@ def distribution(ClassID):
 
     #print(status_output)
 
-    #_____________________________________________________________________Number of completed sections in the class____________________________
+    #_____________________________________________________________________Number of completed sections in the class (section status)____________________________
     
 
     sections = MaterialProgress.query.filter_by(ClassID = ClassID).all()
@@ -163,7 +184,7 @@ def distribution(ClassID):
 
     final_grade_output = {}
     for final_grade in final_grades:
-        print(final_grade.json())
+        #print(final_grade.json())
         learnerid = final_grade.json()['LearnerID']
         if learnerid in final_grade_output:
             if final_grade_output[learnerid] < final_grade.json()['Grade']:
@@ -172,7 +193,32 @@ def distribution(ClassID):
             final_grade_output[learnerid] = final_grade.json()['Grade']
 
 
-    print(final_grade_output)
+    #print(final_grade_output)
+
+    #_____________________________________________________________________number of pass/fail for each section____________________________
+
+
+    section_quiz_result = studentQuizResult.query.filter_by(ClassID=ClassID).all()
+
+    #{"1": {1:79, 2:30...}, "2": {1: 82, 3:0}}
+
+    quiz_result_output = {}
+    for result in section_quiz_result:
+        print(quiz_result_output)
+        learnerid = result.json()['LearnerID']
+        sectionid = result.json()['SectionID']
+        grade = result.json()['Grade']
+        if sectionid in quiz_result_output:
+            if learnerid in quiz_result_output[sectionid]:
+                if quiz_result_output[sectionid][learnerid] < grade:
+                    quiz_result_output[sectionid][learnerid] = grade
+            else:
+                quiz_result_output[sectionid][learnerid] = grade
+        else:
+            quiz_result_output[sectionid] = {learnerid: grade}
+
+    #print(quiz_result_output)
+
 
     return jsonify({
         "code": 200,
@@ -180,7 +226,8 @@ def distribution(ClassID):
             "user_type_distribution": user_output,
             "course_status": status_output,
             "section_status": section_output,
-            "final_grade":final_grade_output
+            "final_grade":final_grade_output,
+            "section_quiz_result": quiz_result_output
         }
     })
 
