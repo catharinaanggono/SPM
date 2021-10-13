@@ -6,7 +6,7 @@
     <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
     <meta name="description" content="Free Bootstrap Theme by uicookes.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
@@ -42,6 +42,19 @@
           position: relative !important;
           width: 100% !important;
           height: auto !important;
+        }
+        .btn {
+          background-color: DodgerBlue;
+          border: none;
+          color: white;
+          padding: 12px 30px;
+          cursor: pointer;
+          font-size: 20px;
+        }
+
+        /* Darker background on mouse-over */
+        .btn:hover {
+          background-color: RoyalBlue;
         }
     </style>
     
@@ -162,7 +175,13 @@
 
                 </div>
             </div>
+            <div class='row' style='margin-top:2%'>
+              <div class='col-md-1'></div>
+
+              <div class='col-md-10'> <button class="btn" onclick='download()'><i class="fa fa-download"></i> Download</button> </div>
+            </div>
         </div>
+        
       </section>
       
     
@@ -272,9 +291,6 @@
 
             } 
         }
-        else if (x.includes('.doc')){
-            document.getElementById('file-viewer').innerHTML += `<iframe class="doc" src="https://docs.google.com/gview?url=http://writing.engr.psu.edu/workbooks/formal_report_template.doc&embedded=true"></iframe>`       
-        }
         else if (x.includes('.mp4')){
             document.getElementById('file-viewer').innerHTML += `<video
     id="my-video"
@@ -294,7 +310,16 @@
   </video>`
         }
         
-            
+        function download(){
+          var link = document.createElement("a");
+          // If you don't know the name or want to use
+          // the webserver default set name = ''
+          link.setAttribute('download', name);
+          link.href = url_used;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        }
         
         
     </script>
