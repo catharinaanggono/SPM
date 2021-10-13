@@ -244,7 +244,7 @@
                         materialContent = secMatList[j].MaterialContent
                         document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
                         <div class="card-body" style="">
-                            <span style="width:100%"> <b> Link to ${materialContent} </b> </span>
+                            <span style="width:100%"> <b> <a href='http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
                             <hr>
                         </div>
                         `
