@@ -192,6 +192,14 @@
 
     
     <script>
+        var allowedSections = []
+        var request = new XMLHttpRequest()
+        request.onreadystatechange = function(){
+          data = JSON.parse(this.responseText)['allowed_sections']
+          allowedSections = data
+        }
+        request.open('GET', 'http://localhost:5001/get-learner-quiz/1/{{ CourseID }}/{{ ClassID }}') // '1' refers to LearnerID --> currently for test purposes
+        request.send()
         var request = new XMLHttpRequest()
         request.onreadystatechange = function(){
             if (this.readyState == 4 && this.status == 200){
@@ -200,10 +208,11 @@
                 console.log(data)
                 for (let i = 1; i <= data.length; i++){
                     idx = i - 1
+                    sectionID = data[idx].SectionID
                     sectionName = data[idx].SectionName || 'EmptyName'
                     sectionNameNoSpace = sectionName.replace(/ /g, '-')
                     document.getElementById('sections').innerHTML += `
-<div class="row">
+<div class="row" id='${i}-${sectionID}'>
     <div id="accordion">
         <div class="card">
             <div class="card-header" id="${i}-${sectionNameNoSpace}">
@@ -239,6 +248,11 @@
                             <hr>
                         </div>
                         `
+                    }
+                    styleHTML = ''
+                    if (!allowedSections.includes(sectionID)){
+                      styleHTML += 'pointer-events: none; opacity: 0.4'
+                      document.getElementById(`${i}-${sectionID}`).style = styleHTML
                     }
                 }
                 
