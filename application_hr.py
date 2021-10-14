@@ -25,14 +25,16 @@ class Application(db.Model):
     LearnerID = db.Column(db.Integer, primary_key = True)
     ApplicationStatus = db.Column(db.String(100), nullable = False)
 
-    def __init__(self, CourseID, ClassID, LearnerID, ApplicationStatus):
+    def __init__(self, CourseID, ClassID, LearnerID, ApplicationStatus, UserName, CourseTitle):
         self.CourseID = CourseID
         self.ClassID = ClassID
         self.LearnerID = LearnerID
         self.ApplicationStatus = ApplicationStatus
+        self.Username = UserName
+        self.CourseTitle = CourseTitle
 
     def json(self):
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus}
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus, "UserName": self.UserName, "CourseTitle": self.CourseTitle}
 
 class User(db.Model):
     __tablename__ = 'userTable'
@@ -49,10 +51,55 @@ class User(db.Model):
     def json(self):
         return {"UserID": self.UserID, "UserName": self.UserName, "UserType": self.UserType}
 
+class Course(db.Model):
+    __tablename__ = 'course'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    CourseTitle = db.Column(db.String(50), nullable=False)
+    CourseDescription = db.Column(db.String(65535), nullable=False)
+    Badge = db.Column(db.String(65535), nullable=False)
+
+    def __init__(self, CourseID, CourseTitle, CourseDescription, Badge):
+        self.CourseID = CourseID
+        self.CourseTitle = CourseTitle
+        self.CourseDescription = CourseDescription
+        self.Badge = Badge
+
+    def json(self):
+        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge}
+
+# @app.route('/applications')
+# def get_all_pending_applications():
+#     applications = Application.query.filter_by(ApplicationStatus="applied").all()
+#     usernames = []
+#     print (type(applications))
+#     for application in applications:
+#         print(type(application))
+#         user = User.query.filter_by(UserID=application.LearnerID).first()
+#         usernames.append(user)
+#     if len(applications):
+#         return jsonify({
+#             "code": 200,
+#             "data": {
+#                 "courses": [application.json() for application in applications],
+#                 "usernames": [username.json()["UserName"] for username in usernames]
+#             }
+#         }), 200
+#     return jsonify({
+#         "code": 404,
+#         "message": "There are no applications."
+#     }), 404
+
 @app.route('/applications')
-def get_all_courses():
-    applications = Application.query.all()
-        
+def get_all_pending_applications():
+    applications = Application.query.filter_by(ApplicationStatus="applied").all()
+
+    for application in applications:
+        user = User.query.filter_by(UserID=application.LearnerID).first()
+        application.UserName = user.UserName
+        course = Course.query.filter_by(CourseID=application.CourseID).first()
+        application.CourseTitle = course.CourseTitle
+
     if len(applications):
         return jsonify({
             "code": 200,
@@ -65,6 +112,20 @@ def get_all_courses():
         "message": "There are no applications."
     }), 404
 
+@app.route("/get_trainers")
+def get_all_senior_engineeers():
+    trainers = User.query.filter_by(UserType="Senior Engineer").all()
+    if len(trainers):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "trainers": [trainer.json() for trainer in trainers]
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no trainers."
+    }), 404
 
 # @app.route("/create_course", methods=["POST"])
 # def create_course():
