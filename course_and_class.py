@@ -467,7 +467,7 @@ def get_all_courses(UserID):
                 a_course.GreyOut = True
         a_course.prereqList = prereqList
         now = datetime.date(datetime.today())
-        classes = course_class.query.filter(CourseID == a_course.CourseID, now < course_class.RegistrationEndDate, now > course_class.RegistrationStartDate) # check registration date
+        classes = course_class.query.filter(CourseID == a_course.CourseID, now <= course_class.RegistrationEndDate, now >= course_class.RegistrationStartDate) # check registration date
         for a_class in classes:
             '''
             CHECK IF ALREADY APPLIED --> GREY OUT AND SHOW 'APPLIED'
