@@ -16,6 +16,12 @@
       <script src="js/vendor/html5shiv.min.js"></script>
       <script src="js/vendor/respond.min.js"></script>
     <![endif]-->
+
+    <script>
+      localStorage.CourseId = 1
+      localStorage.ClassId = 1
+      localStorage.SectionId = 1
+    </script>
   </head>
   <body>
 
@@ -205,6 +211,10 @@
         var qn_id = document.getElementsByClassName('questions').length + 1;
         add_question(); 
         console.log(qn_id)
+
+        var CourseID = localStorage.CourseId;
+        var ClassID = localStorage.ClassID;
+        var SectionID = localStorage.SectionID;
 
         // document.getElementById('question_content').innerHTML = `
         //     <div class="questions" id='question${qn_id}'>
