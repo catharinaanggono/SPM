@@ -241,28 +241,12 @@
                   <section class="probootstrap-section probootstrap-section-sm">
                     <div class="container">
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                      <th scope="col">User Name</th>
-                                      <th scope="col">Course Applied</th>
-                                      <th scope="col">Class Applied</th>
-                                      <!-- <th scope="col"></th> -->
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                      <th scope="row">1</th>
-                                      <td>Mark</td>
-                                      <td>Otto</td>
-                                      <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                      <th scope="row">2</th>
-                                      <td>Jacob</td>
-                                      <td>Thornton</td>
-                                      <td>@fat</td>
-                                </tbody>
+                            <table id="applications" class="table table-hover table-borderless">
+                                <tr>
+                                    <th scope="col">User Name</th>
+                                    <th scope="col">Course Applied</th>
+                                    <th scope="col">Class Applied</th>
+                                </tr>
                             </table>
                           </div>
             
@@ -354,33 +338,35 @@
                 
                 <script>
             
-                //   var request = new XMLHttpRequest();
+                  var request = new XMLHttpRequest();
             
-                //   request.onreadystatechange = function () {
-                //     if (this.readyState == 4 && this.status == 200) {
+                  request.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
             
-                //       var courses = JSON.parse(this.responseText).data.courses;
-                //       console.log("###################")
-                //       console.log(courses)
+                      var applications = JSON.parse(this.responseText).data.applications;
+                      console.log("###################")
+                      console.log(applications)
             
-                //       var prereq_input = '';
+                      var applications_input = '';
                       
             
-                //       for(course of courses){
-                //         let courseID = course.CourseID;
-                //         let courseTitle = course.CourseTitle;
+                      for(application of applications){
+                        let userName = application.UserName;
+                        let courseTitle = application.CourseTitle;
+                        let classId = application.ClassID;
             
-                //         prereq_input += "<option value='" + courseID + "'>" + courseTitle + " </option>"
+                        
+                        applications_input += "<tr><th scope='row'>" + userName + "</th><td>" + courseTitle + "</td><td>" + classId + "</td><td><button type='button' class='btn btn-success'>Accept</button></td><td><button type='button' class='btn btn-danger'>Reject</button></td></tr>"
             
-                //       }            
+                      }            
                       
-                //       document.getElementById("prereq").innerHTML += prereq_input
+                      document.getElementById("applications").innerHTML += applications_input
             
-                //     }
+                    }
             
-                //   };
-                //   request.open("GET", "http://localhost:5005/courses")
-                //   request.send();
+                  };
+                  request.open("GET", "http://localhost:5007/applications")
+                  request.send();
             
             
                 //   function create_course(){

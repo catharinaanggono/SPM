@@ -104,7 +104,7 @@ def get_all_pending_applications():
         return jsonify({
             "code": 200,
             "data": {
-                "courses": [application.json() for application in applications]
+                "applications": [application.json() for application in applications]
             }
         }), 200
     return jsonify({
