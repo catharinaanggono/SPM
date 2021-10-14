@@ -52,7 +52,24 @@ class classLearner(db.Model):
         self.ApplicationStatus = ApplicationStatus
     
     def json(self):
-        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus}
+        if not hasattr(self, "CourseTitle"):
+            self.CourseTitle = ''
+        if not hasattr(self, 'class_start_date'):
+            self.class_start_date = ''
+        if not hasattr(self, 'class_end_date'):
+            self.class_end_date = ''
+        if not hasattr(self, 'ApplicationStatus'):
+            self.ApplicationStatus = ''
+        return{
+                "CourseID": self.CourseID, 
+                "ClassID": self.ClassID, 
+                "LearnerID": self.LearnerID, 
+                "ApplicationStatus": self.ApplicationStatus, 
+                "CourseTitle": self.CourseTitle, 
+                "ClassStartDate": self.class_start_date, 
+                "ClassEndDate": self.class_end_date,
+                "ApplicationStatus": self.ApplicationStatus
+            }
 
 class course(db.Model):
     __tablename__ = 'course'
@@ -95,7 +112,8 @@ class course_class(db.Model):
 
 @app.route("/learner_ongoing_courses/<string:UserID>")
 def get_leaner_ongoing_courses(UserID):
-    Courses = LearnerCourse.query.filter_by(LearnerID = UserID, Status = 'Ongoing').all()
+    Courses = classLearner.query.filter(classLearner.LearnerID == UserID, classLearner.ApplicationStatus.in_(['ongoing', 'self_enrolled', 'enrolled'])).all()
+
     if len(Courses):
         print(Courses)
         for a_course in Courses:
@@ -105,21 +123,22 @@ def get_leaner_ongoing_courses(UserID):
             a_class_list = classLearner.query.filter_by(LearnerID = UserID, CourseID = CourseID).first()
             a_class_details = course_class.query.filter_by(ClassID = a_class_list.ClassID).first()
             a_course_title = course.query.filter_by(CourseID = CourseID).first()
-            a_course.course_title = a_course_title.CourseTitle
+            a_course.CourseTitle = a_course_title.CourseTitle
             a_course.course_class_id = a_class_list.ClassID 
             a_course.class_start_date = a_class_details.StartDate
+            a_course.ApplicationStatus = a_class_list.ApplicationStatus
             a_course.class_end_date = a_class_details.EndDate 
             print(a_class_list)
             print("LearnerID", a_course.LearnerID)
             print('EACH COURSE CLASS ID', a_course.course_class_id)
-
+            
         return jsonify(
             {
                 "code": 200,
                 "data": {
                     "learner_courses": [course.json() for course in Courses] 
                 }
-            }
+            } 
         )
     return jsonify(
         {

@@ -658,10 +658,8 @@
       request.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200){
           var data = JSON.parse(this.responseText).data.courses
-          console.log(data)
           
           for (course in data){
-            console.log(course)
             collapsibleID = data[course].CourseID + data[course].CourseTitle
             courseTitle = data[course].CourseTitle
             courseDescription = data[course].CourseDescription     
@@ -685,7 +683,6 @@
                 }
               }
             }
-            console.log(greyout)
             if (greyout){
               pointer = 'none'
               opacity = 0.6
@@ -726,7 +723,6 @@
                 startDate = new Date(aClass.StartDate)
                 classGreyout = aClass.GreyOut
                 applicationStatus = aClass.Status
-                console.log(applicationStatus)
                 var date = startDate.getDate();
                 var month = startDate.getMonth(); //Be careful! January is 0 not 1
                 var year = startDate.getFullYear();
@@ -758,9 +754,17 @@
                 }
                 appliedHTML = ''
                 disabled = ''
+                var withdrawButton = ''
+                
+                console.log(applicationStatus)
                 if (applicationStatus == 'applied'){
-                  appliedHTML += '<tr> <td style="padding-bottom:20px"> <b> Already Applied </b> </td> </tr>'
-                  disabled = 'disabled'
+                  withdrawButton = `<button class="btn btn-warning" onclick="withdrawApplication(${data[course].CourseID}, ${aClass.ClassID}, ${UserID}, '${data[course].CourseTitle}')"> Withdraw Application </button> <hr>` 
+                  appliedHTML += `<tr> <td style="padding-bottom:20px"> <b> Already Applied </b> </td> </tr>`
+                  disabled = 'disabled '
+                }
+                else if (applicationStatus == 'self_enrolled' && Date(Date.now()) < startDate){
+                  withdrawButton = `<button class="btn btn-warning" onclick="withdrawApplication(${data[course].CourseID}, ${aClass.ClassID}, ${UserID}, '${data[course].CourseTitle}')"> Withdraw Application </button>` 
+                  appliedHTML += `<tr> <td style="padding-bottom:20px"> <b> Already Enrolled </b> </td> </tr>`
                 }
                 document.getElementById(`${collapsibleID}`).innerHTML += `
                 
@@ -788,7 +792,8 @@
                   <button type="button" class="btn btn-primary" ${disabled} onclick="enrolClass(${data[course].CourseID}, ${aClass.ClassID}, ${UserID})"> Enrol </button>
                   <hr>
                 </div>
-
+                ${withdrawButton}
+                
                 `
               }
             }
@@ -810,7 +815,6 @@
       request.send()
 
       function enrolClass(CourseID, ClassID, UserID){
-        console.log("called")
         var request = new XMLHttpRequest();
         var send_value = {CourseID: CourseID, ClassID: ClassID, UserID: UserID}
         request.onreadystatechange = function(){
@@ -859,33 +863,71 @@
         if (this.readyState == 4 && this.status == 200){
           var data = JSON.parse(this.responseText);
           var learner_ongoing_courses = data.data.learner_courses;
-          console.log(learner_ongoing_courses)
           for (var each_course in learner_ongoing_courses){
+            console.log(learner_ongoing_courses[each_course])
             var ClassID = learner_ongoing_courses[each_course].ClassID;
             var CourseID = learner_ongoing_courses[each_course].CourseID;
             var CourseTitle = learner_ongoing_courses[each_course].CourseTitle;
+            var ApplicationStatus = learner_ongoing_courses[each_course].ApplicationStatus;
             var ClassStartDate = learner_ongoing_courses[each_course].ClassStartDate;
             var ClassEndDate = learner_ongoing_courses[each_course].ClassEndDate;
             var LearnerID = learner_ongoing_courses[each_course].LearnerID;
             var Status = learner_ongoing_courses[each_course].Status;
-            console.log("course")
+            var newRow = ''
+            var endRow = ''
+            var withdrawHTML = ''
+            if (each_course % 2 == 1){
+              newRow = `<div class='row'>`
+              endRow = `</div>`
+            }
+            if (ApplicationStatus == 'self_enrolled' && Date(Date.now()) < ClassStartDate){
+                withdrawHTML = `Self-enrolled <br> <br> <button class="btn btn-warning" onclick="withdrawApplication(${CourseID}, ${ClassID}, ${LearnerID}, '${CourseTitle}')"> Withdraw Application </button>`
+            }
+            else if (ApplicationStatus == 'ongoing'){
+              withdrawHTML = `Progress: #pending <br> 
+                    Section 4 out of 12 <br>`
+            }
+            else if (ApplicationStatus == 'enrolled'){
+              withdrawHTML = ' <br> <b> Enrolled by HR </b><br> <br>'
+            }
             document.getElementById('enrolled-courses-content').innerHTML += `
+            ${newRow}
             <div class="col-md-6">
-              <div class="probootstrap-service-2 probootstrap-animate">                
+              <div class="probootstrap-service-2">                
                 <div class="text" style='width: 100%'>
                   <h3>${CourseTitle} - Class: ${ClassID}</h3><br>
                   <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start Date: ${ClassStartDate}</span><br>
-                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> End Date: ${ClassEndDate}</span><br><br>
-                  <p>Progress: #pending<br> 
-                    Section 4 out of 12</p>
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> End Date: ${ClassEndDate}</span>
+                  <p>
+                    
+                    ${withdrawHTML}</p>
                 </div>
               </div>
-              </div>`
+            </div>
+            ${endRow}
+            `
           }
         }
       };
-      request.open('GET', 'http://localhost:5002/learner_ongoing_courses/' + UserID, false);
+      request.open('GET', 'http://localhost:5002/learner_ongoing_courses/' + UserID);
       request.send();
+
+      function withdrawApplication(CourseID, ClassID, UserID, CourseTitle){
+        sendValue = JSON.stringify({CourseID: CourseID, ClassID: ClassID, UserID: UserID})
+        var request = new XMLHttpRequest()
+        request.onreadystatechange = function(){
+          if (this.readyState == 4 && this.status == 200 || this.status == 201){
+            window.alert(`Withdrawal from course ${CourseTitle} has been made`)
+            location.reload()
+          } else if (this.status == 500){
+              window.alert(`UNSUCCESSFUL WITHDRAWAL`)
+              return 
+          }
+        }
+        request.open('POST', `http://localhost:5001/withdraw-application/${CourseID}/${ClassID}/${UserID}`)
+        request.setRequestHeader("Content-type", "application/json")
+        request.send(sendValue)
+      }
     </script>
   </body>
 </html>
