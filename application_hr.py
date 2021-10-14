@@ -127,33 +127,43 @@ def get_all_senior_engineeers():
         "message": "There are no trainers."
     }), 404
 
-# @app.route("/create_course", methods=["POST"])
-# def create_course():
-#     data = request.get_json()
-#     print(data)
-#     CourseTitle = data['CourseTitle']
-#     CourseDescription = data['CourseDescription']
-#     Badge = data['Badge']
-#     prereqList = data['prereqList']
-#     course = Course(CourseTitle, CourseDescription, Badge)
+@app.route("/accept_application", methods=['POST'])
+def accept_application():
+    data = request.get_json()
+    print(data)
+    CourseID = data['CourseID']
+    ClassID = data['ClassID']
+    LearnerID = data['LearnerID']
+    application = Application.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).filter_by(LearnerID=LearnerID).first()
+    application.ApplicationStatus = "enrolled"
 
-#     db.session.add(course)
-#     db.session.commit()
+    db.session.commit()
 
-#     if prereqList:
-#         for prereq in prereqList:
-#             coursePrereq = CoursePrereq(course.CourseID, prereq)
-#             print(coursePrereq)
-#             db.session.add(coursePrereq)
+    return jsonify(
+        {
+            "code": 200,
+            "message": "Application has been accepted"
+        }
+    ), 200
 
-#     db.session.commit()
-     
-#     return jsonify(
-#         {
-#             "code": 200,
-#             "message": "Course is successfully created"
-#         }
-#     ), 200
+@app.route("/reject_application", methods=['POST'])
+def reject_application():
+    data = request.get_json()
+    print(data)
+    CourseID = data['CourseID']
+    ClassID = data['ClassID']
+    LearnerID = data['LearnerID']
+    application = Application.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).filter_by(LearnerID=LearnerID).first()
+    application.ApplicationStatus = "rejected"
+
+    db.session.commit()
+
+    return jsonify(
+        {
+            "code": 200,
+            "message": "Application has been rejected"
+        }
+    ), 200
 
 
 if __name__ == '__main__':

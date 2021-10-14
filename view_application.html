@@ -354,10 +354,17 @@
                         let userName = application.UserName;
                         let courseTitle = application.CourseTitle;
                         let classId = application.ClassID;
-            
                         
-                        applications_input += "<tr><th scope='row'>" + userName + "</th><td>" + courseTitle + "</td><td>" + classId + "</td><td><button type='button' class='btn btn-success'>Accept</button></td><td><button type='button' class='btn btn-danger'>Reject</button></td></tr>"
-            
+                        applications_input += `
+                        <tr>
+                          <th scope="row">${userName}</th>
+                          <td>${courseTitle}</td>
+                          <td>${classId}</td>
+                          <td><button type="button" onclick="accept()" class="btn btn-success">Accept</button></td>
+                          <td><button type="button" onclick="reject()" class="btn btn-danger">Reject</button></td>
+                        </tr>
+                        `
+
                       }            
                       
                       document.getElementById("applications").innerHTML += applications_input
@@ -368,48 +375,36 @@
                   request.open("GET", "http://localhost:5007/applications")
                   request.send();
             
+                  // function accept(){
+                  //   var userName = document.getElementById("courseTitle").value;
+                  //   var courseDesc = document.getElementById("courseDesc").value;
+                  //   var prereq = $('#prereq').val();
+                  //   console.log("###############")
+                  //   console.log(courseTitle)
+                  //   console.log(courseDesc)
+                  //   console.log(prereq)
             
-                //   function create_course(){
+                  //   var send_value = {
+                  //     CourseTitle: courseTitle,
+                  //     CourseDescription: courseDesc,
+                  //     Badge: "python_badge.png",
+                  //     prereqList: prereq
+                  //   }
+                  //   var request = new XMLHttpRequest();
+                  //   request.onreadystatechange = function () {
+                  //       if (this.readyState == 4 && this.status == 200) {
             
-                //     var courseTitle = document.getElementById("courseTitle").value;
-                //     var courseDesc = document.getElementById("courseDesc").value;
-                //     var prereq = $('#prereq').val();
-                //     console.log("###############")
-                //     console.log(courseTitle)
-                //     console.log(courseDesc)
-                //     console.log(prereq)
-            
-                //     // var msg = [];
-            
-                //     // if(courseTitle.length <= 0){
-                //     //   msg.push("Please fill in the course title");
-                //     // }
-                //     // if(courseDesc.length <= 0){
-                //     //   msg.push("Please fill in the course description");
-                //     // }
-            
-                //     var send_value = {
-                //       CourseTitle: courseTitle,
-                //       CourseDescription: courseDesc,
-                //       Badge: "python_badge.png",
-                //       prereqList: prereq
-                //     }
-                //     var request = new XMLHttpRequest();
-                //     request.onreadystatechange = function () {
-                //         if (this.readyState == 4 && this.status == 200) {
-            
-                //           var data = JSON.parse(this.responseText);
-                //           console.log(data)
+                  //         var data = JSON.parse(this.responseText);
+                  //         console.log(data)
                           
-                //         }
-                //     };
-                //     // console.log(JSON.stringify(send_value))
-                //     request.open("POST", "http://localhost:5005/create_course")
-                //     request.setRequestHeader("Content-type", "application/json");
-                //     request.send(JSON.stringify(send_value))
-            
-            
-                //     }
+                  //       }
+                  //   };
+                  //   // console.log(JSON.stringify(send_value))
+                  //   request.open("POST", "http://localhost:5005/create_course")
+                  //   request.setRequestHeader("Content-type", "application/json");
+                  //   request.send(JSON.stringify(send_value))
+
+                  // }
             
                   
                 </script>
