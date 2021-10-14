@@ -199,10 +199,10 @@ def assign_learners():
             db.session.commit()
             output.append(upload_data)
         return jsonify({
-        "code": 200,
+        "code": 201,
         "data": output,
         "message": "Engineers has been successfully applied for the course"
-        }), 200
+        }), 201
     else:
         return jsonify({
         "code": 501,
