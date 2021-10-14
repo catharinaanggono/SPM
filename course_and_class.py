@@ -466,7 +466,8 @@ def get_all_courses(UserID):
             if a_prereq.PrereqID not in prereq_courses:
                 a_course.GreyOut = True
         a_course.prereqList = prereqList
-        now = datetime.date(datetime.today())
+        now = datetime.now()
+        print(now)
         classes = course_class.query.filter(CourseID == a_course.CourseID, now <= course_class.RegistrationEndDate, now >= course_class.RegistrationStartDate) # check registration date
         for a_class in classes:
             '''
