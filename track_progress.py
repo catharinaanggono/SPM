@@ -204,7 +204,7 @@ def distribution(ClassID):
 
     quiz_result_output = {}
     for result in section_quiz_result:
-        print(quiz_result_output)
+        #print(quiz_result_output)
         learnerid = result.json()['LearnerID']
         sectionid = result.json()['SectionID']
         grade = result.json()['Grade']
