@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS section(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
     SectionID INT NOT NULL AUTO_INCREMENT,
+    SectionName TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (SectionID),
     FOREIGN KEY (CourseID) REFERENCES class(CourseID),
     FOREIGN KEY (ClassID) REFERENCES class(ClassID)
@@ -94,11 +95,57 @@ CREATE TABLE IF NOT EXISTS quiz(
     QuizID INT NOT NULL AUTO_INCREMENT,
     QuizTitle VARCHAR(50) NOT NULL,
     QuizTimer INT NOT NULL,
-    PassingScore INT NOT NULL,
     PRIMARY KEY (QuizID),
     FOREIGN KEY (CourseID) REFERENCES section(CourseID),
     FOREIGN KEY (ClassID) REFERENCES section(ClassID),
     FOREIGN KEY (SectionID) REFERENCES section(SectionID)
+);
+
+CREATE TABLE IF NOT EXISTS finalQuiz(
+    CourseID INT NOT NULL,
+    QuizID INT NOT NULL AUTO_INCREMENT,
+    QuizTitle VARCHAR(50) NOT NULL,
+    QuizTimer INT NOT NULL,
+    PRIMARY KEY (QuizID),
+    FOREIGN KEY (CourseID) REFERENCES course(CourseID)
+);
+
+
+CREATE TABLE IF NOT EXISTS finalQuizQuestion(
+    CourseID INT NOT NULL,
+    QuizID INT NOT NULL,
+    QuestionID INT NOT NULL AUTO_INCREMENT,
+    QuestionContent TEXT NOT NULL,
+    PRIMARY KEY (QuestionID),
+    FOREIGN KEY (CourseID) REFERENCES finalQuiz(CourseID),
+    FOREIGN KEY (QuizID) REFERENCES finalQuiz(QuizID)
+);
+
+CREATE TABLE IF NOT EXISTS finalQuizQuestionAnswer(
+    CourseID INT NOT NULL,
+    QuizID INT NOT NULL,
+    QuestionID INT NOT NULL,
+    AnswerID INT NOT NULL AUTO_INCREMENT,
+    AnswerContent TEXT NOT NULL,
+    Correct BOOLEAN NOT NULL,
+    PRIMARY KEY (AnswerID),
+    FOREIGN KEY (CourseID) REFERENCES finalQuizQuestion(CourseID),
+    FOREIGN KEY (QuizID) REFERENCES finalQuizQuestion(QuizID),
+    FOREIGN KEY (QuestionID) REFERENCES finalQuizQuestion(QuestionID)
+);
+
+CREATE TABLE IF NOT EXISTS finalStudentQuizResult(
+    CourseID INT NOT NULL,
+    ClassID INT NOT NULL,
+    QuizID INT NOT NULL,
+    LearnerID INT NOT NULL,
+    Grade INT NOT NULL,
+    AttemptID INT NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (AttemptID),
+    FOREIGN KEY (CourseID) REFERENCES finalQuiz(CourseID),
+    FOREIGN KEY (QuizID) REFERENCES finalQuiz(QuizID),
+    FOREIGN KEY (ClassID) REFERENCES class(ClassID),
+    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
 );
 
 CREATE TABLE IF NOT EXISTS question(
@@ -128,7 +175,8 @@ CREATE TABLE IF NOT EXISTS questionAnswer(
     FOREIGN KEY (CourseID) REFERENCES question(CourseID),
     FOREIGN KEY (ClassID) REFERENCES question(ClassID),
     FOREIGN KEY (SectionID) REFERENCES question(SectionID),
-    FOREIGN KEY (QuizID) REFERENCES question(QuizID)
+    FOREIGN KEY (QuizID) REFERENCES question(QuizID),
+    FOREIGN KEY (QuestionID) REFERENCES question(QuestionID)
 );
 
 CREATE TABLE IF NOT EXISTS studentQuizResult(
@@ -138,7 +186,8 @@ CREATE TABLE IF NOT EXISTS studentQuizResult(
     QuizID INT NOT NULL,
     LearnerID INT NOT NULL,
     Grade INT NOT NULL,
-    PRIMARY KEY (CourseID, ClassID, SectionID, QuizID, LearnerID),
+    AttemptID INT NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (AttemptID),
     FOREIGN KEY (CourseID) REFERENCES quiz(CourseID),
     FOREIGN KEY (ClassID) REFERENCES quiz(ClassID),
     FOREIGN KEY (SectionID) REFERENCES quiz(SectionID),

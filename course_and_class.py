@@ -1,4 +1,5 @@
-from flask import Flask, json, request, jsonify, render_template
+from flask import Flask, json, request, jsonify, render_template, abort
+from flask.globals import session
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
@@ -83,9 +84,234 @@ class SectionMaterial(db.Model):
 
         if not section_path_exists:
             os.mkdir(section_path)
+    
+    def json(self):
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialID": self.MaterialID, "MaterialContent": self.MaterialContent}
 
 def security_input_check(text):
     return True
+
+
+class course_class(db.Model):
+    __tablename__ = 'class'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    StartDate = db.Column(db.DateTime, nullable=False)
+    EndDate = db.Column(db.DateTime, nullable=False)
+    ClassSize = db.Column(db.Integer, nullable = False)
+    RegistrationStartDate = db.Column(db.Date, nullable=False)
+    RegistrationEndDate = db.Column(db.Date, nullable=False)
+
+
+    def __init__(self, CourseID, ClassID, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.StartDate = StartDate
+        self.EndDate = EndDate
+        self.ClassSize = ClassSize
+        self.RegistrationStartDate = RegistrationStartDate
+        self.RegistrationEndDate = RegistrationEndDate
+        
+
+    def json(self):
+        if not hasattr(self, 'GreyOut'):
+            self.GreyOut = False
+        if not hasattr(self, 'RemainingSlot'):
+            self.RemainingSlot = False
+        if not hasattr(self, 'TrainerList'):
+            self.TrainerList = False
+        if not hasattr(self, 'Status'):
+            self.Status = ''
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate, "GreyOut": self.GreyOut, "RemainingSlot": self.RemainingSlot, "TrainerList": self.TrainerList, "Status": self.Status}
+
+
+class course_prereq(db.Model):
+    __tablename__ = 'coursePrereq'
+
+    CourseID = db.Column(db.Integer, primary_key = True)
+    PrereqID = db.Column(db.Integer, primary_key = True)
+
+    def __init__(self, CourseID, PrereqID):
+        self.CourseID = CourseID
+        self.PrereqID = PrereqID
+    
+    def json(self):
+        return {"CourseID": self.CourseID, "PrereqID": self.PrereqID}
+class ClassTaken(db.Model):
+    __tablename__ = 'classLearner'
+
+    # CourseID INT NOT NULL,
+    # ClassID INT NOT NULL,
+    # LearnerID INT NOT NULL,
+    # ApplicationStatus TEXT NOT NULL, -- applied, enrolled, rejected
+
+    CourseID = db.Column(db.Integer, primary_key = True)
+    ClassID = db.Column(db.Integer, primary_key = True)
+    LearnerID = db.Column(db.Integer, primary_key = True)
+    ApplicationStatus = db.Column(db.String(100), nullable = False)
+
+    def __init__(self, CourseID, ClassID, LearnerID, ApplicationStatus):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.LearnerID = LearnerID
+        self.ApplicationStatus = ApplicationStatus
+
+    def json(self):
+        
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID}
+
+class LearnerCourse(db.Model):
+    __tablename__ = 'LearnerCourse'
+
+    LearnerID = db.Column(db.Integer, primary_key=True)
+    CourseID = db.Column(db.Integer, primary_key=True)
+    Status = db.Column(db.String(200), primary_key=True)
+
+    def __init__(self, LearnerID, CourseID, Status):
+        self.LearnerID = LearnerID
+        self.CourseID = CourseID
+        self.Status = Status
+    
+    def json(self):
+        return{"LearnerID": self.LearnerID, "CourseID": self.CourseID, "Status": self.Status}
+
+class TrainerClass(db.Model):
+    __tablename__ = 'classTrainer'
+
+    CourseID = db.Column(db.Integer)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    TrainerID = db.Column(db.Integer, primary_key=True)
+
+    def __init__(self, CourseID, ClassID, TrainerID):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.TrainerID = TrainerID
+    
+    def json(self):
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "TrainerID": self.TrainerID}
+
+
+class User(db.Model):
+    __tablename__ = 'userTable'
+
+    UserID = db.Column(db.Integer, primary_key=True)
+    UserName = db.Column(db.Integer)
+    UserType = db.Column(db.Integer)
+
+    def __init__(self, UserID, UserName, UserType):
+        self.UserID = UserID
+        self.UserName = UserName
+        self.UserType = UserType
+    
+    def json(self):
+        return {"UserID": self.UserID, "UserName": self.UserName, "UserType": self.UserType}
+
+
+class Section(db.Model):
+    __tablename__ = 'section'
+
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, primary_key=True)
+    SectionName = db.Column(db.Text)
+
+    def __init__(self, CourseID, ClassID, SectionName=''):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.SectionName = SectionName
+    
+    def json(self):
+        if not hasattr(self, "SectionMaterialList"):
+            self.SectionMaterialList = []
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID,"SectionName": self.SectionName, "SectionMaterialList": self.SectionMaterialList}
+
+class StudentQuizResult(db.Model):
+    __tablename__ = 'studentQuizResult'
+
+    '''
+    CourseID INT NOT NULL,
+    ClassID INT NOT NULL,
+    SectionID INT NOT NULL,
+    QuizID INT NOT NULL,
+    LearnerID INT NOT NULL,
+    Grade INT NOT NULL,
+    AttemptID INT NOT NULL AUTO_INCREMENT,
+    '''
+
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
+    LearnerID = db.Column(db.Integer, nullable=False)
+    Grade = db.Column(db.Integer, nullable=False)
+    AttemptID = db.Column(db.Integer, primary_key=True)
+
+    def __init__(self, CourseID, ClassID, SectionID, QuizID, LearnerID, Grade):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.SectionID = SectionID
+        self.QuizID = QuizID
+        self.LearnerID = LearnerID
+        self.Grade = Grade
+
+    def json(self):
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizID": self.QuizID, "LearnerID": self.LearnerID, "Grade": self.Grade}
+    
+@app.route('/get-learner-quiz/<string:LearnerID>/<string:CourseID>/<string:ClassID>')
+def get_quiz_attempts(LearnerID, CourseID, ClassID):
+    sections = db.session.query(Section.SectionID).filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).all()
+    result = db.session.query(StudentQuizResult.SectionID).filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).filter_by(LearnerID = LearnerID).all()
+    allowed_sections = []
+    for a_section in sections:
+        if a_section not in result:
+            allowed_sections.append(a_section[0])
+            break
+   
+    return {'allowed_sections': allowed_sections}
+
+@app.route('/view-section/<string:CourseID>/<string:ClassID>')
+def show_section(CourseID, ClassID):
+    pass
+    sections = Section.query.filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).all()
+    sections_count = Section.query.filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).count()
+    '''
+    CourseID = db.Column(db.Integer)
+    ClassID = db.Column(db.Integer)
+    SectionID = db.Column(db.Integer)
+    MaterialID = db.Column(db.Integer, primary_key=True)
+    MaterialContent = db.Column(db.Text)
+    '''
+    section_list = []
+    print(sections)
+    for i in range(sections_count):
+        section_courseid = sections[i].CourseID
+        section_classid = sections[i].ClassID
+        section_sectionid = sections[i].SectionID
+        section_material_list = SectionMaterial.query.filter_by(SectionID = section_sectionid)
+        material_list = []
+        for a_material in section_material_list:
+            material_list.append(a_material)
+        section_list.append([sections[i], material_list])
+    actual_section = []
+    for i in range(len(section_list)):
+        section_list[i][0].SectionMaterialList = [section_mat.json() for section_mat in section_list[i][1]]
+        actual_section.append(section_list[i][0])    
+    if len(sections) > 0:
+        return {
+            "code": 200,
+            "data": [a_section.json() for a_section in actual_section]
+        }
+    
+
+@app.route('/uploader-section-name/<string:CourseID>/<string:ClassID>/<string:SectionID>', methods=['POST'])
+def update_section_name(CourseID, ClassID, SectionID):
+    data = request.get_json()
+    section_name = data['SectionName']
+    section = Section.query.filter_by(SectionID=SectionID).first()
+    section.SectionName = section_name
+    db.session.commit()
+   
 
 @app.route('/uploader/<string:CourseID>/<string:ClassID>/<string:SectionID>', methods = ['POST'])
 def add_material_link(CourseID, ClassID, SectionID):
@@ -95,7 +321,7 @@ def add_material_link(CourseID, ClassID, SectionID):
         material_title = a_link['title']
         material_content_raw = a_link['link']
         if security_input_check(material_title) and security_input_check(material_content_raw):
-            material_content = '<a href="' + material_content_raw + '"> ' + material_title + '</a>'
+            material_content = '<a href="https://' + material_content_raw + '"> ' + material_title + '</a>'
             section_material = SectionMaterial(CourseID, ClassID, SectionID, material_content)
             db.session.add(section_material)
     try:
@@ -165,39 +391,6 @@ def get_course(CourseID):
         }), 404
 
 
-class course_class(db.Model):
-    __tablename__ = 'class'
-
-    CourseID = db.Column(db.Integer, primary_key=True)
-    ClassID = db.Column(db.Integer, primary_key=True)
-    StartDate = db.Column(db.DateTime, nullable=False)
-    EndDate = db.Column(db.DateTime, nullable=False)
-    ClassSize = db.Column(db.Integer, nullable = False)
-    RegistrationStartDate = db.Column(db.Date, nullable=False)
-    RegistrationEndDate = db.Column(db.Date, nullable=False)
-
-
-    def __init__(self, CourseID, ClassID, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate):
-        self.CourseID = CourseID
-        self.ClassID = ClassID
-        self.StartDate = StartDate
-        self.EndDate = EndDate
-        self.ClassSize = ClassSize
-        self.RegistrationStartDate = RegistrationStartDate
-        self.RegistrationEndDate = RegistrationEndDate
-        
-
-    def json(self):
-        if not hasattr(self, 'GreyOut'):
-            self.GreyOut = False
-        if not hasattr(self, 'RemainingSlot'):
-            self.RemainingSlot = False
-        if not hasattr(self, 'TrainerList'):
-            self.TrainerList = False
-        if not hasattr(self, 'Status'):
-            self.Status = ''
-        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate, "GreyOut": self.GreyOut, "RemainingSlot": self.RemainingSlot, "TrainerList": self.TrainerList, "Status": self.Status}
-
 
 
 @app.route('/classes')
@@ -229,19 +422,6 @@ def get_class(ClassID):
         }), 404
 
 
-class course_prereq(db.Model):
-    __tablename__ = 'coursePrereq'
-
-    CourseID = db.Column(db.Integer, primary_key = True)
-    PrereqID = db.Column(db.Integer, primary_key = True)
-
-    def __init__(self, CourseID, PrereqID):
-        self.CourseID = CourseID
-        self.PrereqID = PrereqID
-    
-    def json(self):
-        return {"CourseID": self.CourseID, "PrereqID": self.PrereqID}
-
 @app.route('/courseprereq')
 def get_prereq():
     prereqs = course_prereq.query.all()
@@ -257,90 +437,6 @@ def get_prereq():
         "message": "There are no prerequisites"
     }), 404
 
-class ClassTaken(db.Model):
-    __tablename__ = 'classLearner'
-
-    # CourseID INT NOT NULL,
-    # ClassID INT NOT NULL,
-    # LearnerID INT NOT NULL,
-    # ApplicationStatus TEXT NOT NULL, -- applied, enrolled, rejected
-
-    CourseID = db.Column(db.Integer, primary_key = True)
-    ClassID = db.Column(db.Integer, primary_key = True)
-    LearnerID = db.Column(db.Integer, primary_key = True)
-    ApplicationStatus = db.Column(db.String(100), nullable = False)
-
-    def __init__(self, CourseID, ClassID, LearnerID, ApplicationStatus):
-        self.CourseID = CourseID
-        self.ClassID = ClassID
-        self.LearnerID = LearnerID
-        self.ApplicationStatus = ApplicationStatus
-
-    def json(self):
-        
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID}
-
-# CHECK REMAINING CLASS SLOTS -- DONE
-
-# IF REJECTED, ALLOW APPLICATION AGAIN
-
-# Checking for completed prereq
-
-class LearnerCourse(db.Model):
-    __tablename__ = 'LearnerCourse'
-
-    LearnerID = db.Column(db.Integer, primary_key=True)
-    CourseID = db.Column(db.Integer, primary_key=True)
-    Status = db.Column(db.String(200), primary_key=True)
-
-    def __init__(self, LearnerID, CourseID, Status):
-        self.LearnerID = LearnerID
-        self.CourseID = CourseID
-        self.Status = Status
-    
-    def json(self):
-        return{"LearnerID": self.LearnerID, "CourseID": self.CourseID, "Status": self.Status}
-
-# Checking for trainers in classes
-
-class TrainerClass(db.Model):
-    __tablename__ = 'classTrainer'
-
-    CourseID = db.Column(db.Integer)
-    ClassID = db.Column(db.Integer, primary_key=True)
-    TrainerID = db.Column(db.Integer, primary_key=True)
-
-    def __init__(self, CourseID, ClassID, TrainerID):
-        self.CourseID = CourseID
-        self.ClassID = ClassID
-        self.TrainerID = TrainerID
-    
-    def json(self):
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "TrainerID": self.TrainerID}
-
-# Getting Trainer Names
-
-# CREATE TABLE IF NOT EXISTS userTable(
-#     UserID INT NOT NULL AUTO_INCREMENT,
-#     UserName TEXT NOT NULL,
-#     UserType TEXT NOT NULL,
-#     PRIMARY KEY (UserID)
-# );
-
-class User(db.Model):
-    __tablename__ = 'userTable'
-
-    UserID = db.Column(db.Integer, primary_key=True)
-    UserName = db.Column(db.Integer)
-    UserType = db.Column(db.Integer)
-
-    def __init__(self, UserID, UserName, UserType):
-        self.UserID = UserID
-        self.UserName = UserName
-        self.UserType = UserType
-    
-    def json(self):
-        return {"UserID": self.UserID, "UserName": self.UserName, "UserType": self.UserType}
 
 @app.route('/courses-all/<string:UserID>')
 def get_all_courses(UserID):
@@ -441,13 +537,25 @@ def self_enrol():
     pass
 
 
+
 '''testing render_template'''
 
 @app.route('/test-render-template/<CourseID>/<ClassID>/<SectionID>')
 def test_template(CourseID, ClassID, SectionID):
     return render_template('add-section-material.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
 
+@app.route('/view-section-material/<CourseID>/<ClassID>')
+def section_material_template(CourseID, ClassID):
+    return render_template('view-section-material-student.html', CourseID=CourseID, ClassID=ClassID)
 
+@app.route('/view-material/<CourseID>/<ClassID>/<SectionID>/<url>')
+def view_material(CourseID, ClassID, SectionID, url):
+    allowed_sections = get_quiz_attempts('1', CourseID, ClassID)['allowed_sections']
+    
+    if int(SectionID) in allowed_sections:
+        return render_template('view-file.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID, url=url)
+    else:
+        abort(403)
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
 
