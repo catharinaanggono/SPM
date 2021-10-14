@@ -272,6 +272,14 @@ CREATE TABLE IF NOT EXISTS publicForumReply(
     FOREIGN KEY (ForumID) REFERENCES publicForum(ForumID),
     FOREIGN KEY (UserID) REFERENCES userTable(UserID)
 );
+
+FLUSH PRIVILEGES;
+SET GLOBAL event_scheduler = ON;
+
+
+DELIMITER $$
+CREATE EVENT `UPDATE_ENROL_ONGOING` ON SCHEDULE EVERY 1 MINUTE STARTS '2021-10-14 13:02:26' ON COMPLETION NOT PRESERVE ENABLE DO update classLearner inner join class on class.classid = classlearner.classid set classLearner.ApplicationStatus = 'ongoing' where class.StartDate <= NOW() and (classLearner.ApplicationStatus = 'enrolled' or classlearner.ApplicationStatus = 'self_enrolled')
+DELIMITER ;
 -- create table if not exists course_forum();
 
 -- create table if not exists public_forum(
@@ -304,3 +312,4 @@ insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values
 insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 5, 'applied');
 insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 4, 'enrolled');
 insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (2, 3, 3, 'rejected');
+
