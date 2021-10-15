@@ -107,7 +107,10 @@ def create_quiz():
     return jsonify(
         {
             "code": 201,
-            "message": "Quiz are successfully created"
+            "message": "Quiz are successfully created",
+            "data": {
+                "QuizID": quiz.QuizID
+            }
         }
     ), 201     
 
@@ -135,7 +138,10 @@ def create_question():
     return jsonify(
         {
             "code": 201,
-            "message": "Question are successfully created"
+            "message": "Question are successfully created",
+            "data": {
+                "QuestionID": question.QuestionID
+            }
         }
     ), 201     
 

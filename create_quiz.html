@@ -20,7 +20,7 @@
     <script>
       localStorage.CourseId = 1
       localStorage.ClassId = 1
-      localStorage.SectionId = 1
+      localStorage.SectionId = 3
     </script>
   </head>
   <body>
@@ -208,13 +208,13 @@
     <!-- END wrapper -->
     
     <script>
-        var qn_id = document.getElementsByClassName('questions').length + 1;
+        var qn_id = document.getElementsByClassName('questions').length;
         add_question(); 
         console.log(qn_id)
 
         var CourseID = localStorage.CourseId;
-        var ClassID = localStorage.ClassID;
-        var SectionID = localStorage.SectionID;
+        var ClassID = localStorage.ClassId;
+        var SectionID = localStorage.SectionId;
 
         // document.getElementById('question_content').innerHTML = `
         //     <div class="questions" id='question${qn_id}'>
@@ -265,7 +265,7 @@
         // to add the answer options field from clicking the button 'add option'
         function add_options(current_qn_id){
             var current_qn_id = current_qn_id.slice(10)
-            var num_of_options = document.getElementById('qn' + current_qn_id + '_options').getElementsByTagName('input').length
+            var num_of_options = document.getElementById('qn' + current_qn_id + '_options_content').getElementsByTagName('input').length
             var current_opt_id = num_of_options + 1
             // var num_of_questions = document.getElementsByClassName('questions').length  
             // var current_qn_id = num_of_questions + 1
@@ -291,7 +291,7 @@
             // create input field
             var add_input = document.createElement('input')
             add_input.setAttribute('type', 'text')
-            add_input.setAttribute('class', 'form-control')
+            add_input.setAttribute('class', 'form-control qn' + qn_id + '_options')
             add_input.setAttribute('id', 'qn'+current_qn_id+'_option'+current_opt_id)
             add_input.setAttribute('name', 'option'+current_opt_id)
             add_input.addEventListener('focusout', function(){add_below(add_input.id)})
@@ -317,7 +317,7 @@
             col3.appendChild(remove_opt_btn)
             row.appendChild(col3)
             row.appendChild(col4)
-            document.getElementById('qn' + current_qn_id + '_options').appendChild(row)
+            document.getElementById('qn' + current_qn_id + '_options_content').appendChild(row)
 
             // document.getElementById('qn' + current_qn_id + '_options').innerHTML += `
             //     <div class="form-group row">
@@ -337,8 +337,8 @@
             console.log(opt_id)
             var specific_id = opt_id[0].slice(2)
             console.log(specific_id)
-            console.log(document.getElementById('qn' + specific_id + '_options'))
-            var num_of_options = document.getElementById('qn' + specific_id + '_options').getElementsByTagName('input').length
+            console.log(document.getElementById('qn' + specific_id + '_options_content'))
+            var num_of_options = document.getElementById('qn' + specific_id + '_options_content').getElementsByTagName('input').length
 
             document.getElementById('qn'+specific_id+'_set_answer').innerHTML = 
             `
@@ -352,7 +352,7 @@
                 // console.log(dropdown_value)
                 if (dropdown_text != ''){
                     document.getElementById('qn'+specific_id+'_set_answer').innerHTML += `
-                    <option value='${dropdown_value}'>${dropdown_text}</option>
+                    <option value='${dropdown_text}'>${dropdown_text}</option>
                     `
                     // console.log(document.getElementById('qn'+specific_id+'_set_answer').innerHTML)
                 }
@@ -365,15 +365,18 @@
           // var current_qn_id = num_of_questions + 1
           // console.log(num_of_questions)          
 
+          qn_id += 1
+          console.log("QNID--" + qn_id)
+
           var hr = document.createElement('hr')
 
           var whole_div = document.createElement('div')
           whole_div.setAttribute('id', 'whole_question' + qn_id)
+          whole_div.setAttribute('class', 'questions')
 
           // question div
           var qn_div = document.createElement('div')
-          qn_div.setAttribute('class', 'questions')
-          qn_div.setAttribute('id', 'question' + qn_id)
+          qn_div.setAttribute('id', 'question' + qn_id + '_div')
 
           var qn_row1 = document.createElement('div')
           qn_row1.setAttribute('class', 'form-group row')
@@ -418,7 +421,7 @@
           qn_field.setAttribute('placeholder', 'e.g. What is my name?')
 
           var opt_div = document.createElement('div')
-          opt_div.setAttribute('id', 'qn' + qn_id + '_options')
+          opt_div.setAttribute('id', 'qn' + qn_id + '_options_content')
 
           var opt_row1 = document.createElement('div')
           opt_row1.setAttribute('class', 'form-group row')
@@ -433,7 +436,7 @@
 
           var opt1_field = document.createElement('input')
           opt1_field.setAttribute('type', 'text')
-          opt1_field.setAttribute('class', 'form-control')
+          opt1_field.setAttribute('class', 'form-control qn' + qn_id + '_options')
           opt1_field.setAttribute('id', 'qn'+ qn_id +'_option1')
           opt1_field.setAttribute('name', 'option1')
           opt1_field.addEventListener('focusout', function(){add_below(opt1_field.id)})
@@ -471,7 +474,7 @@
 
           var opt2_field = document.createElement('input')
           opt2_field.setAttribute('type', 'text')
-          opt2_field.setAttribute('class', 'form-control')
+          opt2_field.setAttribute('class', 'form-control qn' + qn_id + '_options')
           opt2_field.setAttribute('id', 'qn'+ qn_id +'_option2')
           opt2_field.setAttribute('name', 'option2')
           opt2_field.addEventListener('focusout', function(){add_below(opt2_field.id)})
@@ -540,9 +543,6 @@
 
           // to hide add question buttons 
           hide_buttons(qn_id);   
-
-          qn_id += 1
-          console.log("QNID--" + qn_id)
         }
 
         function remove_question(delete_qn_id){
@@ -587,9 +587,131 @@
           document.getElementById('remove' + bfr_deleted_qn_id).style.display = "inline"
         }
 
+        // post to db to create quiz
         function submit(){
-          
+          console.log("IM INSIDE")
+          var QuizTitle = document.getElementById('title').value
+          var QuizTimer = document.getElementById('time_limit').value
+
+          var quiz_send_value = {
+            CourseID: CourseID,
+            ClassID: ClassID,
+            SectionID: SectionID,
+            QuizTitle: QuizTitle,
+            QuizTimer: QuizTimer
+          }
+
+          var request = new XMLHttpRequest();
+          request.onreadystatechange = function () {
+              if (this.readyState == 4 && this.status == 201) {
+
+                var data = JSON.parse(this.responseText);
+                console.log(data)
+                var QuizID = data.data.QuizID;
+                console.log(QuizID)
+                
+                post_qn(QuizID)
+              }
+          };
+          // console.log(JSON.stringify(send_value))
+          request.open("POST", "http://localhost:5004/create_quiz")
+          request.setRequestHeader("Content-type", "application/json");
+          request.send(JSON.stringify(quiz_send_value))
+
         }
+          
+        // port to db the questions, answers, and set answer
+        function post_qn(QuizID){
+          var content = document.getElementsByClassName('questions').length
+          console.log('IM INSIDE POST')
+          // loop through the questions one by one
+          for (q_i = 1; q_i<=content; q_i++){
+            console.log("q_i1 "+q_i)
+            var q_i_pass = q_i
+            // get each qn text
+            var question_text = document.getElementById('question'+q_i).value
+
+            var qn_send_value = {
+              CourseID: CourseID,
+              ClassID: ClassID,
+              SectionID: SectionID,
+              QuizID: QuizID,
+              QuestionContent: question_text
+            }
+
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 201) {
+
+                  var data = JSON.parse(this.responseText);
+                  console.log(data)
+
+                  QuestionID = data.data.QuestionID;
+                  console.log(QuestionID)
+                  
+                  console.log("q_i2 "+q_i_pass)
+                  post_ans(QuizID, QuestionID, q_i_pass)
+                }
+            };
+            // console.log(JSON.stringify(send_value))
+            request.open("POST", "http://localhost:5004/create_question", false)
+            request.setRequestHeader("Content-type", "application/json");
+            request.send(JSON.stringify(qn_send_value))
+          }
+        }
+
+        function post_ans(QuizID, QuestionID, q_i_pass){
+          console.log("q_i_pass"+q_i_pass)
+
+          // get the number of options 
+          var options_cnt = document.getElementById('qn'+q_i_pass+'_options_content').getElementsByClassName('qn' + q_i_pass + '_options').length
+
+          // retrieve text of the option selected as answer 
+          var set_answer = document.getElementById('qn'+q_i_pass+'_set_answer').value
+          // console.log(document.getElementById('qn'+q_i+'_set_answer').value)
+
+          // loop through each qn's options and retrieve each opt text
+          for (o_i = 1; o_i <= options_cnt; o_i++){
+            console.log("option index" + o_i)
+            var option_text = document.getElementById('qn'+q_i_pass+'_option'+o_i).value
+            console.log("OPTION TEXT :" + option_text)
+            
+            // check if the option is set as the right answer
+            var correct = '';
+            if (option_text == set_answer){
+              correct = 0
+            }
+            else {
+              correct = 1
+            }
+
+            var ans_send_value = {
+              CourseID: CourseID,
+              ClassID: ClassID,
+              SectionID: SectionID,
+              QuizID: QuizID,
+              QuestionID: QuestionID,
+              AnswerContent: option_text,
+              Correct: correct
+            }
+
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 201) {
+
+                  var data = JSON.parse(this.responseText);
+                  console.log(data)
+                  
+                }
+            };
+            // console.log(JSON.stringify(send_value))
+            request.open("POST", "http://localhost:5004/create_answer")
+            request.setRequestHeader("Content-type", "application/json");
+            request.send(JSON.stringify(ans_send_value))
+          }
+        }
+        
+
     </script>
 
     <script src="js/scripts.min.js"></script>
