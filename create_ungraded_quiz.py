@@ -21,9 +21,9 @@ class Quiz(db.Model):
     __tablename__ = 'quiz'
 
     QuizID = db.Column(db.Integer, primary_key = True)
-    CourseID = db.Column(db.Integer, primary_key = True)
-    ClassID = db.Column(db.Integer, primary_key = True)
-    SectionID = db.Column(db.Integer, primary_key = True)
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, nullable=False)
     QuizTitle = db.Column(db.String(50), nullable=False)
     QuizTimer = db.Column(db.Integer, nullable=False)
 
@@ -41,10 +41,10 @@ class Question(db.Model):
     __tablename__ = 'question'
 
     QuestionID = db.Column(db.Integer, primary_key=True)
-    CourseID = db.Column(db.Integer, primary_key = True)
-    ClassID = db.Column(db.Integer, primary_key = True)
-    SectionID = db.Column(db.Integer, primary_key = True)
-    QuizID = db.Column(db.Integer, primary_key = True)
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
     QuestionContent = db.Column(db.Text, nullable=False)
 
 
@@ -62,11 +62,11 @@ class QuestionAnswer(db.Model):
     __tablename__ = 'questionAnswer'
 
     AnswerID = db.Column(db.Integer, primary_key=True)
-    CourseID = db.Column(db.Integer, primary_key = True)
-    ClassID = db.Column(db.Integer, primary_key = True)
-    SectionID = db.Column(db.Integer, primary_key = True)
-    QuizID = db.Column(db.Integer, primary_key = True)
-    QuestionID = db.Column(db.Integer, primary_key=True)
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
+    QuestionID = db.Column(db.Integer, nullable=False)
     AnswerContent = db.Column(db.Text, nullable=False)
     Correct = db.Column(db.Boolean, nullable=False)
 
