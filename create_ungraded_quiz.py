@@ -21,32 +21,30 @@ class Quiz(db.Model):
     __tablename__ = 'quiz'
 
     QuizID = db.Column(db.Integer, primary_key = True)
-    CourseID = db.Column(db.Integer, primary_key = True)
-    ClassID = db.Column(db.Integer, primary_key = True)
-    SectionID = db.Column(db.Integer, primary_key = True)
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, nullable=False)
     QuizTitle = db.Column(db.String(50), nullable=False)
     QuizTimer = db.Column(db.Integer, nullable=False)
-    PassingScore = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, CourseID, ClassID, SectionID, QuizTitle, QuizTimer, PassingScore):
+    def __init__(self, CourseID, ClassID, SectionID, QuizTitle, QuizTimer):
         self.CourseID = CourseID
         self.ClassID = ClassID
         self.SectionID = SectionID
         self.QuizTitle = QuizTitle
         self.QuizTimer = QuizTimer
-        self.PassingScore = PassingScore
 
     def json(self):
-        return{"QuizID": self.QuizID, "CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizTitle": self.QuizTitle, "QuizTimer": self.QuizTimer, "PassingScore": self.PassingScore}
+        return{"QuizID": self.QuizID, "CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizTitle": self.QuizTitle, "QuizTimer": self.QuizTimer}
 
 class Question(db.Model):
     __tablename__ = 'question'
 
     QuestionID = db.Column(db.Integer, primary_key=True)
-    CourseID = db.Column(db.Integer, primary_key = True)
-    ClassID = db.Column(db.Integer, primary_key = True)
-    SectionID = db.Column(db.Integer, primary_key = True)
-    QuizID = db.Column(db.Integer, primary_key = True)
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
     QuestionContent = db.Column(db.Text, nullable=False)
 
 
@@ -64,11 +62,11 @@ class QuestionAnswer(db.Model):
     __tablename__ = 'questionAnswer'
 
     AnswerID = db.Column(db.Integer, primary_key=True)
-    CourseID = db.Column(db.Integer, primary_key = True)
-    ClassID = db.Column(db.Integer, primary_key = True)
-    SectionID = db.Column(db.Integer, primary_key = True)
-    QuizID = db.Column(db.Integer, primary_key = True)
-    QuestionID = db.Column(db.Integer, primary_key=True)
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
+    QuestionID = db.Column(db.Integer, nullable=False)
     AnswerContent = db.Column(db.Text, nullable=False)
     Correct = db.Column(db.Boolean, nullable=False)
 
@@ -84,6 +82,37 @@ class QuestionAnswer(db.Model):
     
     def json(self):
         return{"AnswerID": self.AnswerID, "CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizID": self.QuizID, "QuestionID": self.QuestionID, "AnswerContent": self.AnswerContent, "Correct": self.Correct}
+
+@app.route('/create_quiz', methods=["POST"])
+def create_quiz():
+
+    data = request.get_json()
+    print(data)
+
+    quiz = Quiz(**data)
+
+    try:
+        db.session.add(quiz)    
+        db.session.commit()
+    
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occurred creating the quiz."
+            }
+        ), 500
+
+
+    return jsonify(
+        {
+            "code": 201,
+            "message": "Quiz are successfully created",
+            "data": {
+                "QuizID": quiz.QuizID
+            }
+        }
+    ), 201     
 
 @app.route('/create_question', methods=["POST"])
 def create_question():
@@ -109,7 +138,10 @@ def create_question():
     return jsonify(
         {
             "code": 201,
-            "message": "Question are successfully created"
+            "message": "Question are successfully created",
+            "data": {
+                "QuestionID": question.QuestionID
+            }
         }
     ), 201     
 
