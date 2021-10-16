@@ -17,6 +17,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 
 db = SQLAlchemy(app)
 
+# ungraded quiz
 class Quiz(db.Model):
     __tablename__ = 'quiz'
 
@@ -83,6 +84,62 @@ class QuestionAnswer(db.Model):
     def json(self):
         return{"AnswerID": self.AnswerID, "CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizID": self.QuizID, "QuestionID": self.QuestionID, "AnswerContent": self.AnswerContent, "Correct": self.Correct}
 
+# graded quiz
+class FinalQuiz(db.Model):
+    __tablename__ = 'finalQuiz'
+
+    QuizID = db.Column(db.Integer, primary_key = True)
+    CourseID = db.Column(db.Integer, nullable=False)
+    QuizTitle = db.Column(db.String(50), nullable=False)
+    QuizTimer = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, CourseID, QuizTitle, QuizTimer):
+        self.CourseID = CourseID
+        self.QuizTitle = QuizTitle
+        self.QuizTimer = QuizTimer
+
+    def json(self):
+        return{"QuizID": self.QuizID, "CourseID": self.CourseID, "QuizTitle": self.QuizTitle, "QuizTimer": self.QuizTimer}
+
+class FinalQuizQuestion(db.Model):
+    __tablename__ = 'finalQuizQuestion'
+
+    QuestionID = db.Column(db.Integer, primary_key=True)
+    CourseID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
+    QuestionContent = db.Column(db.Text, nullable=False)
+
+
+    def __init__(self, CourseID, QuizID, QuestionContent):
+        self.CourseID = CourseID
+        self.QuizID = QuizID
+        self.QuestionContent = QuestionContent
+    
+    def json(self):
+        return{"QuestionID": self.QuestionID, "CourseID": self.CourseID, "QuizID": self.QuizID, "QuestionContent": self.QuestionContent}
+
+class FinalQuizQuestionAnswer(db.Model):
+    __tablename__ = 'finalQuizQuestionAnswer'
+
+    AnswerID = db.Column(db.Integer, primary_key=True)
+    CourseID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
+    QuestionID = db.Column(db.Integer, nullable=False)
+    AnswerContent = db.Column(db.Text, nullable=False)
+    Correct = db.Column(db.Boolean, nullable=False)
+
+
+    def __init__(self, CourseID, QuizID, QuestionID, AnswerContent, Correct):
+        self.CourseID = CourseID
+        self.QuizID = QuizID
+        self.QuestionID = QuestionID
+        self.AnswerContent = AnswerContent
+        self.Correct = Correct
+    
+    def json(self):
+        return{"AnswerID": self.AnswerID, "CourseID": self.CourseID, "QuizID": self.QuizID, "QuestionID": self.QuestionID, "AnswerContent": self.AnswerContent, "Correct": self.Correct}
+
+# for ungraded quiz
 @app.route('/create_quiz', methods=["POST"])
 def create_quiz():
 
@@ -173,51 +230,95 @@ def create_answer():
         }
     ), 201     
 
-# @app.route('/create_question', methods=["POST"])
-# def create_question():
+@app.route('/create_graded_quiz', methods=["POST"])
+def create_graded_quiz():
 
-#     data = request.get_json()
-#     print(data)
+    data = request.get_json()
+    print(data)
 
-#     CourseID = data['CourseID']
-#     ClassID = data['ClassID']
-#     SectionID = data['SectionID']
-#     QuizID = data['QuizID']
-#     QuestionContent = data['QuestionContent']
-#     AnswerOptions = data['AnswerOptions']
+    final_quiz = FinalQuiz(**data)
 
-#     question = Question(CourseID, ClassID, SectionID, QuizID, QuestionContent)
-
-#     try:
-#         db.session.add(question)    
-#         db.session.commit()
-
-#         for each_ans in AnswerOptions:
-#             AnswerContent = data['AnswerOptions'][each_ans]['AnswerContent']
-#             Correct = data['AnswerOptions'][each_ans]['Correct']
-#             answer = QuestionAnswer(CourseID, ClassID, SectionID, QuizID, AnswerContent, Correct)
-#             db.session.add(answer)    
-
-#         db.session.commit()
-
+    try:
+        db.session.add(final_quiz)    
+        db.session.commit()
     
-#     except:
-#         return jsonify(
-#             {
-#                 "code": 500,
-#                 "message": "An error occurred creating the question and answer."
-#             }
-#         ), 500
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occurred creating the quiz."
+            }
+        ), 500
 
 
-#     return jsonify(
-#         {
-#             "code": 201,
-#             "message": "Question and answer are successfully created"
-#         }
-#     ), 201     
+    return jsonify(
+        {
+            "code": 201,
+            "message": "Quiz are successfully created",
+            "data": {
+                "QuizID": final_quiz.QuizID
+            }
+        }
+    ), 201     
+
+@app.route('/create_graded_question', methods=["POST"])
+def create_graded_question():
+
+    data = request.get_json()
+    print(data)
+
+    final_quiz_question = FinalQuizQuestion(**data)
+
+    try:
+        db.session.add(final_quiz_question)    
+        db.session.commit()
+    
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occurred creating the question."
+            }
+        ), 500
 
 
+    return jsonify(
+        {
+            "code": 201,
+            "message": "Question are successfully created",
+            "data": {
+                "QuestionID": final_quiz_question.QuestionID
+            }
+        }
+    ), 201    
+
+@app.route('/create_graded_answer', methods=["POST"])
+def create_graded_answer():
+
+    data = request.get_json()
+    print(data)
+
+    final_quiz_answer = FinalQuizQuestionAnswer(**data)
+
+    try:
+        db.session.add(final_quiz_answer)    
+        db.session.commit()
+    
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occurred creating the answer."
+            }
+        ), 500
+
+
+    return jsonify(
+        {
+            "code": 201,
+            "message": "Answer are successfully created"
+        }
+    ), 201     
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5004, debug=True)
