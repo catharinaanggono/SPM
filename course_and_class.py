@@ -161,6 +161,8 @@ class ClassTaken(db.Model):
         
         return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID}
 
+
+
 class LearnerCourse(db.Model):
     __tablename__ = 'LearnerCourse'
 
@@ -448,7 +450,7 @@ def get_all_courses(UserID):
     for prereq in takenPrereq:
         prereq_courses.append(prereq.CourseID)
     for a_class in takenClasses:
-        if a_class.ApplicationStatus == 'enrolled': # check if user already enrolled
+        if a_class.ApplicationStatus == 'enrolled' or a_class.ApplicationStatus == 'self_enrolled': # check if user already enrolled
             enrolled_courses.append(a_class.CourseID)
         elif a_class.ApplicationStatus == 'applied':
             applied_courses.append([a_class.CourseID, a_class.ClassID])
@@ -517,16 +519,16 @@ def self_enrol():
     courseID = data['CourseID']
     classID = data['ClassID']
     apply_class = ClassTaken(courseID, classID, userID, 'applied')
-    # try:
-    db.session.add(apply_class)
-    db.session.commit()
-    # except:
-    #    return jsonify(
-    #        {
-    #             "code": 500,
-    #             "message": "An error occurred in applying to class."
-    #        }
-    #    ), 500
+    try:
+        db.session.add(apply_class)
+        db.session.commit()
+    except:
+       return jsonify(
+           {
+                "code": 500,
+                "message": "An error occurred in applying to class."
+           }
+       ), 500
  
     return jsonify(
         {
@@ -535,9 +537,21 @@ def self_enrol():
             "data": apply_class.json()
         }
     ), 201
-    pass
 
-
+@app.route('/withdraw-application/<int:CourseID>/<int:ClassID>/<int:UserID>', methods=['POST'])
+def withdraw_application(CourseID, ClassID, UserID):
+    ClassTaken.query.filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).filter_by(LearnerID = UserID).delete()
+    try:
+        db.session.commit()
+        return jsonify({
+            "code": 201,
+            "message": "Successfully withdrawn"
+        })
+    except:
+        return jsonify({
+            "code": 500,
+            "message": "An error occurred in withdrawing class application"
+        }), 500
 
 '''testing render_template'''
 
