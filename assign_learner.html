@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
+    <title>Assign Learner to Class</title>
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     
@@ -316,7 +316,7 @@
       //to retrieve data from database for user details
       //need to change the CourseID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! HEREEEEEEEEEEEEEEEE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       var send_value = {
-        CourseID: 1
+        CourseID: 4
       }
       var request = new XMLHttpRequest();
 
@@ -581,8 +581,8 @@
           //var obj = {'UserID': details.id, 'UserName': details.getAttribute('value'), 'UserType': details.className}
           //selected_engineers.push(obj)
 
-          //[CourseID, ClassID, LearnerID, ApplicationStatus]
-          learner_details.push([1,1, details.id, "enrolled"])
+          //[CourseID, ClassID, LearnerID, ApplicationStatus] //please chage the courseid and classid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          learner_details.push([4,4, details.id, "hr_enrolled"])
 
           // courseid_list.push(1)
           // classid_list.push(1)
@@ -592,8 +592,8 @@
 
         //please chage the courseid and classid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         var send_value = {
-          CourseID: '1',
-          ClassID: '1',
+          CourseID: '4',
+          ClassID: '4',
           data: learner_details
         }
 
@@ -617,7 +617,7 @@
               //console.log(msg)
               //console.log(engineer_enrolled_list)
 
-              document.getElementById("error").innerHTML = 'Learners with the follow ID(s) has already been enrolled into this class: '
+              document.getElementById("error").innerHTML = 'Learners with the follow ID(s) has already been enrolled into/completed this class: '
 
               for(i in engineer_enrolled_list){
                 var id  = engineer_enrolled_list[i].LearnerID;
@@ -632,7 +632,8 @@
               document.getElementById("error").innerHTML = ""
               var data = JSON.parse(this.responseText);
               var msg = data.message
-              document.getElementById("error").innerHTML = `${msg}`
+              var class_availablity = data.available_seat
+              document.getElementById("error").innerHTML = `${msg} There are only ${class_availablity} available seat(s) in this class`
             }
         };
         request.open("POST", "http://localhost:5200/assign_learners")
