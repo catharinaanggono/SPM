@@ -251,7 +251,9 @@
 
     
     <script>   
-        
+        request = new XMLHttpRequest()
+        request.open('GET', `http://localhost:5001/open-material/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}/{{ url }}/1`)
+        request.send()
         
         var file = " {{ url }} "
         "{% set url_safe = url | safe %}"
@@ -260,9 +262,6 @@
         url_used = " {{ url_for('static', filename='course_material/'|safe ~ CourseID ~ '/' ~ ClassID ~ '/' ~ SectionID ~ '/' ~ url_safe|safe  ) }}"
         if (x.includes('.pdf')){
             console.log(1)
-            
-            
-            
             console.log(url_used)
 
             var thePdf = null;

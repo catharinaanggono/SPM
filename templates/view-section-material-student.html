@@ -230,7 +230,13 @@
             </div>
             <div id="${i}-${sectionNameNoSpace}-material" class="collapse" aria-labelledby="${i}-${sectionNameNoSpace}" data-parent="#accordion" aria-expanded="false">
                 <!-- For each section material -- use this template -->
-                
+                <div id="${i}-${sectionNameNoSpace}-progress" style='text-align:center'>
+                  <div id="${i}-${sectionNameNoSpace}-progress-bar" style='width:50%;height:20px;margin-left:25%;background-color:grey;outline: 2px solid grey;'>
+                    
+                  </div>
+                  <div id="${i}-${sectionNameNoSpace}-progress-text">
+                  </div>
+                </div>
             </div>
         </div>
     </div>
@@ -239,16 +245,44 @@
 
                     `
                     secMatList = data[idx].SectionMaterialList
-                    
+                    progressBarList = []
                     for (let j = 0; j < secMatList.length; j++){
                         materialContent = secMatList[j].MaterialContent
+                        original = 'NOT OPENED'
+                        var requestProgress = new XMLHttpRequest()
+                        requestProgress.onreadystatechange = function(){
+                          original = 'OPENED'
+                        }
+                        requestProgress.open("GET", `http://localhost:5001/check-opened-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}/1`)
+                        requestProgress.send()
+                        progressBarList.push(original)
                         document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
                         <div class="card-body" style="">
-                            <span style="width:100%"> <b> <a href='http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
+                            <div class='row'>
+                              <div class ='col-md-8'>
+                                <span style="width:80%"> <b> <a href=
+                                  'http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
+                              </div>
+                              <div class='col-md-4'>
+                                <span> ${original} </span>
+                              </div>
+                            </div>
                             <hr>
                         </div>
                         `
                     }
+                    openedCount = 0
+                    for (checkOpened of progressBarList){
+                      if (checkOpened == 'OPENED'){
+                        openedCount += 1
+                      }
+                    }
+                    allCount = progressBarList.length
+                    percentage = openedCount*100/allCount 
+                    progressTextHTML = `${percentage}% ${openedCount} out of ${allCount} material opened`
+                    document.getElementById(`${i}-${sectionNameNoSpace}-progress-text`).innerHTML = progressTextHTML
+                    progressBarHTML = `<div style='width:${percentage}%; height:20px; background-color:green'></div>`
+                    document.getElementById(`${i}-${sectionNameNoSpace}-progress-bar`).innerHTML = progressBarHTML
                     styleHTML = ''
                     if (!allowedSections.includes(sectionID)){
                       styleHTML += 'pointer-events: none; opacity: 0.4'
@@ -260,6 +294,8 @@
         }
         request.open('GET', 'http://localhost:5001/view-section/{{ CourseID }}/{{ ClassID }}')
         request.send()
+
+      
     </script>
   </body>
 </html>

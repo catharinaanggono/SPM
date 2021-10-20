@@ -1,4 +1,4 @@
-# WRITTEN BY WELLSON ARCHUN HAREND (01385161)
+# WRITTEN BY WELLSON ARCHUN HAREND (wellsonah.2019)
 
 import unittest
 from course_and_class import SectionMaterial

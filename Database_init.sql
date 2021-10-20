@@ -220,7 +220,6 @@ CREATE TABLE IF NOT EXISTS MaterialProgress(
     SectionID INT NOT NULL,
     MaterialContent VARCHAR(500) NOT NULL,
     LearnerID INT NOT NULL,
-    STATUS BOOLEAN NOT NULL,
     PRIMARY KEY (CourseID, ClassID, SectionID, MaterialContent, LearnerID),
     FOREIGN KEY (LearnerID) REFERENCES userTable(UserID),
     FOREIGN KEY (CourseID) REFERENCES sectionMaterial(CourseID),

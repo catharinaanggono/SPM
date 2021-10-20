@@ -89,6 +89,23 @@ class SectionMaterial(db.Model):
 def security_input_check(text):
     return True
 
+class MaterialProgress(db.Model):
+    __tablename__ = 'materialProgress'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    SectionID = db.Column(db.Integer, primary_key=True)
+    MaterialContent = db.Column(db.String(255), primary_key=True)
+    LearnerID = db.Column(db.Integer, primary_key=True)
+
+    def __init__(self, CourseID, ClassID, SectionID, MaterialContent, LearnerID):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.SectionID = SectionID
+        self.MaterialContent = MaterialContent
+        self.LearnerID = LearnerID
+    
+
 
 class course_class(db.Model):
     __tablename__ = 'class'
@@ -302,7 +319,42 @@ def show_section(CourseID, ClassID):
             "code": 200,
             "data": [a_section.json() for a_section in actual_section]
         }
-    
+
+@app.route('/open-material/<string:CourseID>/<string:ClassID>/<string:SectionID>/<string:MaterialContent>/<string:LearnerID>')
+def open_material(CourseID, ClassID, SectionID, MaterialContent, LearnerID):
+    opened = MaterialProgress.query.filter_by(CourseID = CourseID, ClassID=ClassID, SectionID=SectionID, MaterialContent = MaterialContent, LearnerID = LearnerID).first()
+    if not opened:
+        try:
+            db.session.add(MaterialProgress(CourseID, ClassID, SectionID, MaterialContent, LearnerID))
+            db.session.commit()
+            return jsonify({
+                "code": 201,
+                "message": "Progress updated"
+            })
+        except:
+            return jsonify({
+                "code": 500,
+                "message": "An error occurred"
+            })
+    else:
+        return jsonify({
+            "code": 400,
+            "message": "Progress already made before"
+        })
+
+@app.route('/check-opened-material/<string:CourseID>/<string:ClassID>/<string:SectionID>/<string:MaterialContent>/<string:LearnerID>')
+def check_opened(CourseID, ClassID, SectionID, MaterialContent, LearnerID):
+    opened = MaterialProgress.query.filter_by(CourseID = CourseID, ClassID=ClassID, SectionID=SectionID, MaterialContent = MaterialContent, LearnerID = LearnerID).first()
+    if opened:
+        return jsonify({
+            "code": 200,
+            "message": "OPENED"
+        })
+    else:
+        return jsonify({
+            "code": 404,
+            "message": "NOT OPENED"
+        })
 
 @app.route('/uploader-section-name/<string:CourseID>/<string:ClassID>/<string:SectionID>', methods=['POST'])
 def update_section_name(CourseID, ClassID, SectionID):
