@@ -80,13 +80,14 @@ CREATE TABLE IF NOT EXISTS sectionMaterial(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
     SectionID INT NOT NULL,
-    MaterialID INT NOT NULL AUTO_INCREMENT,
-    MaterialContent TEXT NOT NULL,
-    PRIMARY KEY (MaterialID),
+    MaterialContent VARCHAR(500) NOT NULL,
+    PRIMARY KEY (CourseID, ClassID, SectionID, MaterialContent),
     FOREIGN KEY (CourseID) REFERENCES section(CourseID),
     FOREIGN KEY (ClassID) REFERENCES section(ClassID),
     FOREIGN KEY (SectionID) REFERENCES section(SectionID)
 );
+
+ALTER TABLE `sectionmaterial` ADD INDEX( `MaterialContent`);
 
 CREATE TABLE IF NOT EXISTS quiz(
     CourseID INT NOT NULL,
@@ -217,15 +218,15 @@ CREATE TABLE IF NOT EXISTS MaterialProgress(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
     SectionID INT NOT NULL,
-    MaterialID INT NOT NULL,
+    MaterialContent VARCHAR(500) NOT NULL,
     LearnerID INT NOT NULL,
     STATUS BOOLEAN NOT NULL,
-    PRIMARY KEY (CourseID, ClassID, SectionID, MaterialID, LearnerID),
+    PRIMARY KEY (CourseID, ClassID, SectionID, MaterialContent, LearnerID),
     FOREIGN KEY (LearnerID) REFERENCES userTable(UserID),
     FOREIGN KEY (CourseID) REFERENCES sectionMaterial(CourseID),
     FOREIGN KEY (ClassID) REFERENCES sectionMaterial(ClassID),
     FOREIGN KEY (SectionID) REFERENCES sectionMaterial(SectionID),
-    FOREIGN KEY (MaterialID) REFERENCES sectionMaterial(MaterialID)
+    FOREIGN KEY (MaterialContent) REFERENCES sectionMaterial(MaterialContent)
 );
 
 

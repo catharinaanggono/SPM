@@ -718,6 +718,7 @@
             if (data[course].classList.length > 0){
               for (aClass of data[course].classList){
                 classID = "Class " + aClass.ClassID
+                console.log(classID)
                 seniorEngineer = aClass.TrainerList
                 availability = aClass.RemainingSlot
                 startDate = new Date(aClass.StartDate)
@@ -798,6 +799,7 @@
               }
             }
             else{
+              console.log('NO CLASSES')
               document.getElementById(`${collapsibleID}`).innerHTML += `
                 
                 <div class="card-body">

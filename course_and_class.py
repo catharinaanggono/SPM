@@ -47,16 +47,14 @@ class course(db.Model):
 class SectionMaterial(db.Model):
     __tablename__ = 'sectionMaterial'
 
-    CourseID = db.Column(db.Integer)
-    ClassID = db.Column(db.Integer)
-    SectionID = db.Column(db.Integer)
-    MaterialID = db.Column(db.Integer, primary_key=True)
-    MaterialContent = db.Column(db.Text)
+    CourseID = db.Column(db.Integer, primary_key=True)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    SectionID = db.Column(db.Integer, primary_key=True)
+    MaterialContent = db.Column(db.String(255), primary_key=True)
     '''
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
     SectionID INT NOT NULL,
-    MaterialID INT NOT NULL AUTO_INCREMENT,
     MaterialContent TEXT NOT NULL,
     '''
 
@@ -68,9 +66,9 @@ class SectionMaterial(db.Model):
 
     def create_path(self):
 
-        course_path = 'course_material/' + str(self.CourseID)
-        class_path = 'course_material/' + str(self.CourseID) + '/' + str(self.ClassID)
-        section_path = 'course_material/' + str(self.CourseID) + '/' + str(self.ClassID) + '/' + str(self.SectionID)
+        course_path = 'static/course_material/' + str(self.CourseID)
+        class_path = 'static/course_material/' + str(self.CourseID) + '/' + str(self.ClassID)
+        section_path = 'static/course_material/' + str(self.CourseID) + '/' + str(self.ClassID) + '/' + str(self.SectionID)
 
         course_path_exists = os.path.isdir(course_path)
         class_path_exists = os.path.isdir(class_path)
@@ -86,7 +84,7 @@ class SectionMaterial(db.Model):
             os.mkdir(section_path)
     
     def json(self):
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialID": self.MaterialID, "MaterialContent": self.MaterialContent}
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialContent": self.MaterialContent}
 
 def security_input_check(text):
     return True
@@ -344,7 +342,7 @@ def add_material_file(CourseID, ClassID, SectionID):
     for file in files:
         section_material = SectionMaterial(CourseID, ClassID, SectionID, files[file].filename)
         section_material.create_path()
-        files[file].save('course_material/{}/{}/{}/{}'.format(CourseID, ClassID, SectionID, files[file].filename))
+        files[file].save('static/course_material/{}/{}/{}/{}'.format(CourseID, ClassID, SectionID, files[file].filename))
         db.session.add(section_material)
     try:
         db.session.commit()
@@ -450,9 +448,9 @@ def get_all_courses(UserID):
     for prereq in takenPrereq:
         prereq_courses.append(prereq.CourseID)
     for a_class in takenClasses:
-        if a_class.ApplicationStatus == 'enrolled' or a_class.ApplicationStatus == 'self_enrolled': # check if user already enrolled
+        if a_class.ApplicationStatus == 'enrolled' : # check if user already enrolled
             enrolled_courses.append(a_class.CourseID)
-        elif a_class.ApplicationStatus == 'applied':
+        elif a_class.ApplicationStatus == 'applied' or a_class.ApplicationStatus == 'self_enrolled':
             applied_courses.append([a_class.CourseID, a_class.ClassID])
     courses = course.query.filter(~course.CourseID.in_(enrolled_courses), ~course.CourseID.in_(prereq_courses)) # '~' refers to not (a negate function)
     class_per_course = []
@@ -519,17 +517,30 @@ def self_enrol():
     courseID = data['CourseID']
     classID = data['ClassID']
     apply_class = ClassTaken(courseID, classID, userID, 'applied')
-    try:
-        db.session.add(apply_class)
-        db.session.commit()
-    except:
-       return jsonify(
-           {
-                "code": 500,
-                "message": "An error occurred in applying to class."
-           }
-       ), 500
- 
+    check = ClassTaken.query.filter_by(CourseID=courseID, ClassID=classID, LearnerID=userID, ApplicationStatus='rejected').first()
+    if check:
+        try:
+            check.ApplicationStatus = 'applied' 
+            db.session.commit
+        except:
+            return jsonify(
+            {
+                    "code": 500,
+                    "message": "An error occurred in applying to class."
+            }
+        ), 500
+    else:
+        try:
+            db.session.add(apply_class)
+            db.session.commit()
+        except:
+            return jsonify(
+                {
+                        "code": 500,
+                        "message": "An error occurred in applying to class."
+                }
+            ), 500
+    
     return jsonify(
         {
             "code": 201,
@@ -555,7 +566,7 @@ def withdraw_application(CourseID, ClassID, UserID):
 
 '''testing render_template'''
 
-@app.route('/test-render-template/<CourseID>/<ClassID>/<SectionID>')
+@app.route('/add-section-material/<CourseID>/<ClassID>/<SectionID>')
 def test_template(CourseID, ClassID, SectionID):
     return render_template('add-section-material.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
 
