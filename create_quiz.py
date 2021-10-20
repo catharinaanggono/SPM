@@ -230,6 +230,7 @@ def create_answer():
         }
     ), 201     
 
+# for graded quiz
 @app.route('/create_graded_quiz', methods=["POST"])
 def create_graded_quiz():
 
@@ -319,6 +320,22 @@ def create_graded_answer():
             "message": "Answer are successfully created"
         }
     ), 201     
+
+# get quiz
+# @app.route('/get_quiz/<string: QuizID>')
+# def get_quiz(QuizID):
+#     get_quiz_content = Quiz.query.first(QuizID == QuizID)
+#     if len(get_quiz_content):
+#         return jsonify({
+#             "code": 200,
+#             "data":{
+#                 "quiz": get_quiz_content.json()
+#             }
+#         })
+#     return jsonify({
+#         "code":400,
+#         "message":"There is  no quiz"
+#     }), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5004, debug=True)
