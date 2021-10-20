@@ -106,7 +106,7 @@ class LearnerCourse(db.Model):
 @app.route('/HrAssign', methods=["POST"])
 def get_learner():
     data = request.get_json()
-    #print(data['CourseID'])
+    # print(data['CourseID'])
 
     #i am assuming i can get the assigning courseID from previous pages!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11111111111111
     prereqIDs = prereq.query.filter_by(CourseID = data['CourseID']).all()
@@ -116,20 +116,25 @@ def get_learner():
     prereqID_list = []
     for prereqID in prereqIDs:
         prereqID_list.append(prereqID.json()['Prereq'])
-    print(prereqID_list)
+    # print("Pre req id list")
+    # print(prereqID_list)
 
     #to get the learner IDs that has completed the prereq of the course is being assigned
     #if there is any prereq, then it will get those learner that has completed the prereq course
     learnerID_list = []
     if len(prereqID_list):
-        learnerIDs = LearnerCourse.query.filter(LearnerCourse.CourseID.in_(prereqID_list)).all()
+        learnerIDs = classLearner.query.filter(classLearner.CourseID.in_(prereqID_list)).all()
+        # print("here")
+        # print(learnerIDs)
         for learnerID in learnerIDs:
-            status = learnerID.json()['Status']
+            status = learnerID.json()['ApplicationStatus']
             if status == 'completed':
                 learnerID_list.append(learnerID.json()['LearnerID'])
+        # print("Learner id")
+        # print(learnerID_list)
         Users = User.query.filter(User.UserID.in_(learnerID_list)).all()
-        print(learnerID_list)
-        print(Users)
+        # print(learnerID_list)
+        # print(Users)
         return jsonify({
             "code": 200,
             "data": {
@@ -150,7 +155,6 @@ def get_learner():
             "code":400,
             "message":"There are no user"
         }), 404
-
 
 @app.route('/assign_learners', methods=['POST'])
 def assign_learners():
@@ -206,7 +210,8 @@ def assign_learners():
     else:
         return jsonify({
         "code": 501,
-        "message": "There is no enough slot for this class"
+        "available_seat": class_availability,
+        "message": "There is no enough slot for this class."
         }), 501
                 
 if __name__ == '__main__':
