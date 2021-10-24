@@ -321,21 +321,27 @@ def create_graded_answer():
         }
     ), 201     
 
-# get quiz
-# @app.route('/get_quiz/<string: QuizID>')
-# def get_quiz(QuizID):
-#     get_quiz_content = Quiz.query.first(QuizID == QuizID)
-#     if len(get_quiz_content):
-#         return jsonify({
-#             "code": 200,
-#             "data":{
-#                 "quiz": get_quiz_content.json()
-#             }
-#         })
-#     return jsonify({
-#         "code":400,
-#         "message":"There is  no quiz"
-#     }), 404
+# get ungraded quiz
+@app.route('/get_quiz/<string:QuizID>')
+def get_quiz(QuizID):
+    get_quiz_content = Quiz.query.filter(Quiz.QuizID == QuizID).first()
+    get_quiz_questions = Question.query.filter(Question.QuizID == QuizID).all()
+    get_quiz_answers = QuestionAnswer.query.filter(QuestionAnswer.QuizID == QuizID).all()
+    if get_quiz_content:
+        return jsonify({
+            "code": 200,
+            "data":{
+                "Quiz": get_quiz_content.json(),
+                "Questions":
+                    [question.json() for question in get_quiz_questions],
+                "Answers":
+                    [answer.json() for answer in get_quiz_answers]                
+            }
+        })
+    return jsonify({
+        "code":400,
+        "message":"There is  no quiz"
+    }), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5004, debug=True)
