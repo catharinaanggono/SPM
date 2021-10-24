@@ -347,14 +347,14 @@ def check_opened(CourseID, ClassID, SectionID, MaterialContent, LearnerID):
     opened = MaterialProgress.query.filter_by(CourseID = CourseID, ClassID=ClassID, SectionID=SectionID, MaterialContent = MaterialContent, LearnerID = LearnerID).first()
     if opened:
         return jsonify({
-            "code": 200,
-            "message": "OPENED"
-        })
+            'code': 200,
+            'message': 'OPENED'
+        }), 200
     else:
         return jsonify({
-            "code": 404,
-            "message": "NOT OPENED"
-        })
+            'code': 404,
+            'message': 'NOT OPENED'
+        }), 404
 
 @app.route('/uploader-section-name/<string:CourseID>/<string:ClassID>/<string:SectionID>', methods=['POST'])
 def update_section_name(CourseID, ClassID, SectionID):

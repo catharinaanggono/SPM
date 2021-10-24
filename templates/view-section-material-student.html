@@ -205,7 +205,6 @@
             if (this.readyState == 4 && this.status == 200){
                 var response = JSON.parse(this.responseText)
                 var data = response.data
-                console.log(data)
                 for (let i = 1; i <= data.length; i++){
                     idx = i - 1
                     sectionID = data[idx].SectionID
@@ -241,21 +240,30 @@
         </div>
     </div>
 </div>                      
-
-
                     `
                     secMatList = data[idx].SectionMaterialList
                     progressBarList = []
+                    var original = ''
                     for (let j = 0; j < secMatList.length; j++){
                         materialContent = secMatList[j].MaterialContent
                         original = 'NOT OPENED'
                         var requestProgress = new XMLHttpRequest()
                         requestProgress.onreadystatechange = function(){
-                          original = 'OPENED'
+                          if (this.status == 200){
+                            console.log('here')
+                            original = 'OPENED'
+                            progressBarList.push(original)
+
+                          }
+                          else if (this.status == 404){
+                            original = 'NOT OPENED'
+                            progressBarList.push(original)
+
+                          }
                         }
-                        requestProgress.open("GET", `http://localhost:5001/check-opened-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}/1`)
+                        requestProgress.open("GET", `http://localhost:5001/check-opened-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}/1`, false)
                         requestProgress.send()
-                        progressBarList.push(original)
+                        console.log(progressBarList)
                         document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
                         <div class="card-body" style="">
                             <div class='row'>
