@@ -18,7 +18,7 @@
     <![endif]-->
 
     <script>
-      localStorage.QuizID = 59
+      localStorage.QuizID = 55
     </script>
   </head>
   <body>
@@ -94,8 +94,8 @@
 
       <section class="probootstrap-section probootstrap-section-sm">
         <div class="container" style='color:black;'>
-          <div class="row">
-                <form action="#" method="post" class="probootstrap-form">
+          <div class="row" id = 'quiz_content'>
+                <!-- <form action="#" method="post" class="probootstrap-form">
                     <div class='row'>
                         <div class='row'>
                             <div class='container'>
@@ -162,9 +162,9 @@
                             </div>
                         </div>
                     </div>
-                </form>
-                <button type="button" class="btn btn-primary" id = 'submit' onclick='submit()'>Submit</button>
+                </form> -->
             </div>
+            <button type="button" class="btn btn-primary" id = 'submit' onclick='submit()'>Submit</button>
           </div>
       </section>
       
@@ -232,41 +232,94 @@
     <!-- END wrapper -->
     
     <script>
-    var QuizID = localStorage.QuizID;
+    var QuizID = localStorage.QuizID
+    get_quiz()
 
     // call get quiz 
-    var request = new XMLHttpRequest();
+    function get_quiz(){
+      var request = new XMLHttpRequest();
 
-    request.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200){
-        var data = JSON.parse(this.responseText);
-        console.log(data)
-        var quiz_info = data.data.Quiz;
-        console.log(quiz_info)
-        var quiz_qns = data.data.Questions;
-        console.log(quiz_qns)
-        var quiz_ans = data.data.Answers;
-        console.log(quiz_ans)
+      request.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200){
+          var data = JSON.parse(this.responseText);
+          console.log(data)
+          var quiz_info = data.data.Quiz;
+          console.log(quiz_info)
+          var quiz_qns = data.data.Questions;
+          console.log(quiz_qns)
+          var quiz_ans = data.data.Answers;
+          console.log(quiz_ans)
 
-        // display title
-        document.getElementById('title').innerHTML = quiz_info.QuizTitle;
+          // display title
+          document.getElementById('title').innerHTML = quiz_info.QuizTitle;
 
-        // set timer
-        setTimer(quiz_info.QuizTimer)
+          // set timer
+          setTimer(quiz_info.QuizTimer)
 
+          var html = `<form action="#" method="post" class="probootstrap-form">`
 
+          for (qn_i = 0; qn_i < quiz_qns.length; qn_i++){
+            console.log(qn_i)
+            var qn_content = quiz_qns[qn_i].QuestionContent
+            var qn_id = quiz_qns[qn_i].QuestionID
+            var qn_num = qn_i + 1
+            console.log(qn_content)
+            console.log(qn_id)
 
-        console.log(document.getElementById('title').innerHTML)
+            html += `<div class='row'>
+                          <div class='row'>
+                              <div class='container'>
+                                  ${qn_num}. ${qn_content}
+                              </div>
+                          </div>
+                      `
+            for (ans_i = 0; ans_i < quiz_ans.length; ans_i++){
+              var ans_content = quiz_ans[ans_i].AnswerContent
+              var ans_qn_id = quiz_ans[ans_i].QuestionID
+              var ans_id = quiz_ans[ans_i].AnswerID
 
+              if (ans_qn_id == qn_id){
+                console.log(ans_content)
+                console.log(ans_id)
+                html += `<div class='row qn${qn_num}_options'>
+                              <div class='col-sm-1'>
+                              </div>
+                              <div class='col'>
+                                  <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="qnID${ans_qn_id}_options" id="qnID${ans_qn_id}_${ans_id}">
+                                      <label class="form-check-label" for="flexRadioDefault1">
+                                        ${ans_content}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>`
+              }
+              // console.log(ans_content)
+              // console.log(ans_qn_id)
+              // console.log(ans_id)
+            }
+            html += '</div><br>'
+          }
+          
+          html += '</form>'
+
+          document.getElementById('quiz_content').innerHTML += html
+          // console.log(document.getElementById('quiz_content').innerHTML)
+
+      }
+      };
+      request.open('GET', 'http://localhost:5004/get_quiz/' + QuizID);
+      request.send();
+ 
     }
-    };
-    request.open('GET', 'http://localhost:5004/get_quiz/' + QuizID);
-    request.send();
-        
-    // var startDate = new Date("Oct 24, 2022 21:00:00").getTime();
-    // Set the date we're counting down to
-    // var countDownDate = new Date("Oct 24, 2021 21:45:00").getTime();
-    // console.log(countDownDate)
+       
+    function submit(){
+
+      
+
+      var quiz_data = get_quiz();
+      console.log(quiz_data)
+    }
 
     function setTimer(TimeLimit){
         var calc_sec = TimeLimit * 60
