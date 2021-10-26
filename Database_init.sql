@@ -280,6 +280,10 @@ SET GLOBAL event_scheduler = ON;
 DELIMITER $$
 CREATE EVENT `UPDATE_ENROL_ONGOING` ON SCHEDULE EVERY 1 MINUTE STARTS '2021-10-14 13:02:26' ON COMPLETION NOT PRESERVE ENABLE DO update classLearner inner join class on class.classid = classlearner.classid set classLearner.ApplicationStatus = 'ongoing' where class.StartDate <= NOW() and (classLearner.ApplicationStatus = 'hr_enrolled' or classlearner.ApplicationStatus = 'self_approved')$$
 DELIMITER ;
+
+DELIMITER $$
+CREATE EVENT `UPDATE_REJECT_FAILED` ON SCHEDULE EVERY 1 MINUTE STARTS '2021-10-14 13:02:26' ON COMPLETION NOT PRESERVE ENABLE DO update classLearner inner join class on class.classid = classlearner.classid set classLearner.ApplicationStatus = 'failed' where class.EndDate <= NOW() and (classLearner.ApplicationStatus = 'ongoing')$$
+DELIMITER ;
 -- create table if not exists course_forum();
 
 -- create table if not exists public_forum(
