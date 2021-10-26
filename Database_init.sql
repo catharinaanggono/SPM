@@ -278,7 +278,7 @@ SET GLOBAL event_scheduler = ON;
 
 
 DELIMITER $$
-CREATE EVENT `UPDATE_ENROL_ONGOING` ON SCHEDULE EVERY 1 MINUTE STARTS '2021-10-14 13:02:26' ON COMPLETION NOT PRESERVE ENABLE DO update classLearner inner join class on class.classid = classlearner.classid set classLearner.ApplicationStatus = 'ongoing' where class.StartDate <= NOW() and (classLearner.ApplicationStatus = 'enrolled' or classlearner.ApplicationStatus = 'self_enrolled')
+CREATE EVENT `UPDATE_ENROL_ONGOING` ON SCHEDULE EVERY 1 MINUTE STARTS '2021-10-14 13:02:26' ON COMPLETION NOT PRESERVE ENABLE DO update classLearner inner join class on class.classid = classlearner.classid set classLearner.ApplicationStatus = 'ongoing' where class.StartDate <= NOW() and (classLearner.ApplicationStatus = 'hr_enrolled' or classlearner.ApplicationStatus = 'self_approved')$$
 DELIMITER ;
 -- create table if not exists course_forum();
 
@@ -303,13 +303,15 @@ insert into userTable(UserName, UserType) values ('Brenda', 'Junior Engineer');
 insert into userTable(UserName, UserType) values ('Aaron', 'Junior Engineer');
 insert into userTable(UserName, UserType) values ('Fred', 'Junior Engineer');
 insert into class(CourseID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize) values (1, '2021-10-20 09:00:00', '2022-02-20 09:00:00', '2021-10-01 09:00:00', '2021-10-18 09:00:00', 50);
+insert into class(CourseID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize) values (1, '2021-11-30 09:00:00', '2022-03-31 09:00:00', '2021-10-01 09:00:00', '2021-11-23 09:00:00', 50);
+insert into class(CourseID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize) values (2, '2021-12-31 09:00:00', '2022-04-31 09:00:00', '2021-10-01 09:00:00', '2021-12-24 09:00:00', 50);
 insert into class(CourseID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize) values (3, '2021-11-20 09:00:00', '2022-12-30 09:00:00', '2021-11-01 09:00:00', '2021-11-08 09:00:00', 45);
 insert into classTrainer(CourseID, ClassID, TrainerID) values (1, 1, 1);
 insert into classTrainer(CourseID, ClassID, TrainerID) values (3, 2, 2);
 insert into LearnerCourse(CourseID, LearnerID, Status) values (1, 1, "completed");
-insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 3, 'applied');
-insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (2, 3, 4, 'applied');
-insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 5, 'applied');
-insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 4, 'enrolled');
+insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 3, 'ongoing');
+insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (2, 3, 4, 'self_enrolled');
+insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 5, 'ongoing');
+insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 4, 'hr_enrolled');
 insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (2, 3, 3, 'rejected');
 

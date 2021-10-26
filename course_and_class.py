@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_POOL_TIMEOUT'] = 86400
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 
 db = SQLAlchemy(app)
-
+print(environ.get("dbURL"))
 
 class course(db.Model):
     __tablename__ = 'course'
@@ -496,18 +496,20 @@ def get_all_courses(UserID):
     takenClasses = ClassTaken.query.filter_by(LearnerID = UserID)
     applied_courses = []
     prereq_courses = []
+    rejected_courses = []
     takenPrereq = ClassTaken.query.filter(ClassTaken.ApplicationStatus == 'completed', ClassTaken.LearnerID == UserID)
     for prereq in takenPrereq:
         prereq_courses.append(prereq.CourseID)
     for a_class in takenClasses:
-        if a_class.ApplicationStatus == 'enrolled' : # check if user already enrolled
+        if a_class.ApplicationStatus == 'hr_enrolled': # check if user already enrolled
             enrolled_courses.append(a_class.CourseID)
-        elif a_class.ApplicationStatus == 'applied' or a_class.ApplicationStatus == 'self_enrolled':
+        elif a_class.ApplicationStatus == 'self_enrolled' or a_class.ApplicationStatus == 'self_approved':
             applied_courses.append([a_class.CourseID, a_class.ClassID])
+        elif a_class.ApplicationStatus == 'rejected':
+            rejected_courses.append([a_class.CourseID, a_class.ClassID])
     courses = course.query.filter(~course.CourseID.in_(enrolled_courses), ~course.CourseID.in_(prereq_courses)) # '~' refers to not (a negate function)
     class_per_course = []
     for a_course in courses:
-        print(a_course.CourseID)
         shown_classes = []
         prereqList = []
         CourseID = a_course.CourseID
@@ -519,7 +521,6 @@ def get_all_courses(UserID):
                 a_course.GreyOut = True
         a_course.prereqList = prereqList
         now = datetime.now()
-        print(now)
         classes = course_class.query.filter(CourseID == a_course.CourseID, now <= course_class.RegistrationEndDate, now >= course_class.RegistrationStartDate) # check registration date
         for a_class in classes:
             '''
@@ -537,8 +538,11 @@ def get_all_courses(UserID):
             if [a_class.CourseID, a_class.ClassID] in applied_courses:
                 a_class.GreyOut = True
                 a_class.Status = 'applied'
-            currentlyEnrolled = ClassTaken.query.filter(CourseID == a_class.CourseID, ClassTaken.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus == "enrolled") # check remaining class sizes
+            if [a_class.CourseID, a_class.ClassID] in rejected_courses:
+                a_class.Status = 'rejected'
+            currentlyEnrolled = ClassTaken.query.filter(CourseID == a_class.CourseID, ClassTaken.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus.in_(["hr_enrolled", "self_approved"])) # check remaining class sizes
             totalEnrolled = currentlyEnrolled.count()
+            print(totalEnrolled)
             if totalEnrolled < a_class.ClassSize and a_class.CourseID == a_course.CourseID:
                 a_class.RemainingSlot = a_class.ClassSize - totalEnrolled
                 a_class.TrainerList = trainerList

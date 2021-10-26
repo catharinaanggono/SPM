@@ -661,6 +661,7 @@
           
           for (course in data){
             collapsibleID = data[course].CourseID + data[course].CourseTitle
+            collapsibleID = collapsibleID.replace(" ", "-")
             courseTitle = data[course].CourseTitle
             courseDescription = data[course].CourseDescription     
             greyout = data[course].GreyOut
@@ -734,7 +735,22 @@
                 var month = endDate.getMonth(); //Be careful! January is 0 not 1
                 var year = endDate.getFullYear();
                 var endDateString = date + "/" +(month + 1) + "/" + year;
+
+                registrationStartDate = new Date(aClass.RegistrationStartDate)
+                var date = registrationStartDate.getDate();
+                var month = registrationStartDate.getMonth(); //Be careful! January is 0 not 1
+                var year = registrationStartDate.getFullYear();
+                var registrationStartDateString = date + "/" +(month + 1) + "/" + year;
+
+                registrationEndDate = new Date(aClass.RegistrationEndDate)
+                var date = registrationEndDate.getDate();
+                var month = registrationEndDate.getMonth(); //Be careful! January is 0 not 1
+                var year = registrationEndDate.getFullYear();
+                var registrationEndDateString = date + "/" +(month + 1) + "/" + year;
+
                 classPeriod = startDateString + ' - ' + endDateString
+
+                registrationPeriod = registrationStartDateString + ' - ' + registrationEndDateString
                 trainerHTML = ''
                 for (let i = 0; i < seniorEngineer.length; i++){
                   if (i == 0){
@@ -763,9 +779,9 @@
                   appliedHTML += `<tr> <td style="padding-bottom:20px"> <b> Already Applied </b> </td> </tr>`
                   disabled = 'disabled '
                 }
-                else if (applicationStatus == 'self_enrolled' && Date(Date.now()) < startDate){
-                  withdrawButton = `<button class="btn btn-warning" onclick="withdrawApplication(${data[course].CourseID}, ${aClass.ClassID}, ${UserID}, '${data[course].CourseTitle}')"> Withdraw Application </button>` 
-                  appliedHTML += `<tr> <td style="padding-bottom:20px"> <b> Already Enrolled </b> </td> </tr>`
+                else if (applicationStatus == 'rejected'){
+                  appliedHTML += `<tr> <td style="padding-bottom:20px"> <b> Application rejected by HR | Please apply to another class </b> </td> </tr>`              
+                  disabled = 'disabled '
                 }
                 document.getElementById(`${collapsibleID}`).innerHTML += `
                 
@@ -777,8 +793,13 @@
                     ${trainerHTML}
 
                     <tr>
-                      <td style='width:50%'> Period </td>
+                      <td style='width:50%'> Class Period </td>
                       <td style='width:50%'> ${classPeriod} </td>
+                    </tr>
+                    
+                    <tr>
+                      <td style='width:50%'> Registration Period </td>
+                      <td style='width:50%'> ${registrationPeriod} </td>
                     </tr>
 
                     <tr>
