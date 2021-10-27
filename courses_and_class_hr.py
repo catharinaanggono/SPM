@@ -19,7 +19,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 db = SQLAlchemy(app) # initialise database with settings from app
 
 
-class course(db.Model):  # create course table
+class course(db.Model): 
     __tablename__ = 'course'
 
     CourseID = db.Column(db.Integer, primary_key=True)
