@@ -1,14 +1,17 @@
-from flask.json import jsonify
-from course import course
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
+from flask_cors import CORS
 from datetime import datetime
+from dotenv import load_dotenv
 
+load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("dbURL")
+print(environ.get("dbURL"))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_POOL_TIMEOUT'] = 86400
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
@@ -16,7 +19,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 db = SQLAlchemy(app) # initialise database with settings from app
 
 
-class course(db.Model):  # create entities
+class course(db.Model): 
     __tablename__ = 'course'
 
     CourseID = db.Column(db.Integer, primary_key=True)
@@ -34,20 +37,41 @@ class course(db.Model):  # create entities
         return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge}
 
 
+@app.route('/courses')
+def get_all_courses():
+    all_courses = course.query.all()
+    print(all_courses)
+    return jsonify({
+            "code": 200,
+            "message": "Course exists",
+            "data": {
+                "course": [course.json() for course in all_courses]
+            }
+        })
+    
+
+# to search for course via course ID
 @app.route('/courses/<int:CourseID>')
 def get_course(CourseID):
-    if (course.query.filter_by(CourseID=CourseID).first()):
-        return jsonify({
-            "code": 200,
-            "message": "Course exists"
-        }), 201
-    else:
-        return jsonify({
-            "code":404,
-            "message": "Course not found"
-        }), 404
+    pass
 
 
+
+
+
+    # if (course.query.filter_by(CourseID=CourseID).first()):
+    #     return jsonify({
+    #         "code": 200,
+    #         "message": "Course exists"
+    #     }), 200
+    # else:
+    #     return jsonify({
+    #         "code":404,
+    #         "message": "Course not found"
+    #     }), 404
+
+
+# classes within the course
 class course_class(db.Model):
     __tablename__ = "class"
 
@@ -73,32 +97,44 @@ class course_class(db.Model):
     def json(self):
         return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate}
 
-@app.route('/classes/<int:ClassID>')
-def get_all_classes(ClassID):
-    classes = course_class.query.all()
 
-    if len(classes):        #classes present
-        return jsonify({
-            "code": 200,
-            "message": {
-                "classes": [each_class.json() for each_class in classes]
-            }
-        }), 201
+# query all classes
+@app.route('/classes')
+def get_all_classes():
+    all_classes = course_class.query.all()
+    return jsonify({
+        "code": 200,
+        "message": "class exists",
+        "data": {
+            "course_class" : [course_class.json() for course_class in all_classes]
+        }
+    })
 
-    if (course_class.query.filter_by(ClassID = ClassID).first()):
-        return jsonify ({
-            "code": 200,
-            "output": [{
-                "Message": "Class Exists",
-                "Class": course_class.ClassID
-            }] 
-        }), 201
+# @app.route('/classes/<int:ClassID>') # don't need because all the class will just show ?
+# def get_class(ClassID):
 
-    else:
-        return jsonify({
-            "code": 404,
-            "message": "Class doesn't exist"
-        }), 404
+#     if len(classes):        #classes present
+#         return jsonify({
+#             "code": 200,
+#             "message": {
+#                 "classes": [each_class.json() for each_class in classes]
+#             }
+#         }), 201
+
+#     if (course_class.query.filter_by(ClassID = ClassID).first()):
+#         return jsonify ({
+#             "code": 200,
+#             "output": [{
+#                 "Message": "Class Exists",
+#                 "Class": course_class.ClassID
+#             }] 
+#         }), 201
+
+#     else:
+#         return jsonify({
+#             "code": 404,
+#             "message": "Class doesn't exist"
+#         }), 404
 
 
 
@@ -209,9 +245,12 @@ class user(db.Model):
     def json(self):
         return {"UserID": self.UserID, "UserName": self.UserName, "UserType": self.UserType}
 
+
+     
+
     
 
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5202, debug=True)
