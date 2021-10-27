@@ -202,16 +202,18 @@ CREATE TABLE IF NOT EXISTS studentAnswer(
     ClassID INT NOT NULL,
     SectionID INT NOT NULL,
     QuizID INT NOT NULL,
+    AttemptID INT NOT NULL,
     QuestionID INT NOT NULL,
     AnswerID INT NOT NULL,
     LearnerID INT NOT NULL,
-    PRIMARY KEY (CourseID, ClassID, SectionID, QuizID, QuestionID,  LearnerID),
+    PRIMARY KEY (CourseID, ClassID, SectionID, QuizID, QuestionID,  LearnerID, AttemptID),
     FOREIGN KEY (CourseID) REFERENCES question(CourseID),
     FOREIGN KEY (ClassID) REFERENCES question(ClassID),
     FOREIGN KEY (SectionID) REFERENCES question(SectionID),
     FOREIGN KEY (QuizID) REFERENCES question(QuizID),
     FOREIGN KEY (AnswerID) REFERENCES questionAnswer(AnswerID),
-    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
+    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID),
+    FOREIGN KEY (AttemptID) REFERENCES studentQuizResult(AttemptID)
 );
 
 CREATE TABLE IF NOT EXISTS MaterialProgress(
