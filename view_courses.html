@@ -421,7 +421,8 @@
               console.log(course_id[i])
               var table = document.getElementById(course_id[i])
               
-              table.innerHTML = `<table id=${course_id[i]}">
+              table.innerHTML += `
+              <table id=${course_id[i]}">
                 <tr>
                   <td>Class ID: ${class_id[i]}</td>
                   <td>Start Date: ${class_startDate[i]}</td>
@@ -430,9 +431,9 @@
              
                   <td>Registration Start Date: ${registration_start[i]}</td>
                   <td>Registration End Date: ${registration_end[i]}</td>
+                  <td> <a href='http://localhost:5202/assign-learner/${course_id[i]}/${class_id[i]}'> Assign Learners </a> </td>
                 </tr>
-
-                </table>
+              </table>
                 `
               
             }
