@@ -97,16 +97,18 @@ def create_class():
     EndDate = data['EndDate']
     RegistrationStartDate = data['RegStartDate']
     RegistrationEndDate = data['RegEndDate']
-    TrainerID = data['TrainerID']
+    TrainerIDList = data['TrainerIDList']
     cl = Class(CourseID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize)
 
     db.session.add(cl)
     db.session.commit()
 
-    classTrainer = Trainer(CourseID, cl.ClassID, TrainerID)
-    db.session.add(classTrainer)
+    for TrainerID in TrainerIDList:
+        classTrainer = Trainer(CourseID, cl.ClassID, TrainerID)
+        print(classTrainer)
+        db.session.add(classTrainer)
     db.session.commit()
-     
+
     return jsonify(
         {
             "code": 200,
