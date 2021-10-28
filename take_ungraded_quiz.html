@@ -19,6 +19,7 @@
 
     <script>
       localStorage.QuizID = 55
+      localStorage.id = 1
     </script>
   </head>
   <body>
@@ -232,8 +233,10 @@
     <!-- END wrapper -->
     
     <script>
+    window.open('', '_self', '')
     var QuizID = localStorage.QuizID
     get_quiz()
+    var AnswersDict = {}
 
     // call get quiz 
     function get_quiz(){
@@ -249,6 +252,11 @@
           console.log(quiz_qns)
           var quiz_ans = data.data.Answers;
           console.log(quiz_ans)
+
+          console.log(quiz_info)
+          localStorage.CourseID = quiz_info.CourseID
+          localStorage.ClassID = quiz_info.ClassID
+          localStorage.SectionID = quiz_info.SectionID
 
           // display title
           document.getElementById('title').innerHTML = quiz_info.QuizTitle;
@@ -266,12 +274,12 @@
             console.log(qn_content)
             console.log(qn_id)
 
-            html += `<div class='row'>
+            html += `<div class='row qns'>
                           <div class='row'>
                               <div class='container'>
                                   ${qn_num}. ${qn_content}
                               </div>
-                          </div>
+                          </div>  
                       `
             for (ans_i = 0; ans_i < quiz_ans.length; ans_i++){
               var ans_content = quiz_ans[ans_i].AnswerContent
@@ -281,12 +289,12 @@
               if (ans_qn_id == qn_id){
                 console.log(ans_content)
                 console.log(ans_id)
-                html += `<div class='row qn${qn_num}_options'>
+                html += `<div class='row options'>
                               <div class='col-sm-1'>
                               </div>
                               <div class='col'>
                                   <div class="form-check">
-                                      <input class="form-check-input" type="radio" name="qnID${ans_qn_id}_options" id="qnID${ans_qn_id}_${ans_id}">
+                                      <input class="form-check-input" type="radio" name="qn${qn_num}_options" id="qnID${ans_qn_id}_${ans_id}" onclick='answer(this.id)'>
                                       <label class="form-check-label" for="flexRadioDefault1">
                                         ${ans_content}
                                       </label>
@@ -312,17 +320,112 @@
       request.send();
  
     }
-       
+
+    function answer(id){
+      var splitted = id.split('_')
+      var selected_qn_id = splitted[0].substring(4)
+      var selected_ans_id = splitted[1]
+      AnswersDict[selected_qn_id] = selected_ans_id
+      console.log(AnswersDict)
+    }
+
     function submit(){
+      console.log("INSIDE")
+      console.log(AnswersDict)
 
-      
+      var result_send_value = {
+        CourseID: localStorage.CourseID,
+        ClassID: localStorage.ClassID,
+        SectionID: localStorage.SectionID,
+        QuizID: QuizID,
+        LearnerID: localStorage.id
+      }
 
-      var quiz_data = get_quiz();
-      console.log(quiz_data)
+      console.log(result_send_value)
+
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 201) {
+
+          var data = JSON.parse(this.responseText);
+          console.log(data)
+
+          var AttemptID = data.data.AttemptID;
+          submit_ans(AttemptID)
+        }
+      };
+      // console.log(JSON.stringify(send_value))
+      request.open("POST", "http://localhost:5004/post_result", false)
+      request.setRequestHeader("Content-type", "application/json");
+      request.send(JSON.stringify(result_send_value))
+    }
+
+    function submit_ans(AttemptID){
+      for (var key in AnswersDict) {
+        console.log(key);
+        console.log(AnswersDict[key]);
+
+        var take_quiz_send_value = {
+          CourseID: localStorage.CourseID,
+          ClassID: localStorage.ClassID,
+          SectionID: localStorage.SectionID,
+          QuizID: QuizID,
+          QuestionID: key,
+          AnswerID: AnswersDict[key],
+          LearnerID: localStorage.id,
+          AttemptID: AttemptID
+        }
+
+        console.log(take_quiz_send_value)
+
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 201) {
+
+              var data = JSON.parse(this.responseText);
+              console.log(data)
+
+            }
+        };
+        // console.log(JSON.stringify(send_value))
+        request.open("POST", "http://localhost:5004/post_ans", false)
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(take_quiz_send_value))
+        }
+
+        // var take_quiz_send_value = {
+        //   CourseID: localStorage.CourseID,
+        //   ClassID: localStorage.ClassID,
+        //   SectionID: localStorage.SectionID,
+        //   QuizID: QuizID,
+        //   QuestionID: ,
+        //   AnswerID: ,
+        //   LearnerID: localStorage.id
+        // }
+
+      // var request = new XMLHttpRequest();
+      // request.onreadystatechange = function () {
+      //     if (this.readyState == 4 && this.status == 201) {
+
+      //       var data = JSON.parse(this.responseText);
+      //       console.log(data)
+      //       var QuizID = data.data.QuizID;
+      //       console.log(QuizID)
+            
+      //       post_qn(QuizID)
+      //     }
+      // };
+      // // console.log(JSON.stringify(send_value))
+      // request.open("POST", "http://localhost:5004/create_quiz")
+      // request.setRequestHeader("Content-type", "application/json");
+      // request.send(JSON.stringify(quiz_send_value))
+
     }
 
     function setTimer(TimeLimit){
-        var calc_sec = TimeLimit * 60
+        // var calc_sec = TimeLimit*60
+        var calc_sec = 60
+
 
         // Update the count down every 1 second
         var x = setInterval(function() {
@@ -350,7 +453,9 @@
         // If the count down is over, write some text 
         if (distance < 0) {
             clearInterval(x);
-            document.getElementById("demo").innerHTML = "EXPIRED"
+            document.getElementById("demo").innerHTML = "EXCEED"
+            window.location.href = "timeout.html";
+            submit();
         }
         }, 1000);
     }
