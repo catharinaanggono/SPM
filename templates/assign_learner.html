@@ -326,6 +326,7 @@
 
             var data = JSON.parse(this.responseText);
             var user_list = data.data.user;
+            console.log(data)
             console.log(user_list)
             localStorage.setItem("userlist", JSON.stringify(data));
 
