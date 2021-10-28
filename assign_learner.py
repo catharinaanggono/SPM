@@ -1,4 +1,4 @@
-from flask import Flask, json, request, jsonify
+from flask import Flask, json, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
@@ -232,7 +232,7 @@ def assign_learners():
         "message": "There is no enough slot for this class."
         }), 501
 
-@app.route('after-assign')
+@app.route('/after-assign')
 def after_assign():
     return render_template('after_assign.html')
 
