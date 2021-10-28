@@ -152,9 +152,8 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="trainer">Trainer</label>
-                  <select class="form-select form-control" id="trainer">
-                    <option selected>Select Trainer</option>
+                  <label for="trainer">Trainer(s)</label>
+                  <select class="form-select form-control" multiple aria-label="multiple select example" id="trainer" size="5">
                   </select>
                 </div>
 
@@ -289,6 +288,7 @@
         var regStartDate = document.getElementById("regStartDate").value;
         var regEndDate = document.getElementById("regEndDate").value;
         var trainerID = document.getElementById("trainer").value;
+        var trainerIdList = $('#trainer').val();
         console.log("###############")
         console.log(courseID)
         console.log(classSize)
@@ -314,7 +314,7 @@
           EndDate: endDate,
           RegStartDate: regStartDate,
           RegEndDate: regEndDate,
-          TrainerID: trainerID
+          TrainerIDList: trainerIdList
         }
         var request = new XMLHttpRequest();
         request.onreadystatechange = function () {
