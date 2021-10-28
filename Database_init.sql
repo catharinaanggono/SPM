@@ -180,40 +180,22 @@ CREATE TABLE IF NOT EXISTS questionAnswer(
     FOREIGN KEY (QuestionID) REFERENCES question(QuestionID)
 );
 
-CREATE TABLE IF NOT EXISTS studentQuizResult(
-    CourseID INT NOT NULL,
-    ClassID INT NOT NULL,
-    SectionID INT NOT NULL,
-    QuizID INT NOT NULL,
-    LearnerID INT NOT NULL,
-    Grade INT NOT NULL,
-    AttemptID INT NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (AttemptID),
-    FOREIGN KEY (CourseID) REFERENCES quiz(CourseID),
-    FOREIGN KEY (ClassID) REFERENCES quiz(ClassID),
-    FOREIGN KEY (SectionID) REFERENCES quiz(SectionID),
-    FOREIGN KEY (QuizID) REFERENCES quiz(QuizID),
-    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
-
-);
-
 CREATE TABLE IF NOT EXISTS studentAnswer(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
     SectionID INT NOT NULL,
     QuizID INT NOT NULL,
-    AttemptID INT NOT NULL,
+    AttemptID INT NOT NULL AUTO_INCREMENT,
     QuestionID INT NOT NULL,
     AnswerID INT NOT NULL,
     LearnerID INT NOT NULL,
-    PRIMARY KEY (CourseID, ClassID, SectionID, QuizID, QuestionID,  LearnerID, AttemptID),
+    PRIMARY KEY (AttemptID),
     FOREIGN KEY (CourseID) REFERENCES question(CourseID),
     FOREIGN KEY (ClassID) REFERENCES question(ClassID),
     FOREIGN KEY (SectionID) REFERENCES question(SectionID),
     FOREIGN KEY (QuizID) REFERENCES question(QuizID),
     FOREIGN KEY (AnswerID) REFERENCES questionAnswer(AnswerID),
-    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID),
-    FOREIGN KEY (AttemptID) REFERENCES studentQuizResult(AttemptID)
+    FOREIGN KEY (LearnerID) REFERENCES userTable(UserID)
 );
 
 CREATE TABLE IF NOT EXISTS MaterialProgress(
