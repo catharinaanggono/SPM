@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS studentQuizResult(
     SectionID INT NOT NULL,
     QuizID INT NOT NULL,
     LearnerID INT NOT NULL,
-    Grade INT NOT NULL,
+    Grade DOUBLE,
     AttemptID INT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (AttemptID),
     FOREIGN KEY (CourseID) REFERENCES quiz(CourseID),
