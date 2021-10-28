@@ -572,12 +572,16 @@ def self_enrol():
     userID = data['UserID']
     courseID = data['CourseID']
     classID = data['ClassID']
+    
+    
+
     apply_class = ClassTaken(courseID, classID, userID, 'applied')
+
     check = ClassTaken.query.filter_by(CourseID=courseID, ClassID=classID, LearnerID=userID, ApplicationStatus='rejected').first()
     if check:
         try:
-            check.ApplicationStatus = 'applied' 
-            db.session.commit
+            db.session.add(apply_class)
+            db.session.commit()
         except:
             return jsonify(
             {

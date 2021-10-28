@@ -4,6 +4,7 @@ from os import environ
 from flask_cors import CORS
 from datetime import datetime
 from dotenv import load_dotenv
+from flask import render_template
 
 load_dotenv()
 
@@ -246,9 +247,9 @@ class user(db.Model):
         return {"UserID": self.UserID, "UserName": self.UserName, "UserType": self.UserType}
 
 
-     
-
-    
+@app.route('/create-class/<CourseID>')
+def create_class(CourseID):
+    return render_template('create_class.html', CourseID=CourseID)
 
 
 

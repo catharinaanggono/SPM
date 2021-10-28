@@ -336,6 +336,8 @@
                       
                           <td><button class="btn btn-link collapsed" data-toggle="collapse" aria-expanded="false" onclick='show(${course_id[i]})'>
                           Show Classes </button></td>
+
+                          <td> <button class='btn btn-primary' onclick="createClass(${course_id[i]})"> Create Class </button> </td>
                         </tr>
                       </table>
 
@@ -363,9 +365,13 @@
       // };
       request.open("GET", "http://localhost:5202/courses");
       request.send();
+      
+      function createClass(CourseID){
 
+        window.location.href = `http://localhost:5202/create-class/${CourseID}`
 
-
+      }
+        
       // to use GET request
       var request = new XMLHttpRequest();
 

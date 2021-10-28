@@ -7,11 +7,14 @@
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
 
-    
+
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles-merged.css">
-    <link rel="stylesheet" href="css/style.min.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
 
     <script>
       localStorage.courseID = 1
@@ -279,7 +282,7 @@
 
 
       function create_class(){
-        var courseID = localStorage.courseID;
+        var courseID = `{{ CourseID }}`;
         var classSize = document.getElementById("classSize").value;
         var startDate = document.getElementById("startDate").value;
         var endDate = document.getElementById("endDate").value;

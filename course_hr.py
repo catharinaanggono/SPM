@@ -41,7 +41,6 @@ class CoursePrereq(db.Model):
 
     CourseID = db.Column(db.Integer, primary_key=True)
     PrereqID = db.Column(db.Integer, primary_key=True)
-    Status = db.Column(db.String(200), primary_key=True)
 
     def __init__(self, CourseID, PrereqID):
         self.CourseID = CourseID
@@ -93,6 +92,8 @@ def create_course():
         {
             "code": 200,
             "message": "Course is successfully created"
+            # "data": course.json(), coursePrereq.json()
+            
         }
     ), 200
 
