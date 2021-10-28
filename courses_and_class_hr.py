@@ -251,7 +251,9 @@ class user(db.Model):
 def create_class(CourseID):
     return render_template('create_class.html', CourseID=CourseID)
 
-
+@app.route('/assign-learner/<CourseID>/<ClassID>')
+def assign_learner(CourseID, ClassID):
+    return render_template('assign_learner.html', CourseID=CourseID, ClassID=ClassID)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5202, debug=True)

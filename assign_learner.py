@@ -1,4 +1,4 @@
-from flask import Flask, json, request, jsonify
+from flask import Flask, json, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
@@ -16,6 +16,24 @@ app.config['SQLALCHEMY_POOL_TIMEOUT'] = 86400
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 
 db = SQLAlchemy(app)
+
+class course(db.Model):
+    __tablename__ = 'course'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    CourseTitle = db.Column(db.String(50), nullable=False)
+    CourseDescription = db.Column(db.String(65535), nullable=False)
+    Badge = db.Column(db.String(65535), nullable=False)
+
+    def __init__(self, CourseID, CourseTitle, CourseDescription, Badge):
+        self.CourseID = CourseID
+        self.CourseTitle = CourseTitle
+        self.CourseDescription = CourseDescription
+        self.Badge = Badge
+
+    def json(self):
+        return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge}
+
 
 class User(db.Model):
     __tablename__ = 'userTable'
@@ -213,7 +231,11 @@ def assign_learners():
         "available_seat": class_availability,
         "message": "There is no enough slot for this class."
         }), 501
-                
+
+@app.route('/after-assign')
+def after_assign():
+    return render_template('after_assign.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5200, debug=True)
 

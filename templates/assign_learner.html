@@ -8,9 +8,10 @@
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles-merged.css">
-    <link rel="stylesheet" href="css/style.min.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    
     
     <style>
       table {
@@ -307,16 +308,16 @@
     <!-- END wrapper -->
     
 
-    <script src="js/scripts.min.js"></script>
-    <script src="js/main.min.js"></script>
-    <script src="js/custom.js"></script>
+    <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
 
     <script>
       localStorage.clear()
       //to retrieve data from database for user details
       //need to change the CourseID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! HEREEEEEEEEEEEEEEEE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       var send_value = {
-        CourseID: 4
+        CourseID: `{{ CourseID }}`
       }
       var request = new XMLHttpRequest();
 
@@ -325,6 +326,7 @@
 
             var data = JSON.parse(this.responseText);
             var user_list = data.data.user;
+            console.log(data)
             console.log(user_list)
             localStorage.setItem("userlist", JSON.stringify(data));
 
@@ -582,7 +584,7 @@
           //selected_engineers.push(obj)
 
           //[CourseID, ClassID, LearnerID, ApplicationStatus] //please chage the courseid and classid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          learner_details.push([4,4, details.id, "hr_enrolled"])
+          learner_details.push([`{{ CourseID }}`, `{{ ClassID }}`, details.id, "hr_enrolled"])
 
           // courseid_list.push(1)
           // classid_list.push(1)
@@ -592,8 +594,8 @@
 
         //please chage the courseid and classid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         var send_value = {
-          CourseID: '4',
-          ClassID: '4',
+          CourseID: `{{ CourseID }}`,
+          ClassID: `{{ ClassID }}`,
           data: learner_details
         }
 
@@ -605,7 +607,7 @@
               var data = JSON.parse(this.responseText);
               console.log(data.message)
               console.log(data.data)
-              window.location.href = "after_assign.html";
+              window.location.href = "http://localhost:5200/after-assign";
               
             }else if (this.readyState == 4 && this.status == 500) {
               //error 500 if there some selected learners has already been enrolled into the class before
