@@ -102,7 +102,7 @@ class TestRetrieveLearner(TestApp):
 
 
         request_body = {
-            'CourseID': 4
+            'CourseID': 1
         }
 
 
