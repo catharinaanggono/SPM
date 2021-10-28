@@ -231,7 +231,11 @@ def assign_learners():
         "available_seat": class_availability,
         "message": "There is no enough slot for this class."
         }), 501
-                
+
+@app.route('after-assign')
+def after_assign():
+    return render_template('after_assign.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5200, debug=True)
 
