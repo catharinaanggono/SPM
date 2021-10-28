@@ -607,7 +607,7 @@
               var data = JSON.parse(this.responseText);
               console.log(data.message)
               console.log(data.data)
-              window.location.href = "after_assign.html";
+              window.location.href = "http://localhost:5200/after-assign";
               
             }else if (this.readyState == 4 && this.status == 500) {
               //error 500 if there some selected learners has already been enrolled into the class before
