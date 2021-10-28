@@ -98,6 +98,7 @@ class TestRetrieveLearner(TestApp):
         class3 = Class(1, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
         
         db.session.add(course3)
+        db.session.add(class3)
 
 
         request_body = {
@@ -112,7 +113,9 @@ class TestRetrieveLearner(TestApp):
         self.assertEqual(response.json,{
             "code": 200,
             "data":{
-                "user":[]
+                "user":[{'UserID': 1, 
+                        'UserName': 'Jhonny', 
+                        'UserType': 'Senior Engineer'}]
             }
         })
 
