@@ -249,7 +249,7 @@ class user(db.Model):
 
 @app.route('/create-class/<CourseID>')
 def create_class(CourseID):
-    return render_template('create_course.html', CourseID=CourseID)
+    return render_template('create_class.html', CourseID=CourseID)
 
 
 

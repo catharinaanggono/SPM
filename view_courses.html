@@ -368,10 +368,7 @@
       
       function createClass(CourseID){
 
-        var requestCreateClass = new XMLHttpRequest();
-
-        requestCreateClass.open("GET", `http://localhost:5202/create-class/${CourseID}`)
-        requestCreateClass.send()
+        window.location.href = `http://localhost:5202/create-class/${CourseID}`
 
       }
         
