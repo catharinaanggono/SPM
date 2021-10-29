@@ -177,7 +177,7 @@ def get_learner():
 @app.route('/assign_learners', methods=['POST'])
 def assign_learners():
     data = request.get_json()
-    print(data)
+    #print(data)
 
     class_details = Class.query.filter_by(ClassID = data['ClassID'][0]).all()
     #number of learner in the class currently
