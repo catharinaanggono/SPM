@@ -40,6 +40,7 @@ class TestApp(flask_testing.TestCase):
         db.session.remove()
         db.drop_all()
 
+#for assign_learner.py
 class TestRetrieveLearner(TestApp):
     def test_retrieve_learner(self):
 
@@ -110,6 +111,7 @@ class TestRetrieveLearner(TestApp):
                                     data=json.dumps(request_body),
                                     content_type='application/json')
 
+        #should retrieve all the user
         self.assertEqual(response.json,{
             "code": 200,
             "data":{
@@ -118,6 +120,91 @@ class TestRetrieveLearner(TestApp):
                         'UserType': 'Senior Engineer'}]
             }
         })
+    
+class TestAssignLeaner(TestApp):
+    def test_assign_learner(self):
+        learner2 = User(2, "Brenda", "Junior Engineer")
+        learner3 = User(3, "Justin", "Junior Engineer")
+
+        db.session.add(learner2)
+        db.session.add(learner3)
+
+        request_body = {
+          "CourseID": "3",
+          "ClassID": "1",
+          "data": [[3, 1, 2, "hr_enrolled"], [3, 1, 3, "hr_enrolled"]]
+        }
+
+        response = self.client.post("/assign_learners",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
+
+        self.assertEqual(response.json,{
+            "code": 201,
+            "data": [{
+                    'CourseID': 3, 
+                    'ClassID': 1, 
+                    'LearnerID': 2, 
+                    'ApplicationStatus': "hr_enrolled"},
+                    {
+                    'CourseID': 3, 
+                    'ClassID': 1, 
+                    'LearnerID': 3, 
+                    'ApplicationStatus': "hr_enrolled"
+                    }],
+            "message": "Engineers has been successfully applied for the course"
+        })
+    
+    def test_existing_learner(self):
+
+        classLearner5 = classLearner(3, 1, 1, "ongoing")
+
+        db.session.add(classLearner5)
+
+        request_body = {
+          "CourseID": "3",
+          "ClassID": "1",
+          "data": [[3, 1, 1, "hr_enrolled"]]
+        }
+
+        response = self.client.post("/assign_learners",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
+
+        self.assertEqual(response.json,{
+        "code": 500,
+        "data":[{
+                'ApplicationStatus': 'ongoing',
+                'ClassID': 1,
+                'CourseID': 3,
+                'LearnerID': 1
+                }],
+        "message": "An error occured while adding course, the following learner has already been assigned to this class"
+        })
+
+    def test_class_availability(self):
+
+        class4 = Class(3, 2, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 0, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        
+        db.session.add(class4)
+
+        request_body = {
+          "CourseID": "3",
+          "ClassID": "2",
+          "data": [[3, 2, 1, "hr_enrolled"]]
+        }
+
+        response = self.client.post("/assign_learners",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
+
+        self.assertEqual(response.json,{
+        "code": 501,
+        "available_seat": 0,
+        "message": "There is no enough slot for this class."
+        })
+
+
 
 
 
