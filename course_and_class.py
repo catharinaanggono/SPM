@@ -243,6 +243,8 @@ class Section(db.Model):
             self.SectionMaterialList = []
         return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID,"SectionName": self.SectionName, "SectionMaterialList": self.SectionMaterialList}
 
+
+
 class StudentQuizResult(db.Model):
     __tablename__ = 'studentQuizResult'
 
@@ -408,6 +410,28 @@ def add_material_file(CourseID, ClassID, SectionID):
         'message': 'Upload Files Sucessful'
     }
 
+@app.route('/create-section', methods=['POST'])
+def create_section():
+    data = request.get_json()
+    courseid = data['CourseID']
+    classid = data['ClassID']
+    section_name = data['SectionName']
+    
+    section = Section(courseid, classid, section_name)
+    
+    try:
+        db.session.add(section)
+        db.session.flush()
+        db.session.commit()
+        return jsonify({
+            "code": 201,
+            "data": section.json()
+            }), 201
+    except:
+        return jsonify({
+            "code": 500,
+            "message": "An error has occurred"
+        }), 500
 
 # def upload_file(CourseID, ClassID, SectionID):
 
@@ -624,7 +648,9 @@ def withdraw_application(CourseID, ClassID, UserID):
             "message": "An error occurred in withdrawing class application"
         }), 500
 
-'''testing render_template'''
+@app.route('/create-new-section/<CourseID>/<ClassID>')
+def create_section_page(CourseID, ClassID):
+    return render_template('create-section.html', CourseID=CourseID, ClassID=ClassID)
 
 @app.route('/add-section-material/<CourseID>/<ClassID>/<SectionID>')
 def test_template(CourseID, ClassID, SectionID):
