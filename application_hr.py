@@ -135,7 +135,7 @@ def accept_application():
     ClassID = data['ClassID']
     LearnerID = data['LearnerID']
     application = Application.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).filter_by(LearnerID=LearnerID).first()
-    application.ApplicationStatus = "enrolled"
+    application.ApplicationStatus = "self_approved"
 
     db.session.commit()
 
