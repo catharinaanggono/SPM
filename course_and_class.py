@@ -243,6 +243,8 @@ class Section(db.Model):
             self.SectionMaterialList = []
         return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID,"SectionName": self.SectionName, "SectionMaterialList": self.SectionMaterialList}
 
+
+
 class StudentQuizResult(db.Model):
     __tablename__ = 'studentQuizResult'
 
@@ -408,6 +410,28 @@ def add_material_file(CourseID, ClassID, SectionID):
         'message': 'Upload Files Sucessful'
     }
 
+@app.route('/create-section', methods=['POST'])
+def create_section():
+    data = request.get_json()
+    courseid = data['CourseID']
+    classid = data['ClassID']
+    section_name = data['SectionName']
+    
+    section = Section(courseid, classid, section_name)
+    
+    try:
+        db.session.add(section)
+        db.session.flush()
+        db.session.commit()
+        return jsonify({
+            "code": 201,
+            "data": section.json()
+            }), 201
+    except:
+        return jsonify({
+            "code": 500,
+            "message": "An error has occurred"
+        }), 500
 
 # def upload_file(CourseID, ClassID, SectionID):
 
