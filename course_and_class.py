@@ -648,7 +648,9 @@ def withdraw_application(CourseID, ClassID, UserID):
             "message": "An error occurred in withdrawing class application"
         }), 500
 
-'''testing render_template'''
+@app.route('/create-new-section/<CourseID>/<ClassID>')
+def create_section_page(CourseID, ClassID):
+    return render_template('create-section.html', CourseID=CourseID, ClassID=ClassID)
 
 @app.route('/add-section-material/<CourseID>/<ClassID>/<SectionID>')
 def test_template(CourseID, ClassID, SectionID):
