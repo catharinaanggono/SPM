@@ -84,6 +84,56 @@ class QuestionAnswer(db.Model):
     def json(self):
         return{"AnswerID": self.AnswerID, "CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizID": self.QuizID, "QuestionID": self.QuestionID, "AnswerContent": self.AnswerContent, "Correct": self.Correct}
 
+class StudentAnswer(db.Model):
+    __tablename__ = 'studentAnswer'
+
+    CourseID = db.Column(db.Integer, primary_key=True)
+    ClassID = db.Column(db.Integer, primary_key=True)
+    SectionID = db.Column(db.Integer, primary_key=True)
+    QuizID = db.Column(db.Integer, primary_key=True)
+    QuestionID = db.Column(db.Integer, primary_key=True)
+    LearnerID = db.Column(db.Integer, primary_key=True)
+    AnswerID = db.Column(db.Integer, nullable=False)
+    AttemptID = db.Column(db.Integer, primary_key=True)
+
+
+    def __init__(self, CourseID, ClassID, SectionID, QuizID, QuestionID, LearnerID, AnswerID, AttemptID):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.SectionID = SectionID
+        self.QuizID = QuizID
+        self.QuestionID = QuestionID
+        self.LearnerID = LearnerID
+        self.AnswerID = AnswerID
+        self.AttemptID = AttemptID
+    
+    def json(self):
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizID": self.QuizID, "QuestionID": self.QuestionID, "LearnerID": self.LearnerID, "AnswerID": self.AnswerID, "AttemptID": self.AttemptID}
+
+class StudentQuizResult(db.Model):
+    __tablename__ = 'studentQuizResult'
+
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    SectionID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
+    LearnerID = db.Column(db.Integer, nullable=False)
+    Grade = db.Column(db.Float, nullable=True)
+    AttemptID = db.Column(db.Integer, primary_key=True)
+
+
+    def __init__(self, CourseID, ClassID, SectionID, QuizID, LearnerID, Grade=0):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.SectionID = SectionID
+        self.QuizID = QuizID
+        self.LearnerID = LearnerID
+        self.Grade = Grade
+    
+    def json(self):
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizID": self.QuizID, "LearnerID": self.LearnerID, "Grade": self.Grade, "AttemptID": self.AttemptID}
+
+
 # graded quiz
 class FinalQuiz(db.Model):
     __tablename__ = 'finalQuiz'
@@ -321,21 +371,86 @@ def create_graded_answer():
         }
     ), 201     
 
-# get quiz
-# @app.route('/get_quiz/<string: QuizID>')
-# def get_quiz(QuizID):
-#     get_quiz_content = Quiz.query.first(QuizID == QuizID)
-#     if len(get_quiz_content):
-#         return jsonify({
-#             "code": 200,
-#             "data":{
-#                 "quiz": get_quiz_content.json()
-#             }
-#         })
-#     return jsonify({
-#         "code":400,
-#         "message":"There is  no quiz"
-#     }), 404
+# get ungraded quiz
+@app.route('/get_quiz/<string:QuizID>')
+def get_quiz(QuizID):
+    get_quiz_content = Quiz.query.filter(Quiz.QuizID == QuizID).first()
+    get_quiz_questions = Question.query.filter(Question.QuizID == QuizID).all()
+    get_quiz_answers = QuestionAnswer.query.filter(QuestionAnswer.QuizID == QuizID).all()
+    if get_quiz_content:
+        return jsonify({
+            "code": 200,
+            "data":{
+                "Quiz": get_quiz_content.json(),
+                "Questions":
+                    [question.json() for question in get_quiz_questions],
+                "Answers":
+                    [answer.json() for answer in get_quiz_answers]                
+            }
+        })
+    return jsonify({
+        "code":400,
+        "message":"There is  no quiz"
+    }), 404
+
+#post student answers for ungraded quiz
+@app.route('/post_ans', methods=["POST"])
+def post_ans():
+    data = request.get_json()
+    print(data)
+
+    stu_answer = StudentAnswer(**data)
+
+    try:
+        db.session.add(stu_answer)    
+        db.session.commit()
+    
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occurred creating the answer."
+            }
+        ), 500
+
+
+    return jsonify(
+        {
+            "code": 201,
+            "message": "Answer are successfully created"
+        }
+    ), 201     
+
+#post student result for ungraded quiz
+@app.route('/post_result', methods=["POST"])
+def post_result():
+    data = request.get_json()
+    print(data)
+
+    stu_result = StudentQuizResult(**data)
+
+    try:
+        db.session.add(stu_result)    
+        db.session.commit()
+    
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occurred creating the answer."
+            }
+        ), 500
+
+
+    return jsonify(
+        {
+            "code": 201,
+            "message": "Answer are successfully created",
+            "data": {
+                "AttemptID": stu_result.AttemptID
+            }
+        }
+    ), 201     
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5004, debug=True)
