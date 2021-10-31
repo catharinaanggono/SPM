@@ -384,6 +384,7 @@
 
               var data = JSON.parse(this.responseText);
               console.log(data)
+              window.location.href = "successful-submission.html";
 
             }
         };
@@ -393,58 +394,24 @@
         request.send(JSON.stringify(take_quiz_send_value))
         }
 
-        // var take_quiz_send_value = {
-        //   CourseID: localStorage.CourseID,
-        //   ClassID: localStorage.ClassID,
-        //   SectionID: localStorage.SectionID,
-        //   QuizID: QuizID,
-        //   QuestionID: ,
-        //   AnswerID: ,
-        //   LearnerID: localStorage.id
-        // }
-
-      // var request = new XMLHttpRequest();
-      // request.onreadystatechange = function () {
-      //     if (this.readyState == 4 && this.status == 201) {
-
-      //       var data = JSON.parse(this.responseText);
-      //       console.log(data)
-      //       var QuizID = data.data.QuizID;
-      //       console.log(QuizID)
-            
-      //       post_qn(QuizID)
-      //     }
-      // };
-      // // console.log(JSON.stringify(send_value))
-      // request.open("POST", "http://localhost:5004/create_quiz")
-      // request.setRequestHeader("Content-type", "application/json");
-      // request.send(JSON.stringify(quiz_send_value))
-
     }
 
     function setTimer(TimeLimit){
-        // var calc_sec = TimeLimit*60
-        var calc_sec = 60
+        var calc_sec = TimeLimit*60
+        // var calc_sec = 60
 
 
         // Update the count down every 1 second
         var x = setInterval(function() {
 
-        // Get today's date and time
-        // var now = new Date().getTime()
-
         // Find the distance between now and the count down date
         calc_sec -= 1
         var distance = calc_sec
-        // console.log(distance)
             
         // Time calculations for days, hours, minutes and seconds
         var seconds  = Math.floor(distance % 60);
         var minutes  = Math.floor((distance /60) % 60);
         var hours = Math.floor((distance /(60*60)));    
-        // var hours = Math.floor(distance / (60 * 60))
-        // var minutes = Math.floor(distance % (60 * 60))
-        // var seconds = Math.floor(distance % 60)
             
         // Output the result in an element with id="demo"
         document.getElementById("demo").innerHTML = hours + " : "
