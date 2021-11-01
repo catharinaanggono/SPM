@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="css/style.min.css">
     <link rel="stylesheet" href="css/custom.css">
 
+    <!-- VueJS & Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     <!--[if lt IE 9]>
       <script src="js/vendor/html5shiv.min.js"></script>
       <script src="js/vendor/respond.min.js"></script>
@@ -145,6 +149,7 @@
         <div class="probootstrap-tab-style-1">
           <ul class="nav nav-tabs probootstrap-center probootstrap-tabs no-border">
             <li class="active"><a data-toggle="tab" href="#enrolled-courses">Enrolled</a></li>
+            <li><a data-toggle="tab" href="#courses-taught">Courses Taught</a></li>
             <li><a data-toggle="tab" href="#browse-courses">Browse</a></li>
           </ul>
         </div>
@@ -221,6 +226,16 @@
         
                     </div> -->
                   </div>
+
+                  
+                  <div id="courses-taught" class="tab-pane fade">
+                    <div class="row" v-for="c in classes">
+                      {{ c.CourseID }}
+                      {{ c.ClassID }}
+                      
+                    </div>
+                  </div>
+
 
                   <!-- END row -->
                   <div class="row">
@@ -951,6 +966,141 @@
         request.setRequestHeader("Content-type", "application/json")
         request.send(sendValue)
       }
+
+
+
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200){
+          var trainer_classes = JSON.parse(this.responseText).data.classes;
+          for (var each_class in trainer_classes){
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@");
+            console.log(trainer_classes[each_class].CourseID);
+            let CourseID = trainer_classes[each_class].CourseID;
+            let ClassID = trainer_classes[each_class].ClassID;
+            let newRow = ''
+            let endRow = ''
+
+            course = get_course_details(CourseID);
+            console.log("############@")
+            console.log(course)
+
+            
+            if (each_class % 2 == 1){
+              newRow = `<div class='row'>`
+              endRow = `</div>`
+            }
+            document.getElementById('enrolled-courses-content').innerHTML += `
+            ${newRow}
+            <div class="col-md-6">
+              <div class="probootstrap-service-2">                
+                <div class="text" style='width: 100%'>
+                  <h3>${CourseTitle} - Class: ${ClassID}</h3><br>
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start Date: ${ClassStartDate}</span><br>
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> End Date: ${ClassEndDate}</span>
+                </div>
+              </div>
+            </div>
+            ${endRow}
+            `
+          }
+        }
+      };
+      request.open('GET', 'http://localhost:5001/classes-taught/' + UserID, false);
+      request.send();
+
+      function get_course_details(CourseID){
+        var request = new XMLHttpRequest();
+
+        request.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200){
+            var data = JSON.parse(this.responseText).data.course;
+            console.log("!!!!!!!!!!!")
+            }
+          }
+        request.open('GET', 'http://localhost:5001/course-details/' + CourseID, false);
+        request.send();
+      }
+
+    //   new Vue({
+    //     el: "#courses-taught",
+    //     data: {
+    //         classes: []
+    //     },
+    //     mounted() {
+    //         this.init();
+    //         this.getClassesTaught();
+    //     },
+    //     methods: {
+    //         init() {
+                
+    //         },
+    //         async getClassesTaught() {
+    //             try {
+    //                 console.log("TESTTTT")
+    //                 url = `http://localhost:5001/classes-taught/${UserID}`;
+
+    //                 const response = await axios.get(url);
+
+    //                 // const status = response.data.status;
+    //                 // if (status == "error") {
+    //                 //     this.displayError = true
+    //                 //     this.errorMessage = response.data.message;
+    //                 //     return;
+    //                 // }
+    //                 this.classes = response.data.data.classes;
+    //                 console.log("@@@@@@@@@@@@@@")
+    //                 console.log(this.classes)
+    //                 for (c of this.classes){
+    //                   console.log("^^^^^^^^^^^")
+    //                   console.log(c.CourseID)
+    //                   getCourseDetails(c.CourseID)
+    //                 }
+    //             } catch (error) {
+    //                 if (error.response) {
+    //                     this.displayError = true
+    //                     this.errorMessage = error.response.data.message;
+    //                 } else if (error.request) {
+    //                     console.log(error.request);
+    //                 } else {
+    //                     console.log("Error", error.message);
+    //                 }
+    //                 return;
+    //             }
+    //         },
+    //         async getCourseDetails() {
+    //             try {
+    //                 console.log("TESTTTT")
+    //                 url = `http://localhost:5001/course-details/${UserID}`;
+
+    //                 const response = await axios.get(url);
+
+    //                 // const status = response.data.status;
+    //                 // if (status == "error") {
+    //                 //     this.displayError = true
+    //                 //     this.errorMessage = response.data.message;
+    //                 //     return;
+    //                 // }
+    //                 this.classes = response.data.data.classes;
+    //                 console.log("@@@@@@@@@@@@@@")
+    //                 console.log(this.classes)
+    //             } catch (error) {
+    //                 if (error.response) {
+    //                     this.displayError = true
+    //                     this.errorMessage = error.response.data.message;
+    //                 } else if (error.request) {
+    //                     console.log(error.request);
+    //                 } else {
+    //                     console.log("Error", error.message);
+    //                 }
+    //                 return;
+    //             }
+    //         }
+    //     },
+    // });
+
+      
     </script>
   </body>
 </html>
