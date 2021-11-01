@@ -610,7 +610,7 @@
               }
           };
           // console.log(JSON.stringify(send_value))
-          request.open("POST", "http://localhost:5004/create_graded_quiz")
+          request.open("POST", "http://localhost:5001/create_graded_quiz")
           request.setRequestHeader("Content-type", "application/json");
           request.send(JSON.stringify(quiz_send_value))
 
@@ -648,7 +648,7 @@
                 }
             };
             // console.log(JSON.stringify(send_value))
-            request.open("POST", "http://localhost:5004/create_graded_question", false)
+            request.open("POST", "http://localhost:5001/create_graded_question", false)
             request.setRequestHeader("Content-type", "application/json");
             request.send(JSON.stringify(qn_send_value))
           }
@@ -698,7 +698,7 @@
                 }
             };
             // console.log(JSON.stringify(send_value))
-            request.open("POST", "http://localhost:5004/create_graded_answer")
+            request.open("POST", "http://localhost:5001/create_graded_answer")
             request.setRequestHeader("Content-type", "application/json");
             request.send(JSON.stringify(ans_send_value))
           }

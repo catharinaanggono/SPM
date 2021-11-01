@@ -316,7 +316,7 @@
 
       }
       };
-      request.open('GET', 'http://localhost:5004/get_quiz/' + QuizID);
+      request.open('GET', 'http://localhost:5001/get_quiz/' + QuizID);
       request.send();
  
     }
@@ -355,7 +355,7 @@
         }
       };
       // console.log(JSON.stringify(send_value))
-      request.open("POST", "http://localhost:5004/post_result", false)
+      request.open("POST", "http://localhost:5001/post_result", false)
       request.setRequestHeader("Content-type", "application/json");
       request.send(JSON.stringify(result_send_value))
     }
@@ -389,7 +389,7 @@
             }
         };
         // console.log(JSON.stringify(send_value))
-        request.open("POST", "http://localhost:5004/post_ans", false)
+        request.open("POST", "http://localhost:5001/post_ans", false)
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(take_quiz_send_value))
         }
