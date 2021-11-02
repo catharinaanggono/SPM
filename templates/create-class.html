@@ -276,7 +276,7 @@
         }
 
       };
-      request.open("GET", "http://localhost:5006/get_trainers")
+      request.open("GET", "http://localhost:5001/get_trainers")
       request.send();
 
 
@@ -326,7 +326,7 @@
             }
         };
         // console.log(JSON.stringify(send_value))
-        request.open("POST", "http://localhost:5006/create_class")
+        request.open("POST", "http://localhost:5001/create_class")
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
 
