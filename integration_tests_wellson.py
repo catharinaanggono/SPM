@@ -150,6 +150,47 @@ class TestGetAllCourses(TestApp):
         }
         })
 
+    def test_get_all_courses_enrolled_classes(self):
+        application1 = ClassTaken(1, 1, 1, 'self_enrolled')
+        db.session.add(application1)
+        db.session.commit()
+        response = self.client.get("/courses-all/1")
+        self.assertEqual(response.json, {
+            "code":200,
+            "data":{
+                "courses":[
+                    {
+                        "Badge":"Test Course 1 Badge",
+                        "CourseDescription":"Test Course 1 Description",
+                        "CourseID":1,
+                        "CourseTitle":"Test Course 1",
+                        "GreyOut":False,
+                        "classList":[
+                        {
+                            "ClassID":1,
+                            "ClassSize":20,
+                            "CourseID":1,
+                            "EndDate":"Wed, 30 Jun 2021 00:00:00 GMT",
+                            "GreyOut":True, # Notice GreyOut for the class is True here (and False on other tests)
+                            "RegistrationEndDate":"Fri, 31 Dec 2021 00:00:00 GMT",
+                            "RegistrationStartDate":"Fri, 01 Oct 2021 00:00:00 GMT",
+                            "RemainingSlot":20,
+                            "StartDate":"Fri, 31 Dec 2021 00:00:00 GMT",
+                            "Status":"applied",
+                            "TrainerList":[
+                                
+                            ]
+                        }
+                        ],
+                        "prereqList":[
+                        
+                        ]
+                    }
+                ]
+            }
+            })
+            
+
     def test_self_enrol(self):
         
 
