@@ -19,6 +19,29 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 db = SQLAlchemy(app)
 print(environ.get("dbURL"))
 
+
+class finalStudentQuizResult(db.Model):
+    __tablename__ = "finalStudentQuizResult"
+
+    CourseID = db.Column(db.Integer, nullable=False)
+    ClassID = db.Column(db.Integer, nullable=False)
+    QuizID = db.Column(db.Integer, nullable=False)
+    LearnerID = db.Column(db.Integer, nullable=False)
+    Grade = db.Column(db.Integer, nullable=False)
+    AttemptID = db.Column(db.Integer, primary_key=True)
+
+    def __init__ (self, CourseID, ClassID, QuizID, LearnerID, Grade, AttemptID):
+        self.CourseID = CourseID
+        self.ClassID = ClassID
+        self.QuizID = QuizID
+        self.LearnerID = LearnerID
+        self.Grade = Grade
+        self.AttemptID = AttemptID
+
+    def json(self):
+        return{"CourseID": self.CourseID, "ClassID": self.ClassID, "QuizID": self.QuizID, "LearnerID": self.LearnerID, "Grade": self.Grade, "AttemptID": self.AttemptID}
+
+
 class course(db.Model):
     __tablename__ = 'course'
 
@@ -173,8 +196,7 @@ class ClassTaken(db.Model):
         self.ApplicationStatus = ApplicationStatus
 
     def json(self):
-        
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID}
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus}
 
 
 
@@ -219,8 +241,8 @@ class User(db.Model):
     __tablename__ = 'userTable'
 
     UserID = db.Column(db.Integer, primary_key=True)
-    UserName = db.Column(db.Integer)
-    UserType = db.Column(db.Integer)
+    UserName = db.Column(db.String(200), nullable=False)
+    UserType = db.Column(db.String(200), nullable=False)
 
     def __init__(self, UserID, UserName, UserType):
         self.UserID = UserID
@@ -1151,6 +1173,296 @@ def post_result():
         }
     ), 201     
 
+
+
+@app.route('/learner-courses', methods=["POST"])
+def get_course_learner():
+
+    data = request.get_json()
+    print(data['data'])
+
+    #to get the respective list from the html
+    CourseID = []
+    ClassID = []
+    for learner in data['data']:
+        CourseID.append(learner['CourseID'])
+        ClassID.append(learner['ClassID'])
+    
+    #geting data from the course table based on the course IDs
+    course_output = course.query.filter(course.CourseID.in_(CourseID))
+
+    #getting the data from the database fron the class table
+    class_retrive = []
+    for i in range(len(CourseID)):
+        end_data_output = course_class.query.filter((course_class.CourseID == CourseID[i]) & (course_class.ClassID == ClassID[i])).all()
+        class_retrive.append(end_data_output)
+    
+    #changing the data from json obj to list
+    class_output = []
+    for j in class_retrive:
+        for k in j:
+            class_output.append(k.json())
+
+    #print(class_output)
+    return jsonify({
+        "code": 200,
+        "data": {
+            "courses": [course.json() for course in course_output],
+            "classes": class_output
+        }
+    })
+
+@app.route('/user/<string:UserID>')
+def get_acct_details(UserID):
+    user = User.query.filter_by(UserID = UserID).all()
+    Courses = ClassTaken.query.filter_by(LearnerID = UserID).all()
+    
+    if len(user) and len(Courses):
+        return jsonify({
+            "code": 200,
+            "data":{
+                "user_details": [user_detail.json() for user_detail in user], 
+                "learner_courses": [course.json() for course in Courses]
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no such user"
+    }), 404
+
+@app.route('/HrAssign', methods=["POST"])
+def get_learner():
+    data = request.get_json()
+    # print(data['CourseID'])
+
+    #i am assuming i can get the assigning courseID from previous pages!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11111111111111
+    prereqIDs = course_prereq.query.filter_by(CourseID = data['CourseID']).all()
+    #print(prereqIDs)
+
+    #to get the prereq IDs of the course that is being assigned
+    prereqID_list = []
+    for prereqID in prereqIDs:
+        prereqID_list.append(prereqID.json()['Prereq'])
+    # print("Pre req id list")
+    # print(prereqID_list)
+
+    #to get the learner IDs that has completed the prereq of the course is being assigned
+    #if there is any prereq, then it will get those learner that has completed the prereq course
+    learnerID_list = []
+    if len(prereqID_list):
+        learnerIDs = course_prereq.query.filter(course_prereq.CourseID.in_(prereqID_list)).all()
+        # print("here")
+        # print(learnerIDs)
+        for learnerID in learnerIDs:
+            status = learnerID.json()['ApplicationStatus']
+            if status == 'completed':
+                learnerID_list.append(learnerID.json()['LearnerID'])
+        # print("Learner id")
+        # print(learnerID_list)
+        Users = User.query.filter(User.UserID.in_(learnerID_list)).all()
+        # print(learnerID_list)
+        # print(Users)
+        return jsonify({
+            "code": 200,
+            "data": {
+                    "user": [user.json() for user in Users]
+                }
+        })
+    #if there is no prereq, then just return the whole list of engineers
+    else:
+        Users = User.query.all()
+        if len(Users):
+            return jsonify({
+                "code": 200,
+                "data":{
+                    "user": [user.json() for user in Users]
+                }
+            })
+        return jsonify({
+            "code":400,
+            "message":"There are no user"
+        }), 404
+
+@app.route('/assign_learners', methods=['POST'])
+def assign_learners():
+    data = request.get_json()
+    #print(data)
+
+    class_details = course_class.query.filter_by(ClassID = data['ClassID'][0]).all()
+    #number of learner in the class currently
+    num_learner = len(ClassTaken.query.filter_by(ClassID = data['ClassID'][0]).all())
+    
+    #number of learner being assigned by HR
+    num_assigned_learner = len(data['data'])
+
+    class_details_dict = [attribute.json() for attribute in class_details]
+    #the size of the class 
+    class_size = class_details_dict[0]['ClassSize']
+
+    # print(class_size)
+    # print(num_learner)
+    # print(num_assigned_learner)
+
+    #number of availability in the class
+    class_availability = class_size - num_learner
+
+    #check if learner exist in the current class and return the learners that are exist in the class
+    exist_learner = []
+    for k in data['data']:
+        check = ClassTaken.query.filter((ClassTaken.CourseID == k[0]) & (ClassTaken.ClassID == k[1]) & (ClassTaken.LearnerID == k[2]))
+        if(check):
+            for person in check:
+                exist_learner.append(person.json())
+    if(len(exist_learner) > 0):
+        return jsonify({
+        "code": 500,
+        "data": exist_learner,
+        "message": "An error occured while adding course, the following learner has already been assigned to this class"
+        }), 500
+
+    #if all the assigned learners does not exist in this class, then proceed to applying them to the class
+    output = []
+    if (class_availability - num_assigned_learner) > 0:
+        for i in data['data']:
+            upload_data = {'CourseID': i[0], 'ClassID': i[1], 'LearnerID': i[2], 'ApplicationStatus': i[3]}
+            upload = ClassTaken(**upload_data)
+            db.session.add(upload)
+            db.session.commit()
+            output.append(upload_data)
+        return jsonify({
+        "code": 201,
+        "data": output,
+        "message": "Engineers has been successfully applied for the course"
+        }), 201
+    else:
+        return jsonify({
+        "code": 501,
+        "available_seat": class_availability,
+        "message": "There is no enough slot for this class."
+        }), 501
+
+@app.route('/after-assign')
+def after_assign():
+    return render_template('after_assign.html')
+
+
+@app.route('/learner_distribution_chart/<string:ClassID>')
+def distribution(ClassID):
+    #get all the learnerID using the classID
+    learners = ClassTaken.query.filter_by(ClassID = ClassID).all()
+
+    #the list of learners ID in the class
+    learnerIDs = []
+    course_status = []
+    for learner in learners:
+        learnerIDs.append(learner.json()['LearnerID'])
+        course_status.append(learner.json()['ApplicationStatus'])
+    
+    #______________________________________________________________________Engineers Distribution chart_____________________
+
+    #filtering to get user type from the learnerID list
+    users = User.query.filter(User.UserID.in_(learnerIDs))
+
+
+    #output to get the number of usertype in the class
+    user_output = {}
+    for user in users:
+        if user.json()['UserType'] in user_output:
+            user_output[user.json()['UserType']] += 1
+        else:
+            user_output[user.json()['UserType']] = 1
+    # print(output)
+
+    #______________________________________________________________________Number of learners completed the course chart_____________________
+
+    status_output = {}
+    for status in course_status:
+        if status in status_output:
+            status_output[status] += 1
+        else:
+            status_output[status] = 1
+
+    #print(status_output)
+
+    #_____________________________________________________________________Number of completed sections in the class (section status)____________________________
+    
+
+    # sections = MaterialProgress.query.filter_by(ClassID = ClassID).all()
+
+    # #section_output = {"Section1":{'completed':0, "imcomplete":0}, "Section2":{...}}
+
+    # section_output = {}
+    # for section in sections:
+    #     #print(section.json()['SectionID'])
+    #     if section.json()['SectionID'] in section_output:
+    #         if section.json()['STATUS'] == 1:
+    #             section_output[section.json()['SectionID']]['completed'] += 1
+    #         else:
+    #             section_output[section.json()['SectionID']]['incomplete'] += 1
+    #     else:
+    #         section_output[section.json()['SectionID']] = {'completed':0, 'incomplete':0}
+
+    #print(section_output)
+
+    #_____________________________________________________________________Final quiz distribution____________________________
+    
+    final_grades = finalStudentQuizResult.query.filter_by(ClassID=ClassID).all()
+
+    #passing grade is 85%
+    #take highest result
+    #{'1': 73, '2':66, ....}
+
+    final_grade_output = {}
+    for final_grade in final_grades:
+        #print(final_grade.json())
+        learnerid = final_grade.json()['LearnerID']
+        if learnerid in final_grade_output:
+            if final_grade_output[learnerid] < final_grade.json()['Grade']:
+                final_grade_output[learnerid] = final_grade.json()['Grade']
+        else:
+            final_grade_output[learnerid] = final_grade.json()['Grade']
+
+
+    #print(final_grade_output)
+
+    #_____________________________________________________________________number of pass/fail for each section____________________________
+
+
+    section_quiz_result = StudentQuizResult.query.filter_by(ClassID=ClassID).all()
+
+    #{"1": {1:79, 2:30...}, "2": {1: 82, 3:0}}
+
+    quiz_result_output = {}
+    for result in section_quiz_result:
+        #print(quiz_result_output)
+        learnerid = result.json()['LearnerID']
+        sectionid = result.json()['SectionID']
+        grade = result.json()['Grade']
+        if sectionid in quiz_result_output:
+            if learnerid in quiz_result_output[sectionid]:
+                if quiz_result_output[sectionid][learnerid] < grade:
+                    quiz_result_output[sectionid][learnerid] = grade
+            else:
+                quiz_result_output[sectionid][learnerid] = grade
+        else:
+            quiz_result_output[sectionid] = {learnerid: grade}
+
+    #print(quiz_result_output)
+
+
+    return jsonify({
+        "code": 200,
+        "data": {
+            "user_type_distribution": user_output,
+            "course_status": status_output,
+            # "section_status": section_output,
+            "final_grade":final_grade_output,
+            "section_quiz_result": quiz_result_output
+        }
+    })
+
+
+
 @app.route('/create-ungraded-quiz/<CourseID>/<ClassID>/<SectionID>')
 def create_ungraded_quiz_template(CourseID, ClassID, SectionID):
     return render_template('create-ungraded-quiz.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
@@ -1162,6 +1474,7 @@ def create_graded_quiz_template(CourseID):
 @app.route('/take-ungraded-quiz/<QuizID>')
 def take_ungraded_quiz(QuizID):
     return render_template('take-ungraded-quiz.html',QuizID=QuizID)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
