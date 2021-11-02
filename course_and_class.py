@@ -1405,6 +1405,7 @@ def assign_learners():
     output = []
     if (class_availability - num_assigned_learner) > 0:
         for i in data['data']:
+            #print(i)
             upload_data = {'CourseID': i[0], 'ClassID': i[1], 'LearnerID': i[2], 'ApplicationStatus': i[3]}
             upload = ClassTaken(**upload_data)
             db.session.add(upload)
