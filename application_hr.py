@@ -68,27 +68,6 @@ class Course(db.Model):
     def json(self):
         return{"CourseID": self.CourseID, "CourseTitle": self.CourseTitle, "CourseDescription": self.CourseDescription, "Badge": self.Badge}
 
-# @app.route('/applications')
-# def get_all_pending_applications():
-#     applications = Application.query.filter_by(ApplicationStatus="applied").all()
-#     usernames = []
-#     print (type(applications))
-#     for application in applications:
-#         print(type(application))
-#         user = User.query.filter_by(UserID=application.LearnerID).first()
-#         usernames.append(user)
-#     if len(applications):
-#         return jsonify({
-#             "code": 200,
-#             "data": {
-#                 "courses": [application.json() for application in applications],
-#                 "usernames": [username.json()["UserName"] for username in usernames]
-#             }
-#         }), 200
-#     return jsonify({
-#         "code": 404,
-#         "message": "There are no applications."
-#     }), 404
 
 @app.route('/applications')
 def get_all_pending_applications():

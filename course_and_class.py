@@ -206,7 +206,13 @@ class TrainerClass(db.Model):
         self.TrainerID = TrainerID
     
     def json(self):
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "TrainerID": self.TrainerID}
+        if not hasattr(self, "CourseTitle"):
+            self.CourseTitle = ''
+        if not hasattr(self, 'ClassStartDate'):
+            self.ClassStartDate = ''
+        if not hasattr(self, 'ClassEndDate'):
+            self.ClassEndDate = ''
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "TrainerID": self.TrainerID, "CourseTitle": self.CourseTitle, "ClassStartDate": self.ClassStartDate, "ClassEndDate": self.ClassEndDate}
 
 
 class User(db.Model):
@@ -645,6 +651,55 @@ def withdraw_application(CourseID, ClassID, UserID):
             "code": 500,
             "message": "An error occurred in withdrawing class application"
         }), 500
+
+
+@app.route('/user-role/<string:UserID>')
+def get_user_role(UserID):
+    user = User.query.filter_by(UserID=UserID).first()
+
+    if (user):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "UserRole": user.UserType
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no classes."
+    }), 404
+
+@app.route('/classes-taught/<string:UserID>')
+def get_classes_taught(UserID):
+    classes = TrainerClass.query.filter_by(TrainerID=UserID).all()
+    if len(classes):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "classes": [each_class.json() for each_class in classes]
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no classes."
+    }), 404
+
+
+@app.route('/course-details/<string:CourseID>')
+def get_course_details(CourseID):
+    c = course.query.filter_by(CourseID=CourseID).first()
+
+    if (c):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "course": c.json()
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no classes."
+    }), 404
 
 @app.route('/create-new-section/<CourseID>/<ClassID>')
 def create_section_page(CourseID, ClassID):
