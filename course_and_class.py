@@ -1047,9 +1047,6 @@ def post_ans():
         }
     ), 201     
 
-@app.route('/create-ungraded-quiz/<CourseID>/<ClassID>/<SectionID>')
-def create_ungraded_quiz(CourseID, ClassID, SectionID):
-    return render_template('create-ungraded-quiz.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
 
 #post student result for ungraded quiz
 @app.route('/post_result', methods=["POST"])
@@ -1081,6 +1078,14 @@ def post_result():
             }
         }
     ), 201     
+
+@app.route('/create-ungraded-quiz/<CourseID>/<ClassID>/<SectionID>')
+def create_ungraded_quiz_template(CourseID, ClassID, SectionID):
+    return render_template('create-ungraded-quiz.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
+
+@app.route('/create-graded-quiz/<CourseID>')
+def create_graded_quiz_template(CourseID):
+    return render_template('create-graded-quiz.html', CourseID=CourseID)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
