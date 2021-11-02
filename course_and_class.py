@@ -1047,6 +1047,10 @@ def post_ans():
         }
     ), 201     
 
+@app.route('/create-ungraded-quiz/<CourseID>/<ClassID>/<SectionID>')
+def create_ungraded_quiz(CourseID, ClassID, SectionID):
+    return render_template('create-ungraded-quiz.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
+
 #post student result for ungraded quiz
 @app.route('/post_result', methods=["POST"])
 def post_result():
