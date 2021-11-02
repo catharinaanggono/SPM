@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Create Quiz</title>
+    <title>Create Graded Quiz</title>
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     
@@ -14,6 +14,7 @@
     <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
     <!--[if lt IE 9]>
       <script src="js/vendor/html5shiv.min.js"></script>
       <script src="js/vendor/respond.min.js"></script>
@@ -103,7 +104,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12 text-left section-heading probootstrap-animate">
-              <h1 class="mb0">Create Quiz</h1>
+              <h1 class="mb0">Create Final Quiz</h1>
             </div>
           </div>
         </div>
@@ -211,8 +212,6 @@
         console.log(qn_id)
 
         var CourseID = `{{ CourseID }}`;
-        var ClassID = `{{ ClassID }}`;
-        var SectionID = `{{ SectionID }}`;
 
         // document.getElementById('question_content').innerHTML = `
         //     <div class="questions" id='question${qn_id}'>
@@ -593,8 +592,6 @@
 
           var quiz_send_value = {
             CourseID: CourseID,
-            ClassID: ClassID,
-            SectionID: SectionID,
             QuizTitle: QuizTitle,
             QuizTimer: QuizTimer
           }
@@ -612,7 +609,7 @@
               }
           };
           // console.log(JSON.stringify(send_value))
-          request.open("POST", "http://localhost:5001/create_quiz")
+          request.open("POST", "http://localhost:5001/create_graded_quiz")
           request.setRequestHeader("Content-type", "application/json");
           request.send(JSON.stringify(quiz_send_value))
 
@@ -631,8 +628,6 @@
 
             var qn_send_value = {
               CourseID: CourseID,
-              ClassID: ClassID,
-              SectionID: SectionID,
               QuizID: QuizID,
               QuestionContent: question_text
             }
@@ -652,7 +647,7 @@
                 }
             };
             // console.log(JSON.stringify(send_value))
-            request.open("POST", "http://localhost:5001/create_question", false)
+            request.open("POST", "http://localhost:5001/create_graded_question", false)
             request.setRequestHeader("Content-type", "application/json");
             request.send(JSON.stringify(qn_send_value))
           }
@@ -663,6 +658,7 @@
 
           // get the number of options 
           var options_cnt = document.getElementById('qn'+q_i_pass+'_options_content').getElementsByClassName('qn' + q_i_pass + '_options').length
+          console.log("option COUNT" + options_cnt)
 
           // retrieve text of the option selected as answer 
           var set_answer = document.getElementById('qn'+q_i_pass+'_set_answer').value
@@ -685,8 +681,6 @@
 
             var ans_send_value = {
               CourseID: CourseID,
-              ClassID: ClassID,
-              SectionID: SectionID,
               QuizID: QuizID,
               QuestionID: QuestionID,
               AnswerContent: option_text,
@@ -703,7 +697,7 @@
                 }
             };
             // console.log(JSON.stringify(send_value))
-            request.open("POST", "http://localhost:5001/create_answer")
+            request.open("POST", "http://localhost:5001/create_graded_answer")
             request.setRequestHeader("Content-type", "application/json");
             request.send(JSON.stringify(ans_send_value))
           }
@@ -711,8 +705,6 @@
         
 
     </script>
-
-
     
   </body>
 </html>

@@ -228,7 +228,13 @@ class TrainerClass(db.Model):
         self.TrainerID = TrainerID
     
     def json(self):
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "TrainerID": self.TrainerID}
+        if not hasattr(self, "CourseTitle"):
+            self.CourseTitle = ''
+        if not hasattr(self, 'ClassStartDate'):
+            self.ClassStartDate = ''
+        if not hasattr(self, 'ClassEndDate'):
+            self.ClassEndDate = ''
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "TrainerID": self.TrainerID, "CourseTitle": self.CourseTitle, "ClassStartDate": self.ClassStartDate, "ClassEndDate": self.ClassEndDate}
 
 
 class User(db.Model):
@@ -668,6 +674,72 @@ def withdraw_application(CourseID, ClassID, UserID):
             "message": "An error occurred in withdrawing class application"
         }), 500
 
+
+@app.route('/user-role/<string:UserID>')
+def get_user_role(UserID):
+    user = User.query.filter_by(UserID=UserID).first()
+
+    if (user):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "UserRole": user.UserType
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no classes."
+    }), 404
+
+@app.route('/classes-taught/<string:UserID>')
+def get_classes_taught(UserID):
+    classes = TrainerClass.query.filter_by(TrainerID=UserID).all()
+    if len(classes):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "classes": [each_class.json() for each_class in classes]
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no classes."
+    }), 404
+
+
+@app.route('/course-details/<string:CourseID>')
+def get_course_details(CourseID):
+    c = course.query.filter_by(CourseID=CourseID).first()
+
+    if (c):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "course": c.json()
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no classes."
+    }), 404
+
+
+@app.route('/class-details/<string:ClassID>')
+def get_class_details(ClassID):
+    c = course_class.query.filter_by(ClassID=ClassID).first()
+
+    if (c):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "course": c.json()
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no classes."
+    }), 404
+
 @app.route('/create-new-section/<CourseID>/<ClassID>')
 def create_section_page(CourseID, ClassID):
     return render_template('create-section.html', CourseID=CourseID, ClassID=ClassID)
@@ -1069,9 +1141,6 @@ def post_ans():
         }
     ), 201     
 
-@app.route('/create-ungraded-quiz/<CourseID>/<ClassID>/<SectionID>')
-def create_ungraded_quiz(CourseID, ClassID, SectionID):
-    return render_template('create-ungraded-quiz.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
 
 #post student result for ungraded quiz
 @app.route('/post_result', methods=["POST"])
@@ -1103,6 +1172,7 @@ def post_result():
             }
         }
     ), 201     
+
 
 
 @app.route('/learner-courses', methods=["POST"])
@@ -1391,6 +1461,19 @@ def distribution(ClassID):
         }
     })
 
+
+
+@app.route('/create-ungraded-quiz/<CourseID>/<ClassID>/<SectionID>')
+def create_ungraded_quiz_template(CourseID, ClassID, SectionID):
+    return render_template('create-ungraded-quiz.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
+
+@app.route('/create-graded-quiz/<CourseID>')
+def create_graded_quiz_template(CourseID):
+    return render_template('create-graded-quiz.html', CourseID=CourseID)
+
+@app.route('/take-ungraded-quiz/<QuizID>')
+def take_ungraded_quiz(QuizID):
+    return render_template('take-ungraded-quiz.html',QuizID=QuizID)
 
 
 if __name__ == '__main__':
