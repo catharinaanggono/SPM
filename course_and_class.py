@@ -208,8 +208,7 @@ class ClassTaken(db.Model):
                 "ApplicationStatus": self.ApplicationStatus, 
                 "CourseTitle": self.CourseTitle, 
                 "ClassStartDate": self.class_start_date, 
-                "ClassEndDate": self.class_end_date,
-                "ApplicationStatus": self.ApplicationStatus
+                "ClassEndDate": self.class_end_date
             }
 
 class LearnerCourse(db.Model):
@@ -1663,6 +1662,32 @@ def get_leaner_ongoing_courses(UserID):
             "message": "There are no course."
         }
     ), 404 
+
+
+@app.route('/users')
+def get_all_users():
+    all_users = User.query.all()
+    print(all_users)
+    return jsonify ({
+        "code":200,
+        "message": "User exists",
+        "data": {
+            "user": [user.json() for user in all_users]
+        }
+    })
+
+
+@app.route('/learners')
+def get_all_learners():
+    all_learners = ClassTaken.query.all()
+    print(all_learners)
+    return jsonify ({
+        "code":200,
+        "message": "Learner Exist",
+        "data": {
+            "learner": [learner.json() for learner in all_learners]
+        }
+    })
 
 
 @app.route('/create-new-section/<CourseID>/<ClassID>')
