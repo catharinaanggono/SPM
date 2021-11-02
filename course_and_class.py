@@ -1648,7 +1648,7 @@ def view_material(CourseID, ClassID, SectionID, url):
 
 @app.route('/after-assign')
 def after_assign():
-    return render_template('after_assign.html')
+    return render_template('after-assign.html')
 
 
 @app.route('/create-ungraded-quiz/<CourseID>/<ClassID>/<SectionID>')
@@ -1708,7 +1708,7 @@ def create_course_hr():
 
 @app.route('/assign-learner/<CourseID>/<ClassID>')
 def assign_learner(CourseID, ClassID):
-    return render_template('assign_learner.html', CourseID=CourseID, ClassID=ClassID)
+    return render_template('assign-learner.html', CourseID=CourseID, ClassID=ClassID)
 
 
 if __name__ == '__main__':
