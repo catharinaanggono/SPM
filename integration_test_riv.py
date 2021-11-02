@@ -58,7 +58,8 @@ class TestRetrieveLearner(TestApp):
         response = self.client.post("/HrAssign",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
-
+        # print('-----------')
+        # print(response.json)
         self.assertEqual(response.json,{
             "code": 200,
             "data":{

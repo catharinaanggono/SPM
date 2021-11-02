@@ -1310,7 +1310,7 @@ def get_learner():
     #if there is any prereq, then it will get those learner that has completed the prereq course
     learnerID_list = []
     if len(prereqID_list):
-        learnerIDs = course_prereq.query.filter(course_prereq.CourseID.in_(prereqID_list)).all()
+        learnerIDs = ClassTaken.query.filter(ClassTaken.CourseID.in_(prereqID_list)).all()
         # print("here")
         # print(learnerIDs)
         for learnerID in learnerIDs:
