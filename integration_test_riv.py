@@ -2,7 +2,7 @@ import unittest
 import flask_testing
 import json
 from datetime import datetime
-from assign_learner import app, db, prereq, classLearner, User, prereq, Class, course
+from course_and_class import app, db, course_prereq, ClassTaken, User, course_class, course
 
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
@@ -21,9 +21,9 @@ class TestApp(flask_testing.TestCase):
         db.create_all()
         course1 = course(3, "WAD1", "Teach about programming", "python_badge.png")
         course2 = course(4, "WAD2", "Teach about programming", "python_badge.png")
-        prereq1 = prereq(4, 3)
-        class1 = Class(3, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
-        class2 = Class(4, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        prereq1 = course_prereq(4, 3)
+        class1 = course_class(3, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class2 = course_class(4, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
         learner1 = User(1, "Jhonny", "Senior Engineer")
         
 
@@ -44,8 +44,8 @@ class TestApp(flask_testing.TestCase):
 class TestRetrieveLearner(TestApp):
     def test_retrieve_learner(self):
 
-        classLearner1 = classLearner(3, 1, 1, "completed")
-        classLearner2 = classLearner(4, 1, 1, "ongoing")
+        classLearner1 = ClassTaken(3, 1, 1, "completed")
+        classLearner2 = ClassTaken(4, 1, 1, "ongoing")
 
         db.session.add(classLearner1)
         db.session.add(classLearner2)
@@ -70,8 +70,8 @@ class TestRetrieveLearner(TestApp):
     
     def test_prereq(self):
         
-        classLearner3 = classLearner(3, 1, 1, "ongoing")
-        classLearner4 = classLearner(4, 1, 1, "self_enrolled")
+        classLearner3 = ClassTaken(3, 1, 1, "ongoing")
+        classLearner4 = ClassTaken(4, 1, 1, "self_enrolled")
 
         db.session.add(classLearner3)
         db.session.add(classLearner4)
@@ -96,7 +96,7 @@ class TestRetrieveLearner(TestApp):
     def test_no_prereq(self):
         
         course3 = course(1, "SPM", "Teach about programming", "python_badge.png")
-        class3 = Class(1, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class3 = course_class(1, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
         
         db.session.add(course3)
         db.session.add(class3)
@@ -157,7 +157,7 @@ class TestAssignLeaner(TestApp):
     
     def test_existing_learner(self):
 
-        classLearner5 = classLearner(3, 1, 1, "ongoing")
+        classLearner5 = ClassTaken(3, 1, 1, "ongoing")
 
         db.session.add(classLearner5)
 
@@ -184,7 +184,7 @@ class TestAssignLeaner(TestApp):
 
     def test_class_availability(self):
 
-        class4 = Class(3, 2, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 0, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class4 = course_class(3, 2, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 0, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
         
         db.session.add(class4)
 
