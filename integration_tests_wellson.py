@@ -1,7 +1,7 @@
 import unittest
 import flask_testing
 import json
-from course_and_class import app, db, SectionMaterial, ClassTaken, User, course, course_class, course_prereq
+from course_and_class import app, db, SectionMaterial, ClassTaken, User, Course, CourseClass, CoursePrereq
 from datetime import datetime
 
 class TestApp(flask_testing.TestCase):
@@ -20,9 +20,9 @@ class TestApp(flask_testing.TestCase):
         db.create_all()
         u1 = User(1, 'John', 'Junior Engineer')
         u2 = User(2, 'Adam', 'Junior Engineer')
-        course1 = course(None, 'Test Course 1', 'Test Course 1 Description', 'Test Course 1 Badge')
+        course1 = Course(None, 'Test Course 1', 'Test Course 1 Description', 'Test Course 1 Badge')
         
-        class1 = course_class(1, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class1 = CourseClass(1, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
         db.session.add(u1)
         db.session.add(course1)
         db.session.add(class1)
@@ -78,9 +78,9 @@ class TestGetAllCourses(TestApp):
             })
 
     def test_get_all_courses_no_prereq(self):
-        course2 = course(None, 'Test Course 2 - Prereq 1', 'Test Course 2 Description', 'Test Course 2 Badge')
-        courseprereq1 = course_prereq(2, 1)
-        class2 = course_class(2, 2, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        course2 = Course(None, 'Test Course 2 - Prereq 1', 'Test Course 2 Description', 'Test Course 2 Badge')
+        courseprereq1 = CoursePrereq(2, 1)
+        class2 = CourseClass(2, 2, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
         db.session.add(course2)
         db.session.add(courseprereq1)
         db.session.add(class2)
@@ -203,17 +203,22 @@ class TestGetAllCourses(TestApp):
         response = self.client.post("/self-enrol",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
+        
+        print(response.json)
                         
         self.assertEqual(response.json, {
-            "code": 201,
-            "message": "Applied to class sucessfully",
-            "data": {
-                'ApplicationStatus': 'applied',
-                'LearnerID': 1,
-                'CourseID': 1,
-                'ClassID': 1
-                }
-        })
+            "code":201,
+            "data":{
+                "ApplicationStatus":"applied",
+                "ClassEndDate":"",
+                "ClassID":1,
+                "ClassStartDate":"",
+                "CourseID":1,
+                "CourseTitle":"",
+                "LearnerID":1
+            },
+            "message":"Applied to class sucessfully"
+            })
 
     # def test_self_enrol_no_prereq(self):
 
