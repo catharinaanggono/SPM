@@ -703,16 +703,17 @@
                 }
             };
             // console.log(JSON.stringify(send_value))
-            request.open("POST", "http://localhost:5001/create_answer")
+            request.open("POST", "http://localhost:5001/create_answer", false)
             request.setRequestHeader("Content-type", "application/json");
             request.send(JSON.stringify(ans_send_value))
           }
+          redirect()  
         }
-        
+
+        function redirect(){
+          window.location.href = "http://localhost:5001/successful-creation/{{CourseID}}/{{ClassID}}";
+        }
 
     </script>
-
-
-    
   </body>
 </html>

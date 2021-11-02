@@ -385,7 +385,7 @@
 
               var data = JSON.parse(this.responseText);
               console.log(data)
-              window.location.href = "successful-submission.html";
+              window.location.href = "http://localhost:5001/successful-submission/" + localStorage.CourseID + "/" + localStorage.ClassID;
 
             }
         };
@@ -422,7 +422,7 @@
         if (distance < 0) {
             clearInterval(x);
             document.getElementById("demo").innerHTML = "EXCEED"
-            window.location.href = "timeout.html";
+            window.location.href = "http://localhost:5001/timeout/" + localStorage.CourseID + "/" + localStorage.ClassID;
             submit();
         }
         }, 1000);

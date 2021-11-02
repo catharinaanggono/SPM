@@ -292,7 +292,7 @@ class StudentQuizResult(db.Model):
     Grade = db.Column(db.Integer, nullable=False)
     AttemptID = db.Column(db.Integer, primary_key=True)
 
-    def __init__(self, CourseID, ClassID, SectionID, QuizID, LearnerID, Grade):
+    def __init__(self, CourseID, ClassID, SectionID, QuizID, LearnerID, Grade=0):
         self.CourseID = CourseID
         self.ClassID = ClassID
         self.SectionID = SectionID
@@ -1475,6 +1475,17 @@ def create_graded_quiz_template(CourseID):
 def take_ungraded_quiz(QuizID):
     return render_template('take-ungraded-quiz.html',QuizID=QuizID)
 
+@app.route('/timeout/<CourseID>/<ClassID>')
+def timeout(CourseID, ClassID):
+    return render_template('timeout.html', CourseID=CourseID, ClassID=ClassID)
+
+@app.route('/successful-submission/<CourseID>/<ClassID>')
+def successful_submission(CourseID, ClassID):
+    return render_template('successful-submission.html', CourseID=CourseID, ClassID=ClassID)
+
+@app.route('/successful-creation/<CourseID>/<ClassID>')
+def successful_creation(CourseID, ClassID):
+    return render_template('successful-creation.html', CourseID=CourseID, ClassID=ClassID)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
