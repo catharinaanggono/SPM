@@ -1511,6 +1511,10 @@ def successful_submission(CourseID, ClassID):
 def successful_creation(CourseID, ClassID):
     return render_template('successful-creation.html', CourseID=CourseID, ClassID=ClassID)
 
+@app.route('/successful-creation-hr')
+def successful_creation():
+    return render_template('successful-creation-hr.html')
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
 
