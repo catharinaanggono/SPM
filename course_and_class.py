@@ -979,8 +979,6 @@ def get_section_quiz_trainer(CourseID, ClassID, SectionID):
             "message": "No quizzes found for this section"
         })
     
-
-
 # for ungraded quiz
 @app.route('/create_quiz', methods=["POST"])
 def create_quiz():
