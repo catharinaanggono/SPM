@@ -496,7 +496,7 @@ def get_course(CourseID):
         }), 404
 
 
-# sad
+# sad #2
 
 @app.route('/classes')
 def get_all_classes():
@@ -1302,7 +1302,7 @@ def get_learner():
     #to get the prereq IDs of the course that is being assigned
     prereqID_list = []
     for prereqID in prereqIDs:
-        prereqID_list.append(prereqID.json()['Prereq'])
+        prereqID_list.append(prereqID.json()['PrereqID'])
     # print("Pre req id list")
     # print(prereqID_list)
 
