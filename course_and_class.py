@@ -1142,6 +1142,10 @@ def create_ungraded_quiz_template(CourseID, ClassID, SectionID):
 def create_graded_quiz_template(CourseID):
     return render_template('create-graded-quiz.html', CourseID=CourseID)
 
+@app.route('/take-ungraded-quiz/<QuizID>')
+def take_ungraded_quiz(QuizID):
+    return render_template('take-ungraded-quiz.html',QuizID=QuizID)
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
 
