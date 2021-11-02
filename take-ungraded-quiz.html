@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
+    <title>Take Ungraded Quiz</title>
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     
@@ -316,7 +316,7 @@
 
       }
       };
-      request.open('GET', 'http://localhost:5004/get_quiz/' + QuizID);
+      request.open('GET', 'http://localhost:5001/get_quiz/' + QuizID);
       request.send();
  
     }
@@ -355,7 +355,7 @@
         }
       };
       // console.log(JSON.stringify(send_value))
-      request.open("POST", "http://localhost:5004/post_result", false)
+      request.open("POST", "http://localhost:5001/post_result", false)
       request.setRequestHeader("Content-type", "application/json");
       request.send(JSON.stringify(result_send_value))
     }
@@ -389,7 +389,7 @@
             }
         };
         // console.log(JSON.stringify(send_value))
-        request.open("POST", "http://localhost:5004/post_ans", false)
+        request.open("POST", "http://localhost:5001/post_ans", false)
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(take_quiz_send_value))
         }

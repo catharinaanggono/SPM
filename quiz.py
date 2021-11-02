@@ -192,6 +192,7 @@ class FinalQuizQuestionAnswer(db.Model):
 # for ungraded quiz
 @app.route('/create_quiz', methods=["POST"])
 def create_quiz():
+    print("HI")
 
     data = request.get_json()
     print(data)
@@ -214,7 +215,7 @@ def create_quiz():
     return jsonify(
         {
             "code": 201,
-            "message": "Quiz are successfully created",
+            "message": "Quiz is successfully created",
             "data": {
                 "QuizID": quiz.QuizID
             }
