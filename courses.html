@@ -898,12 +898,14 @@
       request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200){
           var data = JSON.parse(this.responseText);
+          console.log("ongoing", data)
           var learner_ongoing_courses = data.data.learner_courses;
           for (var each_course in learner_ongoing_courses){
             console.log(learner_ongoing_courses[each_course])
             var ClassID = learner_ongoing_courses[each_course].ClassID;
             var CourseID = learner_ongoing_courses[each_course].CourseID;
             var CourseTitle = learner_ongoing_courses[each_course].CourseTitle;
+            console.log(CourseTitle)
             var ApplicationStatus = learner_ongoing_courses[each_course].ApplicationStatus;
             var ClassStartDate = learner_ongoing_courses[each_course].ClassStartDate;
             var ClassEndDate = learner_ongoing_courses[each_course].ClassEndDate;
@@ -945,7 +947,7 @@
           }
         }
       };
-      request.open('GET', 'http://localhost:5002/learner_ongoing_courses/' + UserID);
+      request.open('GET', 'http://localhost:5001/learner_ongoing_courses/' + UserID);
       request.send();
 
       function withdrawApplication(CourseID, ClassID, UserID, CourseTitle){

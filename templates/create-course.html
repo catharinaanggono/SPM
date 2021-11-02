@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Quiz Successful Submission</title>
+    <title>Create Course</title>
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
+
     
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
@@ -14,6 +15,21 @@
     <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+  
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      td, th {
+        text-align: left;
+        padding: 8px;
+      }
+      </style>
+    
 
   </head>
   <body>
@@ -94,15 +110,54 @@
         </div>
       </nav>
       
+      <section class="probootstrap-section probootstrap-section-colored">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-left section-heading probootstrap-animate">
+              <h1 class="mb0">Create Course</h1>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section class="probootstrap-section probootstrap-section-sm">
-        <div class="container" style='color:black; height:500px'>
-            <h1>The quiz has been successfully created</h1>
-            <br><br>
-            <button type="button" class="btn btn-primary" id = 'redirect' onclick='redirect()'>Back to All Courses</button>
-          </div>
+        <div class="container">
+            <form>
+                <div class="form-group">
+                  <label for="courseTitle">Course Title</label>
+                  <input type="text" class="form-control" id="courseTitle" placeholder="Course Title" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="courseDesc">Course Description</label>
+                  <textarea class="form-control" id="courseDesc" rows="3" placeholder="Course Description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="prereq">Prereq</label>
+                    <select class="form-select form-control" multiple aria-label="multiple select example" id="prereq" size="5">
+                    </select>
+                </div>
+
+              </form>
+
+        </div>
       </section>
+
       
+
+      
+
+     
+      
+      <section class="probootstrap-cta">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <a href="#" role="button" class="btn btn-primary btn-lg btn-ghost probootstrap-animate" data-animate-effect="fadeInLeft" onclick="create_course()">Create</a>
+            </div>
+          </div>
+        </div>
+      </section>
       <footer class="probootstrap-footer probootstrap-bg">
         <div class="container">
           <div class="row">
@@ -148,7 +203,7 @@
           <!-- END row -->
           
         </div>
-
+        {{ CourseID }}
         <div class="probootstrap-copyright">
           <div class="container">
             <div class="row">
@@ -165,12 +220,91 @@
 
     </div>
     <!-- END wrapper -->
-
-    <script>
-        function redirect() {
-          window.location.href = "http://localhost:5001/view-courses";
-        }
-    </script>
     
+    <script>
+
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+          var courses = JSON.parse(this.responseText).data.course;
+          console.log("###################")
+          console.log(courses)
+
+          var prereq_input = '';
+          
+
+          for(course of courses){
+            let courseID = course.CourseID;
+            let courseTitle = course.CourseTitle;
+
+            prereq_input += "<option value='" + courseID + "'>" + courseTitle + " </option>"
+
+          }            
+          
+          document.getElementById("prereq").innerHTML += prereq_input
+
+        }
+
+      };
+      request.open("GET", "http://localhost:5001/courses")
+      request.send();
+
+
+      function create_course(){
+
+        var courseTitle = document.getElementById("courseTitle").value;
+        var courseDesc = document.getElementById("courseDesc").value;
+        var prereq = $('#prereq').val();
+        console.log("###############")
+        console.log(courseTitle)
+        console.log(courseDesc)
+        console.log(prereq)
+
+        // var msg = [];
+
+        // if(courseTitle.length <= 0){
+        //   msg.push("Please fill in the course title");
+        // }
+        // if(courseDesc.length <= 0){
+        //   msg.push("Please fill in the course description");
+        // }
+        if (courseTitle != "" && courseDesc != ""){
+          var send_value = {
+          CourseTitle: courseTitle,
+          CourseDescription: courseDesc,
+          Badge: "python_badge.png",
+          prereqList: prereq
+        }
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 201) {
+
+              var data = JSON.parse(this.responseText).data;
+              console.log(data.CourseID)
+              window.location.href = `http://localhost:5001/create-graded-quiz/${data.CourseID}`
+              
+            }
+        };
+        // console.log(JSON.stringify(send_value))
+        request.open("POST", "http://localhost:5001/create_course")
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(send_value))
+        }
+        else {
+          console.log("Fill in missing fields.")
+        }
+
+      }
+
+      // function createGradedQuiz(CourseID){
+
+      //   window.location.href = `http://localhost:5202/create-graded-quiz/${CourseID}`
+
+      // }
+
+      
+    </script>
   </body>
 </html>
