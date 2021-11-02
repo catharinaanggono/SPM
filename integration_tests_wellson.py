@@ -208,6 +208,7 @@ class TestGetAllCourses(TestApp):
             "code": 201,
             "message": "Applied to class sucessfully",
             "data": {
+                'ApplicationStatus': 'applied',
                 'LearnerID': 1,
                 'CourseID': 1,
                 'ClassID': 1
