@@ -120,10 +120,10 @@ def accept_application():
 
     return jsonify(
         {
-            "code": 200,
+            "code": 201,
             "message": "Application has been accepted"
         }
-    ), 200
+    ), 201
 
 @app.route("/reject_application", methods=['POST'])
 def reject_application():
@@ -139,10 +139,10 @@ def reject_application():
 
     return jsonify(
         {
-            "code": 200,
+            "code": 201,
             "message": "Application has been rejected"
         }
-    ), 200
+    ), 201
 
 
 if __name__ == '__main__':
