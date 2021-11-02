@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
 from dotenv import load_dotenv
+from flask import render_template
+
 
 load_dotenv()
 
@@ -90,12 +92,17 @@ def create_course():
      
     return jsonify(
         {
-            "code": 200,
-            "message": "Course is successfully created"
-            # "data": course.json(), coursePrereq.json()
+            "code": 201,
+            "message": "Course is successfully created",
+            "data": course.json()
             
         }
-    ), 200
+    ), 201
+
+
+@app.route('/create-graded-quiz/<CourseID>')
+def create_graded_quiz(CourseID):
+    return render_template('create-graded-quiz.html', CourseID=CourseID)
 
 
 if __name__ == '__main__':
