@@ -732,7 +732,7 @@ def get_all_courses(UserID):
     for prereq in takenPrereq:
         prereq_courses.append(prereq.CourseID)
     for a_class in takenClasses:
-        if a_class.ApplicationStatus == 'hr_enrolled': # check if user already enrolled
+        if a_class.ApplicationStatus == 'hr_enrolled' or a_class.ApplicationStatus == 'ongoing': # check if user already enrolled
             enrolled_courses.append(a_class.CourseID)
         elif a_class.ApplicationStatus == 'self_enrolled' or a_class.ApplicationStatus == 'self_approved':
             applied_courses.append([a_class.CourseID, a_class.ClassID])
@@ -768,7 +768,7 @@ def get_all_courses(UserID):
                     trainerList.append(trainerName)
             if [a_class.CourseID, a_class.ClassID] in applied_courses:
                 a_class.GreyOut = True
-                a_class.Status = 'applied'
+                a_class.Status = 'self_enrolled'
             if [a_class.CourseID, a_class.ClassID] in rejected_courses:
                 a_class.Status = 'rejected'
             currentlyEnrolled = ClassTaken.query.filter(CourseID == a_class.CourseID, ClassTaken.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus.in_(["hr_enrolled", "self_approved"])) # check remaining class sizes
@@ -805,20 +805,16 @@ def self_enrol():
     courseID = data['CourseID']
     classID = data['ClassID']
     
-    apply_class = ClassTaken(courseID, classID, userID, 'applied')
+    apply_class = ClassTaken(courseID, classID, userID, 'self_enrolled')
 
     check = ClassTaken.query.filter_by(CourseID=courseID, ClassID=classID, LearnerID=userID, ApplicationStatus='rejected').first()
     if check:
-        try:
-            db.session.add(apply_class)
-            db.session.commit()
-        except:
-            return jsonify(
-            {
-                    "code": 500,
-                    "message": "An error occurred in applying to class."
-            }
-        ), 500
+        return jsonify(
+                {
+                        "code": 400,
+                        "message": "An error occurred in applying to class."
+                }
+            ), 400
     else:
         try:
             db.session.add(apply_class)
