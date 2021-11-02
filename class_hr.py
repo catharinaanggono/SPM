@@ -111,10 +111,10 @@ def create_class():
 
     return jsonify(
         {
-            "code": 200,
+            "code": 201,
             "message": "Class is successfully created"
         }
-    ), 200
+    ), 201
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5006, debug=True)
