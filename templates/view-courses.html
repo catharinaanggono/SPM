@@ -145,6 +145,14 @@
 
       <section class="probootstrap-section probootstrap-section-sm">
         <div class="container">
+          <div class="text-right">
+            <button class="btn btn-primary" onclick="createCourse()"> Create Course</button>
+          </div>
+        </div><br/>
+        
+        
+        <div class="container">
+          
             
             <div class='row'>
                 <div class='col-md-12'>
@@ -298,7 +306,12 @@
       // };
       request.open("GET", "http://localhost:5001/courses", false);
       request.send();
-      
+
+      function createCourse(){
+
+        window.location.href = `http://localhost:5001/create-course`
+
+      }
       function createClass(CourseID){
 
         window.location.href = `http://localhost:5001/create-class/${CourseID}`

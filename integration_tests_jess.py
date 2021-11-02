@@ -1,7 +1,7 @@
 import unittest
 import flask_testing
 import json
-from application_hr import app, db, Application, User, Course
+from course_and_class import app, db, ClassTaken, User, Course
 from datetime import datetime
 
 class TestApp(flask_testing.TestCase):
@@ -22,8 +22,8 @@ class TestApp(flask_testing.TestCase):
         u2 = User(7, 'Aaron', 'Senior Engineer')
 
         course = Course(1, "WAD", "Course Desc", "badge test")
-        app1 = Application(1, 2, 6, "applied")
-        app2 = Application(1, 2, 7, "applied")
+        app1 = ClassTaken(1, 2, 6, "applied")
+        app2 = ClassTaken(1, 2, 7, "applied")
         
         db.session.add(u1)
         db.session.add(u2)
@@ -56,7 +56,19 @@ class TestViewApplication(TestApp):
                         "LearnerID": 6, 
                         "ApplicationStatus": "applied", 
                         "UserName": "Lily", 
-                        "CourseTitle": "WAD"
+                        "CourseTitle": "WAD",
+                        "ClassStartDate": "",
+                        "ClassEndDate": ""
+                    },
+                    {
+                        "CourseID": 1, 
+                        "ClassID": 2, 
+                        "LearnerID": 7, 
+                        "ApplicationStatus": "applied", 
+                        "UserName": "Aaron", 
+                        "CourseTitle": "WAD",
+                        "ClassStartDate": "",
+                        "ClassEndDate": ""
                     }
                 ]
             }
@@ -84,7 +96,9 @@ class TestViewApplication(TestApp):
                 "LearnerID": 6, 
                 "ApplicationStatus": "self_approved", 
                 "UserName": "Lily", 
-                "CourseTitle": "WAD"
+                "CourseTitle": "WAD",
+                "ClassStartDate": "",
+                "ClassEndDate": ""
             }
         })
 
@@ -110,11 +124,11 @@ class TestViewApplication(TestApp):
                     "LearnerID": 7, 
                     "ApplicationStatus": "rejected", 
                     "UserName": "Aaron", 
-                    "CourseTitle": "WAD"
+                    "CourseTitle": "WAD",
+                    "ClassStartDate": "",
+                    "ClassEndDate": ""
                 }
             })
-
-
 
 if __name__ == '__main__':
     unittest.main()
