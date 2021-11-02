@@ -1512,7 +1512,7 @@ def successful_creation(CourseID, ClassID):
     return render_template('successful-creation.html', CourseID=CourseID, ClassID=ClassID)
 
 @app.route('/successful-creation-hr')
-def successful_creation():
+def successful_creation_hr():
     return render_template('successful-creation-hr.html')
 
 if __name__ == '__main__':
