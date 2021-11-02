@@ -773,7 +773,7 @@ def get_all_courses(UserID):
             currentlyEnrolled = ClassTaken.query.filter(CourseID == a_class.CourseID, ClassTaken.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus.in_(["hr_enrolled", "self_approved"])) # check remaining class sizes
             totalEnrolled = currentlyEnrolled.count()
             print(totalEnrolled)
-            if totalEnrolled < a_class.ClassSize and a_class.CourseID == a_course.CourseID:
+            if a_class.CourseID == a_course.CourseID:
                 a_class.RemainingSlot = a_class.ClassSize - totalEnrolled
                 a_class.TrainerList = trainerList
                 shown_classes.append(a_class)

@@ -21,9 +21,7 @@
       <script src="js/vendor/respond.min.js"></script>
     <![endif]-->
 
-    <script>
-      localStorage.id = 1
-    </script>
+    
     <style>
       .greyout{
         pointer-events: none;
@@ -792,6 +790,7 @@
                   appliedHTML += `<tr> <td style="padding-bottom:20px"> <b> Already Applied </b> </td> </tr>`
                   disabled = 'disabled '
                 }
+                
                 else if (applicationStatus == 'self_approved'){
                   withdrawButton = `<button class="btn btn-warning" onclick="withdrawApplication(${data[course].CourseID}, ${aClass.ClassID}, ${UserID}, '${data[course].CourseTitle}')"> Withdraw Application </button> <hr>` 
                   appliedHTML += `<tr> <td style="padding-bottom:20px"> <b> Already Approved by HR </b> </td> </tr>`
@@ -799,6 +798,11 @@
                 }
                 else if (applicationStatus == 'rejected'){
                   appliedHTML += `<tr> <td style="padding-bottom:20px"> <b> Application rejected by HR | Please apply to another class </b> </td> </tr>`              
+                  disabled = 'disabled '
+                }
+                else if (availability <= 0){
+                  styleHTML = 'pointer-events: none; opacity: 0.4'
+                  appliedHTML += `<tr> <td style="padding-bottom:20px"> <b> Class is full </b> </td> </tr>`
                   disabled = 'disabled '
                 }
                 document.getElementById(`${collapsibleID}`).innerHTML += `
