@@ -1405,6 +1405,7 @@ def assign_learners():
     output = []
     if (class_availability - num_assigned_learner) > 0:
         for i in data['data']:
+            #print(i)
             upload_data = {'CourseID': i[0], 'ClassID': i[1], 'LearnerID': i[2], 'ApplicationStatus': i[3]}
             upload = ClassTaken(**upload_data)
             db.session.add(upload)
@@ -1648,7 +1649,7 @@ def view_material(CourseID, ClassID, SectionID, url):
 
 @app.route('/after-assign')
 def after_assign():
-    return render_template('after_assign.html')
+    return render_template('after-assign.html')
 
 
 @app.route('/create-ungraded-quiz/<CourseID>/<ClassID>/<SectionID>')
@@ -1708,7 +1709,7 @@ def create_course_hr():
 
 @app.route('/assign-learner/<CourseID>/<ClassID>')
 def assign_learner(CourseID, ClassID):
-    return render_template('assign_learner.html', CourseID=CourseID, ClassID=ClassID)
+    return render_template('assign-learner.html', CourseID=CourseID, ClassID=ClassID)
 
 
 if __name__ == '__main__':
