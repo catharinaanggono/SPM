@@ -112,7 +112,7 @@ class course_class(db.Model):
 
 @app.route("/learner_ongoing_courses/<string:UserID>")
 def get_leaner_ongoing_courses(UserID):
-    Courses = classLearner.query.filter(classLearner.LearnerID == UserID, classLearner.ApplicationStatus.in_(['ongoing', 'self_enrolled', 'enrolled'])).all()
+    Courses = classLearner.query.filter(classLearner.LearnerID == UserID, classLearner.ApplicationStatus.in_(['ongoing', 'self_approved', 'hr_enrolled'])).all()
 
     if len(Courses):
         print(Courses)
