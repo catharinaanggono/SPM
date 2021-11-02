@@ -35,7 +35,7 @@ class TestApp(flask_testing.TestCase):
 
 
 
-class TestGetAllApplications(TestApp):
+class TestViewApplication(TestApp):
 
     
     def test_get_all_applications(self):
@@ -57,6 +57,37 @@ class TestGetAllApplications(TestApp):
                 ]
             }
             })
+
+
+    def test_approve_application(self):
+
+        
+
+        request_body = {
+          "CourseID": 1,
+          "ClassID": 2,
+          "LearnerID": 6
+        }
+
+        response = self.client.post("/accept_application",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
+
+        self.assertEqual(response.json,{
+            "code": 201,
+            "data": [{
+                    'CourseID': 3, 
+                    'ClassID': 1, 
+                    'LearnerID': 2, 
+                    'ApplicationStatus': "hr_enrolled"},
+                    {
+                    'CourseID': 3, 
+                    'ClassID': 1, 
+                    'LearnerID': 3, 
+                    'ApplicationStatus': "hr_enrolled"
+                    }],
+            "message": "Application has been accepted"
+        })
 
     # def test_get_all_courses_no_prereq(self):
     #     course2 = course(None, 'Test Course 2 - Prereq 1', 'Test Course 2 Description', 'Test Course 2 Badge')

@@ -25,16 +25,18 @@ class Application(db.Model):
     LearnerID = db.Column(db.Integer, primary_key = True)
     ApplicationStatus = db.Column(db.String(100), nullable = False)
 
-    def __init__(self, CourseID, ClassID, LearnerID, ApplicationStatus, UserName, CourseTitle):
+    def __init__(self, CourseID, ClassID, LearnerID, ApplicationStatus):
         self.CourseID = CourseID
         self.ClassID = ClassID
         self.LearnerID = LearnerID
         self.ApplicationStatus = ApplicationStatus
-        self.Username = UserName
-        self.CourseTitle = CourseTitle
 
     def json(self):
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus, "UserName": self.UserName, "CourseTitle": self.CourseTitle}
+        if not hasattr(self, 'UserName'):
+            self.Username = ""
+        if not hasattr(self, 'CourseTitle'):
+            self.CourseTitle = ""
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus, "UserName": self.Username, "CourseTitle": self.CourseTitle}
 
 class User(db.Model):
     __tablename__ = 'userTable'
@@ -75,7 +77,7 @@ def get_all_pending_applications():
 
     for application in applications:
         user = User.query.filter_by(UserID=application.LearnerID).first()
-        application.UserName = user.UserName
+        application.Username = user.UserName
         course = Course.query.filter_by(CourseID=application.CourseID).first()
         application.CourseTitle = course.CourseTitle
 
@@ -121,7 +123,8 @@ def accept_application():
     return jsonify(
         {
             "code": 201,
-            "message": "Application has been accepted"
+            "message": "Application has been accepted",
+            "data": application.json()
         }
     ), 201
 
@@ -140,7 +143,8 @@ def reject_application():
     return jsonify(
         {
             "code": 201,
-            "message": "Application has been rejected"
+            "message": "Application has been rejected",
+            "data": application.json()
         }
     ), 201
 
