@@ -227,12 +227,8 @@
                     </div> -->
                   </div>
 
-                  
                   <div id="courses-taught" class="tab-pane fade">
-                    <div class="row" v-for="c in classes">
-                      {{ c.CourseID }}
-                      {{ c.ClassID }}
-                      
+                    <div class="row" id="courses-taught-content">
                     </div>
                   </div>
 
@@ -974,7 +970,9 @@
       request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200){
           var trainer_classes = JSON.parse(this.responseText).data.classes;
+          console.log(trainer_classes)
           for (var each_class in trainer_classes){
+            
             console.log("@@@@@@@@@@@@@@@@@@@@@@@");
             console.log(trainer_classes[each_class].CourseID);
             let CourseID = trainer_classes[each_class].CourseID;
@@ -986,19 +984,23 @@
             console.log("############@")
             console.log(course)
 
+            cl = get_class_details(ClassID);
+            console.log("############$")
+            console.log(cl)
+
             
             if (each_class % 2 == 1){
               newRow = `<div class='row'>`
               endRow = `</div>`
             }
-            document.getElementById('enrolled-courses-content').innerHTML += `
+            document.getElementById('courses-taught-content').innerHTML += `
             ${newRow}
             <div class="col-md-6">
               <div class="probootstrap-service-2">                
                 <div class="text" style='width: 100%'>
-                  <h3>${CourseTitle} - Class: ${ClassID}</h3><br>
-                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start Date: ${ClassStartDate}</span><br>
-                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> End Date: ${ClassEndDate}</span>
+                  <h3>${course.CourseTitle} - Class: ${ClassID}</h3><br>
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start Date: ${cl.StartDate}</span><br>
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> End Date: ${cl.EndDate}</span>
                 </div>
               </div>
             </div>
@@ -1012,94 +1014,33 @@
 
       function get_course_details(CourseID){
         var request = new XMLHttpRequest();
+        var data = ""
 
         request.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200){
-            var data = JSON.parse(this.responseText).data.course;
+            data = JSON.parse(this.responseText).data.course;
             console.log("!!!!!!!!!!!")
             }
           }
         request.open('GET', 'http://localhost:5001/course-details/' + CourseID, false);
         request.send();
+        return data;
       }
 
-    //   new Vue({
-    //     el: "#courses-taught",
-    //     data: {
-    //         classes: []
-    //     },
-    //     mounted() {
-    //         this.init();
-    //         this.getClassesTaught();
-    //     },
-    //     methods: {
-    //         init() {
-                
-    //         },
-    //         async getClassesTaught() {
-    //             try {
-    //                 console.log("TESTTTT")
-    //                 url = `http://localhost:5001/classes-taught/${UserID}`;
+      function get_class_details(ClassID){
+        var request = new XMLHttpRequest();
+        var data = ""
 
-    //                 const response = await axios.get(url);
-
-    //                 // const status = response.data.status;
-    //                 // if (status == "error") {
-    //                 //     this.displayError = true
-    //                 //     this.errorMessage = response.data.message;
-    //                 //     return;
-    //                 // }
-    //                 this.classes = response.data.data.classes;
-    //                 console.log("@@@@@@@@@@@@@@")
-    //                 console.log(this.classes)
-    //                 for (c of this.classes){
-    //                   console.log("^^^^^^^^^^^")
-    //                   console.log(c.CourseID)
-    //                   getCourseDetails(c.CourseID)
-    //                 }
-    //             } catch (error) {
-    //                 if (error.response) {
-    //                     this.displayError = true
-    //                     this.errorMessage = error.response.data.message;
-    //                 } else if (error.request) {
-    //                     console.log(error.request);
-    //                 } else {
-    //                     console.log("Error", error.message);
-    //                 }
-    //                 return;
-    //             }
-    //         },
-    //         async getCourseDetails() {
-    //             try {
-    //                 console.log("TESTTTT")
-    //                 url = `http://localhost:5001/course-details/${UserID}`;
-
-    //                 const response = await axios.get(url);
-
-    //                 // const status = response.data.status;
-    //                 // if (status == "error") {
-    //                 //     this.displayError = true
-    //                 //     this.errorMessage = response.data.message;
-    //                 //     return;
-    //                 // }
-    //                 this.classes = response.data.data.classes;
-    //                 console.log("@@@@@@@@@@@@@@")
-    //                 console.log(this.classes)
-    //             } catch (error) {
-    //                 if (error.response) {
-    //                     this.displayError = true
-    //                     this.errorMessage = error.response.data.message;
-    //                 } else if (error.request) {
-    //                     console.log(error.request);
-    //                 } else {
-    //                     console.log("Error", error.message);
-    //                 }
-    //                 return;
-    //             }
-    //         }
-    //     },
-    // });
-
+        request.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200){
+            data = JSON.parse(this.responseText).data.course;
+            console.log("!!!!!!!!!!!")
+            }
+          }
+        request.open('GET', 'http://localhost:5001/class-details/' + ClassID, false);
+        request.send();
+        return data;
+      }
       
     </script>
   </body>
