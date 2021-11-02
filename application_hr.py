@@ -33,10 +33,10 @@ class Application(db.Model):
 
     def json(self):
         if not hasattr(self, 'UserName'):
-            self.Username = ""
+            self.UserName = ""
         if not hasattr(self, 'CourseTitle'):
             self.CourseTitle = ""
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus, "UserName": self.Username, "CourseTitle": self.CourseTitle}
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "LearnerID": self.LearnerID, "ApplicationStatus": self.ApplicationStatus, "UserName": self.UserName, "CourseTitle": self.CourseTitle}
 
 class User(db.Model):
     __tablename__ = 'userTable'
@@ -77,7 +77,7 @@ def get_all_pending_applications():
 
     for application in applications:
         user = User.query.filter_by(UserID=application.LearnerID).first()
-        application.Username = user.UserName
+        application.UserName = user.UserName
         course = Course.query.filter_by(CourseID=application.CourseID).first()
         application.CourseTitle = course.CourseTitle
 
@@ -116,6 +116,10 @@ def accept_application():
     ClassID = data['ClassID']
     LearnerID = data['LearnerID']
     application = Application.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).filter_by(LearnerID=LearnerID).first()
+    user = User.query.filter_by(UserID=LearnerID).first()
+    application.UserName = user.UserName
+    course = Course.query.filter_by(CourseID=CourseID).first()
+    application.CourseTitle = course.CourseTitle
     application.ApplicationStatus = "self_approved"
 
     db.session.commit()
@@ -136,6 +140,10 @@ def reject_application():
     ClassID = data['ClassID']
     LearnerID = data['LearnerID']
     application = Application.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).filter_by(LearnerID=LearnerID).first()
+    user = User.query.filter_by(UserID=LearnerID).first()
+    application.UserName = user.UserName
+    course = Course.query.filter_by(CourseID=CourseID).first()
+    application.CourseTitle = course.CourseTitle
     application.ApplicationStatus = "rejected"
 
     db.session.commit()
