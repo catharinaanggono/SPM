@@ -149,7 +149,7 @@
         <div class="probootstrap-tab-style-1">
           <ul class="nav nav-tabs probootstrap-center probootstrap-tabs no-border">
             <li class="active"><a data-toggle="tab" href="#enrolled-courses">Enrolled</a></li>
-            <li><a data-toggle="tab" href="#courses-taught">Courses Taught</a></li>
+            <li><a data-toggle="tab" id="courses-taught-tab" href="#courses-taught" style="display: none;">Courses Taught</a></li>
             <li><a data-toggle="tab" href="#browse-courses">Browse</a></li>
           </ul>
         </div>
@@ -227,11 +227,6 @@
                     </div> -->
                   </div>
 
-                  <div id="courses-taught" class="tab-pane fade">
-                    <div class="row" id="courses-taught-content">
-                    </div>
-                  </div>
-
 
                   <!-- END row -->
                   <div class="row">
@@ -240,6 +235,13 @@
                     </div>
                   </div>
                 </div>
+
+                <div id="courses-taught" class="tab-pane fade">
+                  <div class="row" id="courses-taught-content">
+                  </div>
+                </div>
+
+
                 <div id="browse-courses" class="tab-pane fade">
                   <div class="row">
                       
@@ -964,53 +966,75 @@
       }
 
 
+      if (get_user_role(UserID) == "Senior Engineer"){
+        var request = new XMLHttpRequest();
 
-      var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200){
+            var trainer_classes = JSON.parse(this.responseText).data.classes;
+            console.log(trainer_classes)
 
-      request.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200){
-          var trainer_classes = JSON.parse(this.responseText).data.classes;
-          console.log(trainer_classes)
-          for (var each_class in trainer_classes){
-            
-            console.log("@@@@@@@@@@@@@@@@@@@@@@@");
-            console.log(trainer_classes[each_class].CourseID);
-            let CourseID = trainer_classes[each_class].CourseID;
-            let ClassID = trainer_classes[each_class].ClassID;
-            let newRow = ''
-            let endRow = ''
+            if (trainer_classes){
+              document.getElementById("courses-taught-tab").style.display = "";
+              for (var each_class in trainer_classes){
+              
+                console.log("@@@@@@@@@@@@@@@@@@@@@@@");
+                console.log(trainer_classes[each_class].CourseID);
+                let CourseID = trainer_classes[each_class].CourseID;
+                let ClassID = trainer_classes[each_class].ClassID;
+                let newRow = ''
+                let endRow = ''
 
-            course = get_course_details(CourseID);
-            console.log("############@")
-            console.log(course)
+                course = get_course_details(CourseID);
+                console.log("############@")
+                console.log(course)
 
-            cl = get_class_details(ClassID);
-            console.log("############$")
-            console.log(cl)
+                cl = get_class_details(ClassID);
+                console.log("############$")
+                console.log(cl)
 
-            
-            if (each_class % 2 == 1){
-              newRow = `<div class='row'>`
-              endRow = `</div>`
-            }
-            document.getElementById('courses-taught-content').innerHTML += `
-            ${newRow}
-            <div class="col-md-6">
-              <div class="probootstrap-service-2">                
-                <div class="text" style='width: 100%'>
-                  <h3>${course.CourseTitle} - Class: ${ClassID}</h3><br>
-                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start Date: ${cl.StartDate}</span><br>
-                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> End Date: ${cl.EndDate}</span>
+
+                if (each_class % 2 == 1){
+                  newRow = `<div class='row'>`
+                  endRow = `</div>`
+                }
+                document.getElementById('courses-taught-content').innerHTML += `
+                ${newRow}
+                <div class="col-md-6">
+                  <div class="probootstrap-service-2">                
+                    <div class="text" style='width: 100%'>
+                      <h3>${course.CourseTitle} - Class: ${ClassID}</h3><br>
+                      <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start Date: ${cl.StartDate}</span><br>
+                      <span class="probootstrap-meta"><i class="icon-calendar2"></i> End Date: ${cl.EndDate}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            ${endRow}
-            `
+                ${endRow}
+                `
+              }
+              
+            }
           }
-        }
-      };
-      request.open('GET', 'http://localhost:5001/classes-taught/' + UserID, false);
-      request.send();
+        };
+        request.open('GET', 'http://localhost:5001/classes-taught/' + UserID, false);
+        request.send();
+      }
+      
+
+      function get_user_role(UserID){
+        var request = new XMLHttpRequest();
+        var data = ""
+
+        request.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200){
+            data = JSON.parse(this.responseText).data.UserRole;
+            console.log("!!!!!!!!!!!")
+            }
+          }
+        request.open('GET', 'http://localhost:5001/user-role/' + UserID, false);
+        request.send();
+        return data;
+      }
 
       function get_course_details(CourseID){
         var request = new XMLHttpRequest();
@@ -1033,7 +1057,7 @@
 
         request.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200){
-            data = JSON.parse(this.responseText).data.course;
+            data = JSON.parse(this.responseText).data.class;
             console.log("!!!!!!!!!!!")
             }
           }

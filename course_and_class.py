@@ -710,7 +710,7 @@ def get_class_details(ClassID):
         return jsonify({
             "code": 200,
             "data": {
-                "course": c.json()
+                "class": c.json()
             }
         })
     return jsonify({
