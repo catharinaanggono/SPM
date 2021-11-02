@@ -29,25 +29,26 @@
           padding-inline-end: 50px;
       } */
       
-      table, tr, th, td {
+      /* table, tr, th, td {
           padding: 20px;     
-      }
+      } */    
       
       table{
         border-collapse: collapse;
         box-sizing:0 5px 10px lightgrey;
-        width:100%;
       }
-      tr {
-        box-shadow: 0 5px 10px lightgrey;
+      tr{
+        box-shadow:0 5px 10px lightgrey;
       }
-      .design {
+      .design{
         box-shadow:0 5px 10px lightgrey;
         font-size: 17px;
+        text-transform:uppercase;
         background-color: grey;
-        color:white;
-        text-transform: uppercase;
+        color: white;
       }
+
+
     </style>
 
 
@@ -145,75 +146,18 @@
 
       <section class="probootstrap-section probootstrap-section-sm">
         <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-                
-              <div class="row probootstrap-gutter0">
-                <!-- <div class="col-md-4" id="probootstrap-sidebar">
-                  <div class="probootstrap-sidebar-inner probootstrap-overlap probootstrap-animate">
-                    <h3>More Courses</h3>
-                    <ul class="probootstrap-side-menu">
-                      <li class="active"><a>Chemical Engineering</a></li>
-                      <li><a href="#">Application Design</a></li>
-                      <li><a href="#">Math Major</a></li>
-                      <li><a href="#">English Major</a></li>
-                    </ul>
-                  </div>
-                </div> -->
-              
-
-                <!-- <div class="search"> -->
-                    <!-- <input type="text" id="search" style="width:80%; text-align: center;" placeholder="Search Engineer (Name/ ID)"> -->
-                    <!-- <button type="submit" class="search-btn"> -->
-                      <!-- <i class="fa fa-search"></i> -->
-                    <!-- </button> -->
-  
-                <!-- </div> -->
-                
-                <div class="col-md-7 col-md-push-1  probootstrap-animate" id="probootstrap-content">
-
-                  <div id="div1" style="height: 600px; width: 900px; position:relative;">
-                    <div id="div2" style="max-height:100%;overflow:auto;">
-                      <div id="div3" style="height:1500px;">
-
-                       
-                        
-
-                        <table id='EngineerList' class="accordion"> <!--TAKE THE COURSE ID FROM THE TABLE-->
-                          <tr class="design"><div style="font-weight: 200"></div>
-                            <th>User ID</th>
-                            <th>User Name</th>
-                            <th>User Type</th>
-                            <th></th>
-                            
-
-                          </tr>
-                           
-                             <!-- <tr>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               
-                               
-                             </tr> -->
-
-                             
-
-                            
-                          <!-- </tr> -->
-
-                          
-
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- <h2>Description</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime rerum possimus maiores, natus fugiat quibusdam dolorem. Dolore, odit ipsum, commodi distinctio repellendus vel tempore accusamus ea assumenda totam aut tempora. Illum sed harum, doloremque magnam nostrum. Fuga tempora corrupti unde ratione, placeat voluptates dicta asperiores est, ad voluptatem dolor, delectus sapiente voluptatum! Rerum magnam ducimus voluptas dolorum consectetur ex facilis quaerat sapiente eaque consequuntur perspiciatis nesciunt tenetur quibusdam corrupti voluptates consequatur repudiandae, quisquam aperiam veniam. Architecto voluptas blanditiis provident modi cumque a eius nam dignissimos numquam ducimus earum odit ipsam, reiciendis assumenda id quasi dolore, totam impedit molestias? Alias, ipsa!</p>
-                  <p>Velit natus alias eligendi architecto rem, itaque distinctio? Excepturi obcaecati fuga ratione. Dolore in ipsam rem ullam nemo error aperiam dolores eius, doloremque blanditiis placeat fugiat libero id atque, recusandae, voluptate laboriosam, distinctio omnis ab. Eius obcaecati, laudantium ex voluptatum voluptas, cum vitae molestiae quam est omnis nulla, quis velit? Esse natus tempore molestias deserunt, tempora illum labore, fuga animi totam dolore doloribus doloremque laudantium velit distinctio, non cumque dolorem delectus quia quibusdam? Amet, consectetur. Reprehenderit unde, eveniet temporibus, quae possimus magni. Dolore quo eveniet, distinctio dicta quisquam? Aliquid libero dolore provident, beatae odit facilis quasi dolorum sit ad minus!</p>
-                  <p>Tenetur, soluta natus porro, cumque vitae, iste accusamus beatae repudiandae quidem magnam sunt, nihil reprehenderit facere eveniet non sint aliquid. Ipsam totam nostrum, modi veritatis quidem maiores dolor minima incidunt non ratione qui quas, quasi aut sit obcaecati iure. Corporis, rem? Reprehenderit sequi, tenetur, libero nobis beatae ut doloremque obcaecati ipsa? Itaque numquam ratione et veniam porro magnam expedita ad laboriosam dolorum debitis omnis mollitia id eum minus necessitatibus ipsam consequuntur sed tempora assumenda, repudiandae culpa atque? Ad ut porro praesentium, earum voluptatum maxime, deserunt, omnis dolorem veniam cumque et officia veritatis, nam perferendis ex facilis sit sapiente at accusamus?</p>
-                  <p><a href="#" class="btn btn-primary">Enroll with this course now</a> <span class="enrolled-count">2,928 students enrolled</span></p> -->
-                </div>
+          <div class="row align-middle" id='EngineerList'>
+            <div class='row'  style='font-weight: bold; padding:20px;'>
+              <div class='col-md-3'> <!--TAKE THE COURSE ID FROM THE TABLE-->
+                User ID
+              </div>
+              <div class='col-md-3'> 
+                User Name
+              </div>
+              <div class='col-md-3'> 
+                User Type
+              </div>
+              <div class='col-md-3'> 
               </div>
             </div>
           </div>
@@ -328,24 +272,43 @@
 
             //to input the data into webpage
 
-            var table= document.getElementById("EngineerList")
+            var engineer_row= document.getElementById("EngineerList")
+            console.log(engineer_row)
             for (i in users_data){
                 console.log(i)
-                table.innerHTML += `<table>
-                    <tr>
-                       <td>${user_id[i]}</td>
-                        <td>${user_name[i]}</td>
-                        <td>${user_type[i]}</td>
-
-                        <td><button class="btn btn-link collapsed" data-toggle="collapse" aria-expanded="false")'>
-                          Show Details </button></td>
+                engineer_row.innerHTML += `
+                      <div class='row'>
+                        <div class='row' style='background-color:rgba(211, 183, 153, 0.5); padding: 20px; box-shadow:0 5px 10px lightgrey;'>
+                          <div class='col-md-3'>${user_id[i]}</div>
                           
-                      </tr>
-                    </table>
+                          <div class='col-md-3'>${user_name[i]}</div>
+                          <div class='col-md-3'>${user_type[i]}</div>
+                          
+                      
+                          <div class='col-md-3' style='width:10%'><button class="btn btn-link collapsed" data-toggle="collapse" aria-expanded="false">
+                          Show Details </button></div>
 
-                    <span id="${user_id[i]}"></span>
-                    <br><br>
-                    `
+                        </div>
+
+                        <div class='row' id="${user_id[i]}" style='padding: 20px; box-shadow:0 5px 10px lightgrey;'></div>
+                      </div>
+                      <br>
+                      `
+                // table.innerHTML += `<table style="width: 1vw">
+                //     <tr>
+                //        <td>${user_id[i]}</td>
+                //         <td>${user_name[i]}</td>
+                //         <td>${user_type[i]}</td>
+
+                //         <td><button class="btn btn-link collapsed" data-toggle="collapse" aria-expanded="false")'>
+                //           Show Details </button></td>
+                          
+                //       </tr>
+                //     </table>
+
+                //     <span id="${user_id[i]}"></span>
+                //     <br><br>
+                //     `
             } 
           }
       };
@@ -377,7 +340,7 @@
               user_id.push(learner_data[learner]['LearnerID'])
               learner_id.push(learner_data[learner]['LearnerID'])
               course_id.push(learner_data[learner]['CourseID'])
-              status.push(learner_data[learner]['Status'])
+              status.push(learner_data[learner]['ApplicationStatus'])
             }
 
             console.log(user_id)
@@ -392,15 +355,20 @@
               console.log(learner_id[i])
               var table = document.getElementById(user_id[i])
 
-              table.innerHTML = `<table id=${user_id[i]}>
-                <tr>
-                  <td>Learner ID: ${learner_id[i]}</td>
-                  <td>Course ID: ${course_id[i]}</td>
-                  <td>Status: ${status[i]}</td>
-                </tr>
-              </table>
+              table.innerHTML   = `
+                  <div class='col-md-6' >Course ID: ${course_id[i]}</div>
+                  <div class='col-md-6' >Status: ${status[i]}</div>
+                  <div class='row'></div>`
 
-              `
+              // table.innerHTML = `<table id=${user_id[i]}>
+              //   <tr>
+              //     <td>Learner ID: ${learner_id[i]}</td>
+              //     <td>Course ID: ${course_id[i]}</td>
+              //     <td>Status: ${status[i]}</td>
+              //   </tr>
+              // </table>
+
+              // `
             }
             
             

@@ -210,9 +210,8 @@ class ClassTaken(db.Model):
                 "ApplicationStatus": self.ApplicationStatus, 
                 "CourseTitle": self.CourseTitle, 
                 "ClassStartDate": self.class_start_date, 
-                "ClassEndDate": self.class_end_date,
-                "ApplicationStatus": self.ApplicationStatus,
-                "UserName": self.UserName
+                "UserName": self.UserName,
+                "ClassEndDate": self.class_end_date
             }
 
 class LearnerCourse(db.Model):
@@ -734,7 +733,7 @@ def get_all_courses(UserID):
     for prereq in takenPrereq:
         prereq_courses.append(prereq.CourseID)
     for a_class in takenClasses:
-        if a_class.ApplicationStatus == 'hr_enrolled': # check if user already enrolled
+        if a_class.ApplicationStatus == 'hr_enrolled' or a_class.ApplicationStatus == 'ongoing': # check if user already enrolled
             enrolled_courses.append(a_class.CourseID)
         elif a_class.ApplicationStatus == 'self_enrolled' or a_class.ApplicationStatus == 'self_approved':
             applied_courses.append([a_class.CourseID, a_class.ClassID])
@@ -811,16 +810,12 @@ def self_enrol():
 
     check = ClassTaken.query.filter_by(CourseID=courseID, ClassID=classID, LearnerID=userID, ApplicationStatus='rejected').first()
     if check:
-        try:
-            db.session.add(apply_class)
-            db.session.commit()
-        except:
-            return jsonify(
-            {
-                    "code": 500,
-                    "message": "An error occurred in applying to class."
-            }
-        ), 500
+        return jsonify(
+                {
+                        "code": 400,
+                        "message": "An error occurred in applying to class."
+                }
+            ), 400
     else:
         try:
             db.session.add(apply_class)
@@ -1759,6 +1754,32 @@ def get_leaner_ongoing_courses(UserID):
     ), 404 
 
 
+@app.route('/users')
+def get_all_users():
+    all_users = User.query.all()
+    print(all_users)
+    return jsonify ({
+        "code":200,
+        "message": "User exists",
+        "data": {
+            "user": [user.json() for user in all_users]
+        }
+    })
+
+
+@app.route('/learners')
+def get_all_learners():
+    all_learners = ClassTaken.query.all()
+    print(all_learners)
+    return jsonify ({
+        "code":200,
+        "message": "Learner Exist",
+        "data": {
+            "learner": [learner.json() for learner in all_learners]
+        }
+    })
+
+
 @app.route('/create-new-section/<CourseID>/<ClassID>')
 def create_section_page(CourseID, ClassID):
     return render_template('create-section.html', CourseID=CourseID, ClassID=ClassID)
@@ -1848,6 +1869,9 @@ def create_course_hr():
 def assign_learner(CourseID, ClassID):
     return render_template('assign-learner.html', CourseID=CourseID, ClassID=ClassID)
 
+@app.route('/progress-tracker/<ClassID>')
+def progress_tracker(ClassID):
+    return render_template('progress_tracker.html', ClassID=ClassID)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
