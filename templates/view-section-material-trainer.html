@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
-    
+    <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
     <!--[if lt IE 9]>
       <script src="js/vendor/html5shiv.min.js"></script>
       <script src="js/vendor/respond.min.js"></script>
@@ -24,6 +26,8 @@
         cursor: pointer; 
       }
     </style>
+
+    
   </head>
   <body>
 
@@ -114,47 +118,10 @@
       </section>
 
       <section class="probootstrap-section">
-        <h1 style='margin-left:5%;'> Create a New Section: </h1>
-        <div class='container' id='input-form'>
-          <div class='row'>
-            <div class='col-md-3'>
-              <h3> Section Name: </h3>
-            </div>
-            <div class='col-md-6'>
-              <input type='text' size="50" id='section-name' />
-            </div>
-          </div>
-          <div class='row'>
-            <div class='col-md-3'>
-              <h3> Materials: </h3> 
-            </div>
-            <div class='col-md-6'>
-              <form id='file-form' method="POST" enctype='multipart/form-data'>
-                <input type="file" multiple name='file' id="file" style="display: none;" onchange="javascript:updateList()"/>
-                <input type="button" value="Upload File..." onclick="document.getElementById('file').click();" />
-              </form>
-              <p>Selected files:</p>
-              <div id="fileList"></div>
-            </div>
-          </div>
+        
 
-          <div class='row'>
-            <div class='col-md-3'>
-              <h3> External Link: </h3> 
-            </div>
-            <div class='col-md-9'>
-              <input type='text' placeholder='Title' id='title-1'>
-              <input type='text' placeholder='Link' size='50' id='link-1'>
-              <button onclick='addLink()'> Add More Links </button>
-            </div>
-          </div>
-        </div>
-        <div class='container'>
-          <div class='row'>
-            <div class='col-md-3'>
-              <button class='btn btn-primary' onclick='createSection()'> Add Content & Create Quiz </button>
-            </div>
-          </div>
+        <div class='container' id='sections'>
+            
         </div>
       </section>
       
@@ -223,122 +190,120 @@
     <!-- END wrapper -->
 
 
-    <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    
     <script>
-      updateList = function() {
-        var input = document.getElementById('file');
-        var output = document.getElementById('fileList');
-        var children = "";
-        for (var i = 0; i < input.files.length; ++i) {
-          children += `<span id='${input.files.item(i).name}'>` + input.files.item(i).name + ` <button onclick="removeFile('${input.files.item(i).name}')"> Remove File </button> </span>` + "<br>" ;
-        }
-        output.innerHTML = children;
-      }
-
-      function removeFile(id){
-        console.log('called')
-        document.getElementById(id).remove()
-      }
-      var counter = 1
-      function addLink(){
-        counter += 1
         
-        var divNode = document.createElement('div')
-        divNode.className = "row"
-        divNode.style = "margin-bottom:2em;"
-        divNode.innerHTML += `
-          <div class='col-md-3'>
-            
-          </div>
-          <div class='col-md-9'>
-            <input type='text' placeholder='Title' id='title-${counter}'>
-            <input type='text' placeholder='Link' size='50' id='link-${counter}'>
-          </div>
-        `
-        document.getElementById('input-form').appendChild(divNode)
-        
+        var request = new XMLHttpRequest()
+        request.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                var response = JSON.parse(this.responseText)
+                var data = response.data
+                for (let i = 1; i <= data.length; i++){
+                    idx = i - 1
+                    courseID = data[idx].CourseID
+                    classID = data[idx].ClassID
+                    sectionID = data[idx].SectionID
+                    sectionName = data[idx].SectionName || 'EmptyName'
+                    console.log(sectionName)
+                    sectionNameNoSpace = sectionName.replace(/ /g, '-')
+                    document.getElementById('sections').innerHTML += `
+<div class="row" id='${i}-${sectionID}'>
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="${i}-${sectionNameNoSpace}">
+                <h5 class="mb-0">
+                    <div class="probootstrap-service-2">
+                        <div class="text">
+                            <h3> <b> Section ${i}: ${sectionName} </b> </h3>
+                            
+                        </div>
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#${i}-${sectionNameNoSpace}-material" aria-expanded="false" aria-controls="${i}-${sectionNameNoSpace}-material">
+                            Show Materials
+                        </button>
+                        <button class='btn btn-link' onclick='addMaterial(${courseID}, ${classID}, ${sectionID}, "${sectionName}")'>
+                          Add Materials
+                        </button>
+                    </div>
+                </h5>
+            </div>
+            <div id="${i}-${sectionNameNoSpace}-material" class="collapse" aria-labelledby="${i}-${sectionNameNoSpace}" data-parent="#accordion" aria-expanded="false">
+                
+            </div>
+        </div>
+    </div>
+</div>                      
+                    `
+                    secMatList = data[idx].SectionMaterialList
+                    progressBarList = []
+                    var original = ''
+                    for (let j = 0; j < secMatList.length; j++){
+                        materialContent = secMatList[j].MaterialContent
 
-      }
-      function createSection(){
-        createSection = {
-          "CourseID": `{{ CourseID }}`,
-          "ClassID":`{{ ClassID }}`,
-          "SectionName": document.getElementById('section-name').value
+                        if (!materialContent.includes('</a>')){
+                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
+                          <div class="card-body" style="">
+                              <div class='row'>
+                                <div class ='col-md-8'>
+                                  <span style="width:80%"> <b> <a href=
+                                    'http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
+                                </div>
+                                <div class='col-md-4'>
+                                  <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
+                                </div>
+                              </div>
+                              <hr>
+                          </div>
+                          `
+                        }
+                        else{
+                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
+                          <div class="card-body" style="">
+                              <div class='row'>
+                                <div class ='col-md-8'>
+                                  <span style="width:80%"> <b> ${materialContent} </b> </span>
+                                </div>
+                                <div class='col-md-4'>
+                                  <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
+                                </div>
+                              </div>
+                              <hr>
+                          </div>
+                          `
+                        }
+
+                        document.getElementById(`remove-material-${i}-${sectionNameNoSpace}`).addEventListener('click', function(){removeMat(courseID, classID, sectionID, materialContent)})
+                    }
+                   
+                    
+                }
+                
+            }
         }
-        request_section = new XMLHttpRequest()
-        request_section.onreadystatechange = function(){
-          if (this.readyState == 4 && this.status == 201){
-            createdSectionId = JSON.parse(this.responseText).data.SectionID
-            submit(createdSectionId)
+        request.open('GET', 'http://localhost:5001/view-section/{{ CourseID }}/{{ ClassID }}')
+        request.send()
+
+        function addMaterial(CourseID, ClassID, SectionID, SectionName){
+          window.location.href = `http://localhost:5001/add-section-material/${CourseID}/${ClassID}/${SectionID}/${SectionName}`
+        }
+
+        function removeMat(courseID, classID, sectionID, materialContent){
+          requestBody = {
+            "CourseID": courseID,
+            "ClassID": classID,
+            "SectionID": sectionID,
+            "MaterialContent": materialContent
           }
-        }
-        request_section.open("POST", `http://localhost:5001/create-section`, true)
-        request_section.setRequestHeader("Content-type", "application/json")
-        request_section.send(JSON.stringify(createSection))
-      }
-
-      function submit(sectionId){
-        
-
-        var linkList = []
-
-        for (let i = 1; i <= counter; i++){
-          var link = document.getElementById(`link-${i}`).value
-          var title = document.getElementById(`title-${i}`).value
-          element = {'title': title, 'link': link}
-          if (link != ''){
-            linkList.push(element)
-          }
-        }
-        console.log(linkList)
-        if (linkList.length > 0){
           request = new XMLHttpRequest()
           request.onreadystatechange = function(){
-
-          }
-          request.open("POST", `http://localhost:5001/uploader/{{ CourseID }}/{{ ClassID }}/${sectionId}` )
-          request.setRequestHeader("Content-type", "application/json");
-          request.send(JSON.stringify(linkList))
-        }
-
-        // SENDING FILE
-        files = document.getElementById('file').files
-        formData = new FormData()
-        var allowedFiles = ['pdf', 'mp4']
-        var allowed = true
-        for (let i = 0; i < files.length; i++){
-          fileName = files.item(i).name
-          fileExtension = fileName.split('.')[fileName.split('.').length - 1]
-          console.log(fileExtension)
-          if (!(allowedFiles.includes(fileExtension))){
-            allowed = false
-          }
-        }
-        if (allowed){
-          for (let i = 0; i < files.length; i++){
-            fileName = files.item(i).name
-            file = files.item(i)
-            formData.append(i, file, fileName)
-          }
-          console.log(formData)
-          request_file = new XMLHttpRequest()
-          request_file.onreadystatechange = function(){
             if (this.status == 200 && this.readyState == 4){
-              window.alert('FILE HAS BEEN UPLOADED')
-              window.location.href = `http://localhost:5001/create-ungraded-quiz/{{ CourseID }}/{{ ClassID }}/${sectionId}`
+              window.alert('FILE HAS BEEN REMOVED.')
+              location.reload()
             }
           }
-          request_file.open("POST", `http://localhost:5001/uploader-file/{{ CourseID }}/{{ ClassID }}/${sectionId}`)
-          request_file.send(formData)
+          request.open('POST', 'http://localhost:5001/remove-material')
+          request.setRequestHeader("Content-type", "application/json");          
+          request.send(JSON.stringify(requestBody))
         }
-        else{
-          window.alert('Some files are not allowed, only ' + allowedFiles.join(', ') + ' are allowed.')
-        }
-      }
-
-
     </script>
   </body>
 </html>

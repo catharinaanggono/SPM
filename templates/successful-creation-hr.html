@@ -3,19 +3,18 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HR Home</title>
+    <title>Quiz Successful Submission</title>
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles-merged.css">
-    <link rel="stylesheet" href="css/style.min.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
 
-    <!--[if lt IE 9]>
-      <script src="js/vendor/html5shiv.min.js"></script>
-      <script src="js/vendor/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
 
@@ -66,7 +65,7 @@
 
           <div id="navbar-collapse" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li class="active"><a href="index.html">Home</a></li>
+              <li><a href="index.html">Home</a></li>
               <li><a href="courses.html">Courses</a></li>
               <li><a href="teachers.html">Teachers</a></li>
               <li><a href="events.html">Events</a></li>
@@ -75,7 +74,7 @@
                 <ul class="dropdown-menu">
                   <li><a href="about.html">About Us</a></li>
                   <li><a href="courses.html">Courses</a></li>
-                  <li><a href="course-single.html">Course Single</a></li>
+                  <li class="active"><a href="course-single.html">Course Single</a></li>
                   <li><a href="gallery.html">Gallery</a></li>
                   <li class="dropdown-submenu dropdown">
                     <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Sub Menu</span></a>
@@ -94,94 +93,14 @@
           </div>
         </div>
       </nav>
+      
 
-      <section class="flexslider">
-        <ul class="slides">
-          <li style="background-image: url(img/slider_1.jpg)" class="overlay">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                  <div class="probootstrap-slider-text text-center">
-                    <h1 class="probootstrap-heading probootstrap-animate">Your Bright Future is Our Mission</h1>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li style="background-image: url(img/slider_2.jpg)" class="overlay">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                  <div class="probootstrap-slider-text text-center">
-                    <h1 class="probootstrap-heading probootstrap-animate">Education is Life</h1>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-          </li>
-          <li style="background-image: url(img/slider_3.jpg)" class="overlay">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                  <div class="probootstrap-slider-text text-center">
-                    <h1 class="probootstrap-heading probootstrap-animate">Helping Each of Our Students Fulfill the Potential</h1>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </section>
-
-
-      <section class="probootstrap-section probootstrap-section">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-              
-              <div class="tab-content">
-
-                <div id="featured-news" class="tab-pane fade in active">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="owl-carousel" id="owl1">
-                        <div class="item">
-                          <a href="view_courses.html" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="img/courses.png"  class="img-responsive" width="30" height="50"></figure>
-                            <div class="probootstrap-text">
-                              <h3>View courses avaiable currently</h3>
-                            </div>
-                          </a>
-                        </div>
-                        <!-- END item -->
-                        <div class="item">
-                          <a href="view_engineers.html" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="img/com_engineers.jpeg"  class="img-responsive" width="30" height="50"></figure>
-                            <div class="probootstrap-text">
-                              <h3>View all engineers avaiable</h3>
-                            </div>
-                          </a>
-                        </div>
-                        <!-- END item -->
-                        <div class="item">
-                          <a href="view_application.html" class="probootstrap-featured-news-box">
-                            <figure class="probootstrap-media"><img src="img/self_enroll.png"  class="img-responsive" width="30" height="50"></figure>
-                            <div class="probootstrap-text">
-                              <h3>View Self-Enrolled Application</h3>
-                            </div>
-                          </a>
-                        </div>
-                        <!-- END item -->
-                      </div>
-                    </div>
-                  </div>
-                  <!-- END row -->
-                </div>
-              </div>
-            </div>
+      <section class="probootstrap-section probootstrap-section-sm">
+        <div class="container" style='color:black; height:500px'>
+            <h1>The quiz has been successfully created</h1>
+            <br><br>
+            <button type="button" class="btn btn-primary" id = 'redirect' onclick='redirect()'>Back to Section</button>
           </div>
-        </div>
       </section>
       
       <footer class="probootstrap-footer probootstrap-bg">
@@ -246,11 +165,12 @@
 
     </div>
     <!-- END wrapper -->
+
+    <script>
+        function redirect() {
+          // window.location.href = "http://localhost:5001/view-section-material/{{CourseID}}/{{ClassID}}";
+        }
+    </script>
     
-
-    <script src="js/scripts.min.js"></script>
-    <script src="js/main.min.js"></script>
-    <script src="js/custom.js"></script>
-
   </body>
 </html>
