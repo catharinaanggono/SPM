@@ -1,3 +1,4 @@
+<!-- route: http://localhost:5202/assign-learner/1/1 -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -347,7 +348,7 @@
             }
           } 
       };
-      request.open("POST", "http://localhost:5200/HrAssign")
+      request.open("POST", "http://localhost:5001/HrAssign")
       request.setRequestHeader("Content-type", "application/json");
       request.send(JSON.stringify(send_value))
 
@@ -607,7 +608,7 @@
               var data = JSON.parse(this.responseText);
               console.log(data.message)
               console.log(data.data)
-              window.location.href = "http://localhost:5200/after-assign";
+              window.location.href = "http://localhost:5001/after-assign";
               
             }else if (this.readyState == 4 && this.status == 500) {
               //error 500 if there some selected learners has already been enrolled into the class before
@@ -638,7 +639,7 @@
               document.getElementById("error").innerHTML = `${msg} There are only ${class_availablity} available seat(s) in this class`
             }
         };
-        request.open("POST", "http://localhost:5200/assign_learners")
+        request.open("POST", "http://localhost:5001/assign_learners")
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
       }

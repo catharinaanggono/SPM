@@ -58,7 +58,7 @@ class classes(db.Model):
         return{"CourseID": self.CourseID, "ClassID": self.ClassID, "StartDate": self.StartDate, "EndDate": self.EndDate, "ClassSize": self.ClassSize, "RegistrationStartDate": self.RegistrationStartDate, "RegistrationEndDate": self.RegistrationEndDate}
 
 
-@app.route('/courses', methods=["POST"])
+@app.route('/learner-courses', methods=["POST"])
 def get_course():
 
     data = request.get_json()

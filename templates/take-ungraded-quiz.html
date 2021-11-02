@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Take Ungraded Quiz</title>
+    <meta name="description" content="Free Bootstrap Theme by uicookies.com">
+    <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
+    
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+    <!--[if lt IE 9]>
+      <script src="js/vendor/html5shiv.min.js"></script>
+      <script src="js/vendor/respond.min.js"></script>
+    <![endif]-->
+
+    <script>
+      localStorage.id = 1
+    </script>
+  </head>
+  <body>
+
+    <div class="probootstrap-search" id="probootstrap-search">
+      <a href="#" class="probootstrap-close js-probootstrap-close"><i class="icon-cross"></i></a>
+      <form action="#">
+        <input type="search" name="s" id="search" placeholder="Search a keyword and hit enter...">
+      </form>
+    </div>
+    
+    <div class="probootstrap-page-wrapper">
+      <!-- Fixed navbar -->
+      
+      
+      <nav class="navbar navbar-default probootstrap-navbar">
+        <div class="container">
+          <div class="navbar-header">
+            <div class="btn-more js-btn-more visible-xs">
+              <a href="#"><i class="icon-dots-three-vertical "></i></a>
+            </div>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html" title="uiCookies:Enlight">Enlight</a>
+          </div>
+
+          <div id="navbar-collapse" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="courses.html">Courses</a></li>
+              <li><a href="teachers.html">Teachers</a></li>
+              <li><a href="events.html">Events</a></li>
+              <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Pages</a>
+                <ul class="dropdown-menu">
+                  <li><a href="about.html">About Us</a></li>
+                  <li><a href="courses.html">Courses</a></li>
+                  <li class="active"><a href="course-single.html">Course Single</a></li>
+                  <li><a href="gallery.html">Gallery</a></li>
+                  <li class="dropdown-submenu dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Sub Menu</span></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="news.html">News</a></li>
+                </ul>
+              </li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <hr>
+      <div class="probootstrap-header-top">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8">
+                <h2 id='title'></h2>
+            </div>
+            <div class="col-sm-4" style='text-align: right; height: 8 vh;'>
+                <p><b>Time Limit: </b><span id="demo"></span></p>
+            </div>
+        </div>
+      </div>
+
+      <section class="probootstrap-section probootstrap-section-sm">
+        <div class="container" style='color:black;'>
+          <div class="row" id = 'quiz_content'>
+                <!-- <form action="#" method="post" class="probootstrap-form">
+                    <div class='row'>
+                        <div class='row'>
+                            <div class='container'>
+                                1. Hello?
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-sm-1'>
+    
+                            </div>
+                            <div class='col'>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                      Default radio
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-sm-1'>
+    
+                            </div>
+                            <div class='col'>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                      Default radio
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='row'>
+                            <div class='container'>
+                                2. Hello?
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-sm-1'>
+    
+                            </div>
+                            <div class='col'>
+                                <div class="form-check">
+                                    <input class="form-check-input1" type="radio" name="flexRadioDefault1" id="flexRadioDefault1">
+                                    <label class="form-check-label1" for="flexRadioDefault1">
+                                      Default radio
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-sm-1'>
+    
+                            </div>
+                            <div class='col'>
+                                <div class="form-check">
+                                    <input class="form-check-input1" type="radio" name="flexRadioDefault1" id="flexRadioDefault1">
+                                    <label class="form-check-label1" for="flexRadioDefault1">
+                                      Default radio
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form> -->
+            </div>
+            <button type="button" class="btn btn-primary" id = 'submit' onclick='submit()'>Submit</button>
+          </div>
+      </section>
+      
+      <footer class="probootstrap-footer probootstrap-bg">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="probootstrap-footer-widget">
+                <h3>About The School</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro provident suscipit natus a cupiditate ab minus illum quaerat maxime inventore Ea consequatur consectetur hic provident dolor ab aliquam eveniet alias</p>
+                <h3>Social</h3>
+                <ul class="probootstrap-footer-social">
+                  <li><a href="#"><i class="icon-twitter"></i></a></li>
+                  <li><a href="#"><i class="icon-facebook"></i></a></li>
+                  <li><a href="#"><i class="icon-github"></i></a></li>
+                  <li><a href="#"><i class="icon-dribbble"></i></a></li>
+                  <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                  <li><a href="#"><i class="icon-youtube"></i></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-3 col-md-push-1">
+              <div class="probootstrap-footer-widget">
+                <h3>Links</h3>
+                <ul>
+                  <li><a href="#">Home</a></li>
+                  <li><a href="#">Courses</a></li>
+                  <li><a href="#">Teachers</a></li>
+                  <li><a href="#">News</a></li>
+                  <li><a href="#">Contact</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="probootstrap-footer-widget">
+                <h3>Contact Info</h3>
+                <ul class="probootstrap-contact-info">
+                  <li><i class="icon-location2"></i> <span>198 West 21th Street, Suite 721 New York NY 10016</span></li>
+                  <li><i class="icon-mail"></i><span>info@domain.com</span></li>
+                  <li><i class="icon-phone2"></i><span>+123 456 7890</span></li>
+                </ul>
+              </div>
+            </div>
+           
+          </div>
+          <!-- END row -->
+          
+        </div>
+
+        <div class="probootstrap-copyright">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8 text-left">
+                <p>&copy; 2017 <a href="https://uicookies.com/">uiCookies:Enlight</a>. All Rights Reserved. Designed &amp; Developed with <i class="icon icon-heart"></i> by <a href="https://uicookies.com/">uicookies.com</a></p>
+              </div>
+              <div class="col-md-4 probootstrap-back-to-top">
+                <p><a href="#" class="js-backtotop">Back to top <i class="icon-arrow-long-up"></i></a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+    <!-- END wrapper -->
+    
+    <script>
+    var QuizID = `{{ QuizID }}`
+    get_quiz()
+    var AnswersDict = {}
+
+    // call get quiz 
+    function get_quiz(){
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200){
+          var data = JSON.parse(this.responseText);
+          console.log(data)
+          var quiz_info = data.data.Quiz;
+          console.log(quiz_info)
+          var quiz_qns = data.data.Questions;
+          console.log(quiz_qns)
+          var quiz_ans = data.data.Answers;
+          console.log(quiz_ans)
+
+          console.log(quiz_info)
+          localStorage.CourseID = quiz_info.CourseID
+          localStorage.ClassID = quiz_info.ClassID
+          localStorage.SectionID = quiz_info.SectionID
+
+          // display title
+          document.getElementById('title').innerHTML = quiz_info.QuizTitle;
+
+          // set timer
+          setTimer(quiz_info.QuizTimer)
+
+          var html = `<form action="#" method="post" class="probootstrap-form">`
+
+          for (qn_i = 0; qn_i < quiz_qns.length; qn_i++){
+            console.log(qn_i)
+            var qn_content = quiz_qns[qn_i].QuestionContent
+            var qn_id = quiz_qns[qn_i].QuestionID
+            var qn_num = qn_i + 1
+            console.log(qn_content)
+            console.log(qn_id)
+
+            html += `<div class='row qns'>
+                          <div class='row'>
+                              <div class='container'>
+                                  ${qn_num}. ${qn_content}
+                              </div>
+                          </div>  
+                      `
+            for (ans_i = 0; ans_i < quiz_ans.length; ans_i++){
+              var ans_content = quiz_ans[ans_i].AnswerContent
+              var ans_qn_id = quiz_ans[ans_i].QuestionID
+              var ans_id = quiz_ans[ans_i].AnswerID
+
+              if (ans_qn_id == qn_id){
+                console.log(ans_content)
+                console.log(ans_id)
+                html += `<div class='row options'>
+                              <div class='col-sm-1'>
+                              </div>
+                              <div class='col'>
+                                  <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="qn${qn_num}_options" id="qnID${ans_qn_id}_${ans_id}" onclick='answer(this.id)'>
+                                      <label class="form-check-label" for="flexRadioDefault1">
+                                        ${ans_content}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>`
+              }
+              // console.log(ans_content)
+              // console.log(ans_qn_id)
+              // console.log(ans_id)
+            }
+            html += '</div><br>'
+          }
+          
+          html += '</form>'
+
+          document.getElementById('quiz_content').innerHTML += html
+          // console.log(document.getElementById('quiz_content').innerHTML)
+
+      }
+      };
+      request.open('GET', 'http://localhost:5001/get_quiz/' + QuizID);
+      request.send();
+ 
+    }
+
+    function answer(id){
+      var splitted = id.split('_')
+      var selected_qn_id = splitted[0].substring(4)
+      var selected_ans_id = splitted[1]
+      AnswersDict[selected_qn_id] = selected_ans_id
+      console.log(AnswersDict)
+    }
+
+    function submit(){
+      console.log("INSIDE")
+      console.log(AnswersDict)
+
+      var result_send_value = {
+        CourseID: localStorage.CourseID,
+        ClassID: localStorage.ClassID,
+        SectionID: localStorage.SectionID,
+        QuizID: QuizID,
+        LearnerID: localStorage.id
+      }
+
+      console.log(result_send_value)
+
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 201) {
+
+          var data = JSON.parse(this.responseText);
+          console.log(data)
+
+          var AttemptID = data.data.AttemptID;
+          submit_ans(AttemptID)
+        }
+      };
+      // console.log(JSON.stringify(send_value))
+      request.open("POST", "http://localhost:5001/post_result", false)
+      request.setRequestHeader("Content-type", "application/json");
+      request.send(JSON.stringify(result_send_value))
+    }
+
+    function submit_ans(AttemptID){
+      for (var key in AnswersDict) {
+        console.log(key);
+        console.log(AnswersDict[key]);
+
+        var take_quiz_send_value = {
+          CourseID: localStorage.CourseID,
+          ClassID: localStorage.ClassID,
+          SectionID: localStorage.SectionID,
+          QuizID: QuizID,
+          QuestionID: key,
+          AnswerID: AnswersDict[key],
+          LearnerID: localStorage.id,
+          AttemptID: AttemptID
+        }
+
+        console.log(take_quiz_send_value)
+
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 201) {
+
+              var data = JSON.parse(this.responseText);
+              console.log(data)
+              window.location.href = "http://localhost:5001/successful-submission/" + localStorage.CourseID + "/" + localStorage.ClassID;
+
+            }
+        };
+        // console.log(JSON.stringify(send_value))
+        request.open("POST", "http://localhost:5001/post_ans", false)
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(take_quiz_send_value))
+        }
+
+    }
+
+    function setTimer(TimeLimit){
+        var calc_sec = TimeLimit*60
+        // var calc_sec = 60
+
+
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+
+        // Find the distance between now and the count down date
+        calc_sec -= 1
+        var distance = calc_sec
+            
+        // Time calculations for days, hours, minutes and seconds
+        var seconds  = Math.floor(distance % 60);
+        var minutes  = Math.floor((distance /60) % 60);
+        var hours = Math.floor((distance /(60*60)));    
+            
+        // Output the result in an element with id="demo"
+        document.getElementById("demo").innerHTML = hours + " : "
+        + minutes + " : " + seconds 
+            
+        // If the count down is over, write some text 
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("demo").innerHTML = "EXCEED"
+            window.location.href = "http://localhost:5001/timeout/" + localStorage.CourseID + "/" + localStorage.ClassID;
+            submit();
+        }
+        }, 1000);
+    }
+    
+    </script>
+    
+  </body>
+</html>
