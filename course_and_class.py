@@ -730,7 +730,7 @@ def get_all_courses(UserID):
     for prereq in takenPrereq:
         prereq_courses.append(prereq.CourseID)
     for a_class in takenClasses:
-        if a_class.ApplicationStatus == 'hr_enrolled': # check if user already enrolled
+        if a_class.ApplicationStatus == 'hr_enrolled' or a_class.ApplicationStatus == 'ongoing': # check if user already enrolled
             enrolled_courses.append(a_class.CourseID)
         elif a_class.ApplicationStatus == 'self_enrolled' or a_class.ApplicationStatus == 'self_approved':
             applied_courses.append([a_class.CourseID, a_class.ClassID])
@@ -807,16 +807,12 @@ def self_enrol():
 
     check = ClassTaken.query.filter_by(CourseID=courseID, ClassID=classID, LearnerID=userID, ApplicationStatus='rejected').first()
     if check:
-        try:
-            db.session.add(apply_class)
-            db.session.commit()
-        except:
-            return jsonify(
-            {
-                    "code": 500,
-                    "message": "An error occurred in applying to class."
-            }
-        ), 500
+        return jsonify(
+                {
+                        "code": 400,
+                        "message": "An error occurred in applying to class."
+                }
+            ), 400
     else:
         try:
             db.session.add(apply_class)
@@ -1779,6 +1775,9 @@ def create_course_hr():
 def assign_learner(CourseID, ClassID):
     return render_template('assign-learner.html', CourseID=CourseID, ClassID=ClassID)
 
+@app.route('/progress-tracker/<ClassID>')
+def progress_tracker(ClassID):
+    return render_template('progress_tracker.html', ClassID=ClassID)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
