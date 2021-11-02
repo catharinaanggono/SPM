@@ -701,6 +701,23 @@ def get_course_details(CourseID):
         "message": "There are no classes."
     }), 404
 
+
+@app.route('/class-details/<string:ClassID>')
+def get_class_details(ClassID):
+    c = course_class.query.filter_by(ClassID=ClassID).first()
+
+    if (c):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "course": c.json()
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no classes."
+    }), 404
+
 @app.route('/create-new-section/<CourseID>/<ClassID>')
 def create_section_page(CourseID, ClassID):
     return render_template('create-section.html', CourseID=CourseID, ClassID=ClassID)
