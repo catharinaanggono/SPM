@@ -203,17 +203,22 @@ class TestGetAllCourses(TestApp):
         response = self.client.post("/self-enrol",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
+        
+        print(response.json)
                         
         self.assertEqual(response.json, {
-            "code": 201,
-            "message": "Applied to class sucessfully",
-            "data": {
-                'ApplicationStatus': 'applied',
-                'LearnerID': 1,
-                'CourseID': 1,
-                'ClassID': 1
-                }
-        })
+            "code":201,
+            "data":{
+                "ApplicationStatus":"applied",
+                "ClassEndDate":"",
+                "ClassID":1,
+                "ClassStartDate":"",
+                "CourseID":1,
+                "CourseTitle":"",
+                "LearnerID":1
+            },
+            "message":"Applied to class sucessfully"
+            })
 
     # def test_self_enrol_no_prereq(self):
 
