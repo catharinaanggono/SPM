@@ -507,9 +507,8 @@
           if (this.readyState == 4 && this.status == 200) {
 
             var data = JSON.parse(this.responseText);
-            console.log(data.data.learner_courses)
-            console.log(data.data.user_details)
-
+            console.log(data)
+            
             learner_course_obj = data.data.learner_courses;
             user_details_list = data.data.user_details
 
@@ -540,7 +539,7 @@
             
           } 
       };
-      request.open("GET", "http://localhost:5002/user/1", true); //hardcoded userid!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      request.open("GET", "http://localhost:5001/user/1", true); //hardcoded userid!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       request.send();
 
 
@@ -596,7 +595,7 @@
               }
             }
           };
-        request.open("POST", "http://localhost:5004/courses")
+        request.open("POST", "http://localhost:5001/learner-courses")
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
       }
