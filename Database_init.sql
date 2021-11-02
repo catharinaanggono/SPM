@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS classLearner(
     ClassID INT NOT NULL,
     LearnerID INT NOT NULL,
     ApplicationStatus TEXT NOT NULL, -- self_enrolled, hr_enrolled, rejected, failed, ongoing, completed
-    PRIMARY KEY (ClassID, CourseID, LearnerID),
+    PRIMARY KEY (ClassID, LearnerID),
     FOREIGN KEY (CourseID, ClassID) REFERENCES class(CourseID, ClassID),
     FOREIGN KEY (LearnerID) REFERENCES userTable(UserID) 
 );
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS sectionMaterial(
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
     SectionID INT NOT NULL,
-    MaterialContent VARCHAR(500) NOT NULL,
+    MaterialContent TEXT NOT NULL,
     PRIMARY KEY (CourseID, ClassID, SectionID, MaterialContent),
     FOREIGN KEY (CourseID) REFERENCES section(CourseID),
     FOREIGN KEY (ClassID) REFERENCES section(ClassID),
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS finalStudentQuizResult(
     ClassID INT NOT NULL,
     QuizID INT NOT NULL,
     LearnerID INT NOT NULL,
-    Grade INT NOT NULL,
+    Grade DOUBLE NOT NULL,
     AttemptID INT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (AttemptID),
     FOREIGN KEY (CourseID) REFERENCES finalQuiz(CourseID),

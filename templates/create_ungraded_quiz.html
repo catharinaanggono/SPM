@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
+    <meta name="description" content="Free Bootstrap Theme by uicookies.com">
+    <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
+    
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles-merged.css">
+    <link rel="stylesheet" href="css/style.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!--[if lt IE 9]>
+      <script src="js/vendor/html5shiv.min.js"></script>
+      <script src="js/vendor/respond.min.js"></script>
+    <![endif]-->
+
+    <script>
+      localStorage.CourseId = 1
+      localStorage.ClassId = 1
+      localStorage.SectionId = 3
+    </script>
+  </head>
+  <body>
+
+    <div class="probootstrap-search" id="probootstrap-search">
+      <a href="#" class="probootstrap-close js-probootstrap-close"><i class="icon-cross"></i></a>
+      <form action="#">
+        <input type="search" name="s" id="search" placeholder="Search a keyword and hit enter...">
+      </form>
+    </div>
+    
+    <div class="probootstrap-page-wrapper">
+      <!-- Fixed navbar -->
+      
+      <div class="probootstrap-header-top">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-9 col-md-9 col-sm-9 probootstrap-top-quick-contact-info">
+              <span><i class="icon-location2"></i>Brooklyn, NY 10036, United States</span>
+              <span><i class="icon-phone2"></i>+1-123-456-7890</span>
+              <span><i class="icon-mail"></i>info@uicookies.com</span>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 probootstrap-top-social">
+              <ul>
+                <li><a href="#"><i class="icon-twitter"></i></a></li>
+                <li><a href="#"><i class="icon-facebook2"></i></a></li>
+                <li><a href="#"><i class="icon-instagram2"></i></a></li>
+                <li><a href="#"><i class="icon-youtube"></i></a></li>
+                <li><a href="#" class="probootstrap-search-icon js-probootstrap-search"><i class="icon-search"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="navbar navbar-default probootstrap-navbar">
+        <div class="container">
+          <div class="navbar-header">
+            <div class="btn-more js-btn-more visible-xs">
+              <a href="#"><i class="icon-dots-three-vertical "></i></a>
+            </div>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html" title="uiCookies:Enlight">Enlight</a>
+          </div>
+
+          <div id="navbar-collapse" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="courses.html">Courses</a></li>
+              <li><a href="teachers.html">Teachers</a></li>
+              <li><a href="events.html">Events</a></li>
+              <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Pages</a>
+                <ul class="dropdown-menu">
+                  <li><a href="about.html">About Us</a></li>
+                  <li><a href="courses.html">Courses</a></li>
+                  <li class="active"><a href="course-single.html">Course Single</a></li>
+                  <li><a href="gallery.html">Gallery</a></li>
+                  <li class="dropdown-submenu dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Sub Menu</span></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="news.html">News</a></li>
+                </ul>
+              </li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
+      <section class="probootstrap-section probootstrap-section-colored">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-left section-heading probootstrap-animate">
+              <h1 class="mb0">Create Quiz</h1>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+
+      <section class="probootstrap-section probootstrap-section-sm">
+        <div class="container" style='color:black;'>
+          <div class="row">
+                <!-- <h2>Get In Touch</h2> -->
+                <!-- <p>Contact us using the form below.</p> -->
+                <form action="#" method="post" class="probootstrap-form">
+                    <div>
+                        <div class="form-group row">
+                            <label for="title" class="col-sm-2 col-form-label">Quiz Title</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="title" name="title">
+                            </div> 
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group row">
+                            <label for="time_limit" class="col-sm-2 col-form-label">Time Limit (minutes)</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="time_limit" name="time_limit" size="3" maxlength="3" placeholder="60">
+                            </div> 
+                        </div>
+                    </div>
+                    <div id='question_content'>
+                        
+                    </div>
+                </form>
+                <button type="button" class="btn btn-primary" id = 'submit' onclick='submit()'>Submit</button>
+            </div>
+          </div>
+      </section>
+      
+      <footer class="probootstrap-footer probootstrap-bg">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="probootstrap-footer-widget">
+                <h3>About The School</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro provident suscipit natus a cupiditate ab minus illum quaerat maxime inventore Ea consequatur consectetur hic provident dolor ab aliquam eveniet alias</p>
+                <h3>Social</h3>
+                <ul class="probootstrap-footer-social">
+                  <li><a href="#"><i class="icon-twitter"></i></a></li>
+                  <li><a href="#"><i class="icon-facebook"></i></a></li>
+                  <li><a href="#"><i class="icon-github"></i></a></li>
+                  <li><a href="#"><i class="icon-dribbble"></i></a></li>
+                  <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                  <li><a href="#"><i class="icon-youtube"></i></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-3 col-md-push-1">
+              <div class="probootstrap-footer-widget">
+                <h3>Links</h3>
+                <ul>
+                  <li><a href="#">Home</a></li>
+                  <li><a href="#">Courses</a></li>
+                  <li><a href="#">Teachers</a></li>
+                  <li><a href="#">News</a></li>
+                  <li><a href="#">Contact</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="probootstrap-footer-widget">
+                <h3>Contact Info</h3>
+                <ul class="probootstrap-contact-info">
+                  <li><i class="icon-location2"></i> <span>198 West 21th Street, Suite 721 New York NY 10016</span></li>
+                  <li><i class="icon-mail"></i><span>info@domain.com</span></li>
+                  <li><i class="icon-phone2"></i><span>+123 456 7890</span></li>
+                </ul>
+              </div>
+            </div>
+           
+          </div>
+          <!-- END row -->
+          
+        </div>
+
+        <div class="probootstrap-copyright">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8 text-left">
+                <p>&copy; 2017 <a href="https://uicookies.com/">uiCookies:Enlight</a>. All Rights Reserved. Designed &amp; Developed with <i class="icon icon-heart"></i> by <a href="https://uicookies.com/">uicookies.com</a></p>
+              </div>
+              <div class="col-md-4 probootstrap-back-to-top">
+                <p><a href="#" class="js-backtotop">Back to top <i class="icon-arrow-long-up"></i></a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+    <!-- END wrapper -->
+    
+    <script>
+        var qn_id = document.getElementsByClassName('questions').length;
+        add_question(); 
+        console.log(qn_id)
+
+        var CourseID = localStorage.CourseId;
+        var ClassID = localStorage.ClassId;
+        var SectionID = localStorage.SectionId;
+
+        // document.getElementById('question_content').innerHTML = `
+        //     <div class="questions" id='question${qn_id}'>
+        //         <div class="form-group row">
+        //             <div class="col-sm-6">Question ${qn_id}</div>
+        //             <div class="col-sm-3" style='text-align: center;'>
+        //                 <button type="button" class="btn btn-primary" id = 'remove_${qn_id}' onclick='remove_question()'>Remove question</button>
+        //             </div>
+        //             <div class="col-sm-3" style='text-align: center;'>
+        //                 <button type="button" class="btn btn-primary" id = 'button${qn_id}' onclick='add_question()'>Add question</button>
+        //             </div>
+        //         </div>
+        //         <div class="form-group row">
+        //             <div class="col-sm-12">
+        //                 <input type="text" class="form-control" id="question${qn_id}" name="question" placeholder="e.g. What is my name?">
+        //             </div> 
+        //         </div>
+        //     </div>
+        //     <div id='qn${qn_id}_options'>
+        //         <div class="form-group row">
+        //             <div class="col-sm-2">Options</div>
+        //             <div class="col-sm-8">
+        //                 <input type="text" class="form-control" id="qn${qn_id}_option1" name="option1" onfocusout="add_below(this.id)">
+        //             </div>
+        //             <div class="col-sm-2" style='text-align: center;'>
+        //                 <button type="button" class="btn btn-primary" id='add_opt_qn${qn_id}' onclick="add_options(this.id)">Add option</button>
+        //             </div>
+        //         </div>
+        //         <div class="form-group row">
+        //             <div class="col-sm-2"></div>
+        //             <div class="col-sm-8">
+        //                 <input type="text" class="form-control" id="qn${qn_id}_option2" name="option2" onfocusout="add_below(this.id)">
+        //             </div>
+        //             <div class="col-sm-2">
+        //             </div>
+        //         </div>
+        //     </div>
+        //     <div class="form-group row">
+        //         <div class="col-sm-2">Set as answer</div>
+        //           <div class="col-sm-10" id='qn${qn_id}_set_answer_content'>
+        //             <select class="form-control" id="qn${qn_id}_set_answer">
+        //                 <option selected>Choose to set the answer</option>
+        //             </select> 
+        //         </div>
+        //     </div>
+        //     `
+        
+        // to add the answer options field from clicking the button 'add option'
+        function add_options(current_qn_id){
+            var current_qn_id = current_qn_id.slice(10)
+            var num_of_options = document.getElementById('qn' + current_qn_id + '_options_content').getElementsByTagName('input').length
+            var current_opt_id = num_of_options + 1
+            // var num_of_questions = document.getElementsByClassName('questions').length  
+            // var current_qn_id = num_of_questions + 1
+            console.log('total_opt'+num_of_options)
+            console.log("opt_id" + current_opt_id)
+            // console.log(num_of_questions)
+            console.log('qn_id'+current_qn_id)
+            // console.log(document.getElementById('question' + qn_id))
+
+            // create row
+            var row = document.createElement('div')
+            row.setAttribute('class', 'form-group row')
+            row.setAttribute('id', 'qn'+current_qn_id+'_option'+current_opt_id+'_row')
+
+            // create col1
+            var col1 = document.createElement('div')
+            col1.setAttribute('class', 'col-sm-2')
+
+            // create col2
+            var col2 = document.createElement('div')
+            col2.setAttribute('class', 'col-sm-7')
+
+            // create input field
+            var add_input = document.createElement('input')
+            add_input.setAttribute('type', 'text')
+            add_input.setAttribute('class', 'form-control qn' + qn_id + '_options')
+            add_input.setAttribute('id', 'qn'+current_qn_id+'_option'+current_opt_id)
+            add_input.setAttribute('name', 'option'+current_opt_id)
+            add_input.addEventListener('focusout', function(){add_below(add_input.id)})
+
+            var remove_opt_btn = document.createElement('button')
+            remove_opt_btn.setAttribute('type', 'button')
+            remove_opt_btn.setAttribute('class', 'btn btn-danger')
+            remove_opt_btn.setAttribute('id', 'remove_opt_qn'+qn_id)
+            remove_opt_btn.addEventListener('click', function(){remove_options(current_qn_id, current_opt_id)})
+            remove_opt_btn.innerHTML = `X`
+
+            // create col3
+            var col3 = document.createElement('div')
+            col3.setAttribute('class', 'col-sm-1')
+
+            var col4 = document.createElement('div')
+            col4.setAttribute('class', 'col-sm-2')
+
+            //append child sequence
+            row.appendChild(col1)
+            col2.appendChild(add_input)
+            row.appendChild(col2)
+            col3.appendChild(remove_opt_btn)
+            row.appendChild(col3)
+            row.appendChild(col4)
+            document.getElementById('qn' + current_qn_id + '_options_content').appendChild(row)
+
+            // document.getElementById('qn' + current_qn_id + '_options').innerHTML += `
+            //     <div class="form-group row">
+            //         <div class="col-sm-2"></div>
+            //         <div class="col-sm-8">
+            //             <input type="text" class="form-control" id="qn${current_qn_id}_option${current_opt_id}" name="option${current_opt_id}" onfocusout="add_below(this.id)">
+            //         </div>
+            //         <div class="col-sm-2">
+            //         </div>
+            //     </div>` 
+        }
+
+        // add each question answers' options to the dropdown
+        function add_below(opt_id){
+            console.log(opt_id)
+            var opt_id = opt_id.toString().split('_')
+            console.log(opt_id)
+            var specific_id = opt_id[0].slice(2)
+            console.log(specific_id)
+            console.log(document.getElementById('qn' + specific_id + '_options_content'))
+            var num_of_options = document.getElementById('qn' + specific_id + '_options_content').getElementsByTagName('input').length
+
+            document.getElementById('qn'+specific_id+'_set_answer').innerHTML = 
+            `
+            <option selected>Choose to set the answer</option>
+            `
+            
+            for (i=1; i <= num_of_options; i++){
+                var dropdown_value = document.getElementById('qn'+specific_id+'_option'+i).id
+                var dropdown_text = document.getElementById('qn'+specific_id+'_option'+i).value
+                // console.log(dropdown_text)
+                // console.log(dropdown_value)
+                if (dropdown_text != ''){
+                    document.getElementById('qn'+specific_id+'_set_answer').innerHTML += `
+                    <option value='${dropdown_text}'>${dropdown_text}</option>
+                    `
+                    // console.log(document.getElementById('qn'+specific_id+'_set_answer').innerHTML)
+                }
+            }            
+        }
+
+        // to add question field from clicking the button 'add question'
+        function add_question(){
+          // var num_of_questions = document.getElementsByClassName('questions').length  
+          // var current_qn_id = num_of_questions + 1
+          // console.log(num_of_questions)          
+
+          qn_id += 1
+          console.log("QNID--" + qn_id)
+
+          var hr = document.createElement('hr')
+
+          var whole_div = document.createElement('div')
+          whole_div.setAttribute('id', 'whole_question' + qn_id)
+          whole_div.setAttribute('class', 'questions')
+
+          // question div
+          var qn_div = document.createElement('div')
+          qn_div.setAttribute('id', 'question' + qn_id + '_div')
+
+          var qn_row1 = document.createElement('div')
+          qn_row1.setAttribute('class', 'form-group row')
+
+          var qn_r1_col1 = document.createElement('div')
+          qn_r1_col1.setAttribute('class', 'col-sm-8')
+          qn_r1_col1.innerHTML = 'Question ' + qn_id
+
+          var qn_r1_col2 = document.createElement('div')
+          qn_r1_col2.setAttribute('class', 'col-sm-3')
+          qn_r1_col2.setAttribute('style', 'text-align: right;')
+
+          var qn_r1_col3 = document.createElement('div')
+          qn_r1_col3.setAttribute('class', 'col-sm-1')
+          qn_r1_col3.setAttribute('style', 'text-align: center;')
+
+          var add_qn_btn = document.createElement('button')
+          add_qn_btn.setAttribute('type', 'button')
+          add_qn_btn.setAttribute('class', 'btn btn-primary')
+          add_qn_btn.setAttribute('id', 'button'+qn_id)
+          add_qn_btn.addEventListener('click', add_question)
+          add_qn_btn.innerHTML = 'Add question'
+
+          var remove_qn_btn = document.createElement('button')
+          remove_qn_btn.setAttribute('type', 'button')
+          remove_qn_btn.setAttribute('class', 'btn btn-danger')
+          remove_qn_btn.setAttribute('id', 'remove'+qn_id)
+          remove_qn_btn.addEventListener('click', function(){remove_question(remove_qn_btn.id)})
+          remove_qn_btn.innerHTML = `X`
+
+          var qn_row2 = document.createElement('div')
+          qn_row2.setAttribute('class', 'form-group row')
+
+          var qn_r2_col = document.createElement('div')
+          qn_r2_col.setAttribute('class', 'col-sm-12')
+          
+          var qn_field = document.createElement('input')
+          qn_field.setAttribute('type', 'text')
+          qn_field.setAttribute('class', 'form-control')
+          qn_field.setAttribute('id', 'question'+qn_id)
+          qn_field.setAttribute('name', 'question')
+          qn_field.setAttribute('placeholder', 'e.g. What is my name?')
+
+          var opt_div = document.createElement('div')
+          opt_div.setAttribute('id', 'qn' + qn_id + '_options_content')
+
+          var opt_row1 = document.createElement('div')
+          opt_row1.setAttribute('class', 'form-group row')
+          opt_row1.setAttribute('id', 'qn'+qn_id+'_option1_row')
+
+          var opt_r1_col1 = document.createElement('div')
+          opt_r1_col1.setAttribute('class', 'col-sm-2')
+          opt_r1_col1.innerHTML = 'Options'
+
+          var opt_r1_col2 = document.createElement('div')
+          opt_r1_col2.setAttribute('class', 'col-sm-7')
+
+          var opt1_field = document.createElement('input')
+          opt1_field.setAttribute('type', 'text')
+          opt1_field.setAttribute('class', 'form-control qn' + qn_id + '_options')
+          opt1_field.setAttribute('id', 'qn'+ qn_id +'_option1')
+          opt1_field.setAttribute('name', 'option1')
+          opt1_field.addEventListener('focusout', function(){add_below(opt1_field.id)})
+
+          var opt_r1_col3 = document.createElement('div')
+          opt_r1_col3.setAttribute('class', 'col-sm-1')
+          opt_r1_col3.setAttribute('style', 'text-align: center;')
+
+          var add_opt_btn = document.createElement('button')
+          add_opt_btn.setAttribute('type', 'button')
+          add_opt_btn.setAttribute('class', 'btn btn-primary')
+          add_opt_btn.setAttribute('id', 'add_opt_qn'+qn_id)
+          add_opt_btn.addEventListener('click', function(){add_options(add_opt_btn.id)})
+          add_opt_btn.innerHTML = 'Add option'
+
+          var opt_r1_col4 = document.createElement('div')
+          opt_r1_col4.setAttribute('class', 'col-sm-2')
+          opt_r1_col4.setAttribute('style', 'text-align: center;')
+
+          var opt_row2 = document.createElement('div')
+          opt_row2.setAttribute('class', 'form-group row')
+          opt_row2.setAttribute('id', 'qn'+qn_id+'_option2_row')
+
+          var opt_r2_col1 = document.createElement('div')
+          opt_r2_col1.setAttribute('class', 'col-sm-2')
+
+          var opt_r2_col2 = document.createElement('div')
+          opt_r2_col2.setAttribute('class', 'col-sm-7')
+
+          var opt_r2_col3 = document.createElement('div')
+          opt_r2_col3.setAttribute('class', 'col-sm-2')
+
+          var opt_r2_col3 = document.createElement('div')
+          opt_r2_col3.setAttribute('class', 'col-sm-1')
+
+          var opt2_field = document.createElement('input')
+          opt2_field.setAttribute('type', 'text')
+          opt2_field.setAttribute('class', 'form-control qn' + qn_id + '_options')
+          opt2_field.setAttribute('id', 'qn'+ qn_id +'_option2')
+          opt2_field.setAttribute('name', 'option2')
+          opt2_field.addEventListener('focusout', function(){add_below(opt2_field.id)})
+
+          var ans_row = document.createElement('div')
+          ans_row.setAttribute('class', 'form-group row')
+
+          var ans_r1_col1 = document.createElement('div')
+          ans_r1_col1.setAttribute('class', 'col-sm-2')
+          ans_r1_col1.innerHTML = "Set As Answer"
+
+          var ans_r1_col2 = document.createElement('div')
+          ans_r1_col2.setAttribute('class', 'col-sm-10')
+          ans_r1_col2.setAttribute('id', 'qn'+qn_id+'_set_answer_content')
+
+          var select = document.createElement('select')
+          select.setAttribute('class', 'form-control')
+          select.setAttribute('id', 'qn'+ qn_id +'_set_answer')
+
+          var ans = document.createElement('option')
+          ans.setAttribute('selected', 'selected')
+          ans.innerHTML = "Choose to set the answer"
+
+          // Append content to question div
+          qn_r1_col2.appendChild(add_qn_btn)
+          qn_r1_col3.appendChild(remove_qn_btn)
+          qn_r2_col.appendChild(qn_field)
+          qn_row1.appendChild(qn_r1_col1)
+          qn_row1.appendChild(qn_r1_col2)
+          qn_row1.appendChild(qn_r1_col3)
+          qn_row2.appendChild(qn_r2_col)
+          qn_div.appendChild(qn_row1)
+          qn_div.appendChild(qn_row2)
+
+          // Append content to option div
+          opt_r1_col2.appendChild(opt1_field)
+          opt_r1_col4.appendChild(add_opt_btn)
+          opt_r2_col2.appendChild(opt2_field)
+          opt_row1.appendChild(opt_r1_col1)
+          opt_row1.appendChild(opt_r1_col2)
+          opt_row1.appendChild(opt_r1_col3)
+          opt_row1.appendChild(opt_r1_col4)
+          opt_row2.appendChild(opt_r2_col1)
+          opt_row2.appendChild(opt_r2_col2)
+          opt_row2.appendChild(opt_r2_col3)
+          opt_div.appendChild(opt_row1)
+          opt_div.appendChild(opt_row2)
+
+          // Append content to set answer row
+          select.appendChild(ans)
+          ans_r1_col2.appendChild(select)
+          ans_row.appendChild(ans_r1_col1)
+          ans_row.appendChild(ans_r1_col2)
+
+          // append qn div and opt dov to whole div
+          whole_div.appendChild(hr)
+          whole_div.appendChild(qn_div)
+          whole_div.appendChild(opt_div)
+          whole_div.appendChild(ans_row)
+
+          console.log("QNID-" + qn_id)
+
+          // Append option div
+          document.getElementById('question_content').appendChild(whole_div)
+
+
+          // to hide add question buttons 
+          hide_buttons(qn_id);   
+        }
+
+        function remove_question(delete_qn_id){
+          var delete_qn_id = delete_qn_id.slice(6)
+          var qn_node = document.getElementById('whole_question'+delete_qn_id)
+          console.log("DELETE QN " + delete_qn_id)
+          document.getElementById('question_content').removeChild(qn_node)
+
+          qn_id -= 1
+          console.log('QN ID ' + qn_id)
+
+          var bfr_deleted_qn_id = document.getElementsByClassName('questions').length 
+          hide_buttons_reverse(bfr_deleted_qn_id)
+        }
+
+        function remove_options(chosen_qn_id, chosen_opt_id){
+          var opt_node = document.getElementById('qn'+chosen_qn_id+'_option'+chosen_opt_id+'_row')
+          document.getElementById('qn'+chosen_qn_id+'_options').removeChild(opt_node)
+          add_below('qn'+chosen_qn_id+'_option'+chosen_opt_id)
+        }
+
+        // hide add question and remove question (on the ones before) buttons as the user adds more questions
+        function hide_buttons(hide_qn_id_buttons){
+          for (i=1; i<=hide_qn_id_buttons; i++){
+            if (i == 1){
+                document.getElementById('remove' + i).style.display = "none"
+            }
+            if (i < hide_qn_id_buttons){
+              
+              document.getElementById('remove' + i).style.display = "none"
+              document.getElementById('button' + i).style.display = "none"
+              console.log("HERE1")
+              console.log("i1 "+ i)
+            }
+          }
+        }
+
+        // show add question and remove question buttons as the user removes questions
+        function hide_buttons_reverse(bfr_deleted_qn_id){
+          console.log(bfr_deleted_qn_id)
+          document.getElementById('button' + bfr_deleted_qn_id).style.display = "inline"
+          document.getElementById('remove' + bfr_deleted_qn_id).style.display = "inline"
+        }
+
+        // post to db to create quiz
+        function submit(){
+          console.log("IM INSIDE")
+          var QuizTitle = document.getElementById('title').value
+          var QuizTimer = document.getElementById('time_limit').value
+
+          var quiz_send_value = {
+            CourseID: CourseID,
+            ClassID: ClassID,
+            SectionID: SectionID,
+            QuizTitle: QuizTitle,
+            QuizTimer: QuizTimer
+          }
+
+          var request = new XMLHttpRequest();
+          request.onreadystatechange = function () {
+              if (this.readyState == 4 && this.status == 201) {
+
+                var data = JSON.parse(this.responseText);
+                console.log(data)
+                var QuizID = data.data.QuizID;
+                console.log(QuizID)
+                
+                post_qn(QuizID)
+              }
+          };
+          // console.log(JSON.stringify(send_value))
+          request.open("POST", "http://localhost:5001/create_quiz")
+          request.setRequestHeader("Content-type", "application/json");
+          request.send(JSON.stringify(quiz_send_value))
+
+        }
+          
+        // port to db the questions, answers, and set answer
+        function post_qn(QuizID){
+          var content = document.getElementsByClassName('questions').length
+          console.log('IM INSIDE POST')
+          // loop through the questions one by one
+          for (q_i = 1; q_i<=content; q_i++){
+            console.log("q_i1 "+q_i)
+            var q_i_pass = q_i
+            // get each qn text
+            var question_text = document.getElementById('question'+q_i).value
+
+            var qn_send_value = {
+              CourseID: CourseID,
+              ClassID: ClassID,
+              SectionID: SectionID,
+              QuizID: QuizID,
+              QuestionContent: question_text
+            }
+
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 201) {
+
+                  var data = JSON.parse(this.responseText);
+                  console.log(data)
+
+                  QuestionID = data.data.QuestionID;
+                  console.log(QuestionID)
+                  
+                  console.log("q_i2 "+q_i_pass)
+                  post_ans(QuizID, QuestionID, q_i_pass)
+                }
+            };
+            // console.log(JSON.stringify(send_value))
+            request.open("POST", "http://localhost:5001/create_question", false)
+            request.setRequestHeader("Content-type", "application/json");
+            request.send(JSON.stringify(qn_send_value))
+          }
+        }
+
+        function post_ans(QuizID, QuestionID, q_i_pass){
+          console.log("q_i_pass"+q_i_pass)
+
+          // get the number of options 
+          var options_cnt = document.getElementById('qn'+q_i_pass+'_options_content').getElementsByClassName('qn' + q_i_pass + '_options').length
+
+          // retrieve text of the option selected as answer 
+          var set_answer = document.getElementById('qn'+q_i_pass+'_set_answer').value
+          // console.log(document.getElementById('qn'+q_i+'_set_answer').value)
+
+          // loop through each qn's options and retrieve each opt text
+          for (o_i = 1; o_i <= options_cnt; o_i++){
+            console.log("option index" + o_i)
+            var option_text = document.getElementById('qn'+q_i_pass+'_option'+o_i).value
+            console.log("OPTION TEXT :" + option_text)
+            
+            // check if the option is set as the right answer
+            var correct = '';
+            if (option_text == set_answer){
+              correct = 0
+            }
+            else {
+              correct = 1
+            }
+
+            var ans_send_value = {
+              CourseID: CourseID,
+              ClassID: ClassID,
+              SectionID: SectionID,
+              QuizID: QuizID,
+              QuestionID: QuestionID,
+              AnswerContent: option_text,
+              Correct: correct
+            }
+
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 201) {
+
+                  var data = JSON.parse(this.responseText);
+                  console.log(data)
+                  
+                }
+            };
+            // console.log(JSON.stringify(send_value))
+            request.open("POST", "http://localhost:5001/create_answer")
+            request.setRequestHeader("Content-type", "application/json");
+            request.send(JSON.stringify(ans_send_value))
+          }
+        }
+        
+
+    </script>
+
+    <script src="js/scripts.min.js"></script>
+    <script src="js/main.min.js"></script>
+    <script src="js/custom.js"></script>
+
+    
+  </body>
+</html>
