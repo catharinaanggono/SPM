@@ -1343,6 +1343,8 @@ def get_learner():
             "message":"There are no user"
         }), 404
 
+#SAd
+
 @app.route('/assign_learners', methods=['POST'])
 def assign_learners():
     data = request.get_json()
