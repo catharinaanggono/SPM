@@ -1481,7 +1481,17 @@ def distribution(ClassID):
         }
     })
 
-
+@app.route('/courses')
+def get_all_courses_hr():
+    all_courses = course.query.all()
+    print(all_courses)
+    return jsonify({
+            "code": 200,
+            "message": "Course exists",
+            "data": {
+                "course": [course.json() for course in all_courses]
+            }
+        })
 
 @app.route('/create-ungraded-quiz/<CourseID>/<ClassID>/<SectionID>')
 def create_ungraded_quiz_template(CourseID, ClassID, SectionID):
@@ -1514,6 +1524,19 @@ def successful_creation(CourseID, ClassID):
 @app.route('/successful-creation-hr')
 def successful_creation_hr():
     return render_template('successful-creation-hr.html')
+
+@app.route('/view-courses')
+def view_course_hr():
+    return render_template('view-courses.html')
+
+@app.route('/create-class/<CourseID>')
+def create_class(CourseID):
+    return render_template('create-class.html', CourseID=CourseID)
+
+@app.route('/assign-learner/<CourseID>/<ClassID>')
+def assign_learner(CourseID, ClassID):
+    return render_template('assign_learner.html', CourseID=CourseID, ClassID=ClassID)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)

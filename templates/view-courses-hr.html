@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>View Courses (HR)</title>
+    <meta name="description" content="Free Bootstrap Theme by uicookies.com">
+    <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
+    
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+
+    <!--[if lt IE 9]>
+      <script src="js/vendor/html5shiv.min.js"></script>
+      <script src="js/vendor/respond.min.js"></script>
+    <![endif]-->
+
+    <script>
+      localStorage.id = 1
+    </script>
+    <style>
+      .greyout{
+        pointer-events: none;
+      }
+
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td, th {
+        text-align: left;
+      }
+
+      .search {
+        text-align: center;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <div class="probootstrap-search" id="probootstrap-search">
+      <a href="#" class="probootstrap-close js-probootstrap-close"><i class="icon-cross"></i></a>
+      <form action="#">
+        <input type="search" name="s" id="search" placeholder="Search a keyword and hit enter...">
+      </form>
+    </div>
+    
+    <div class="probootstrap-page-wrapper">
+      <!-- Fixed navbar -->
+      
+      <div class="probootstrap-header-top">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-9 col-md-9 col-sm-9 probootstrap-top-quick-contact-info">
+              <span><i class="icon-location2"></i>Brooklyn, NY 10036, United States</span>
+              <span><i class="icon-phone2"></i>+1-123-456-7890</span>
+              <span><i class="icon-mail"></i>info@uicookies.com</span>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 probootstrap-top-social">
+              <ul>
+                <li><a href="#"><i class="icon-twitter"></i></a></li>
+                <li><a href="#"><i class="icon-facebook2"></i></a></li>
+                <li><a href="#"><i class="icon-instagram2"></i></a></li>
+                <li><a href="#"><i class="icon-youtube"></i></a></li>
+                <li><a href="#" class="probootstrap-search-icon js-probootstrap-search"><i class="icon-search"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="navbar navbar-default probootstrap-navbar">
+        <div class="container">
+          <div class="navbar-header">
+            <div class="btn-more js-btn-more visible-xs">
+              <a href="#"><i class="icon-dots-three-vertical "></i></a>
+            </div>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html" title="uiCookies:Enlight">Enlight</a>
+          </div>
+
+          <div id="navbar-collapse" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="index.html">Home</a></li>
+              <li class="active"><a href="courses.html">Courses</a></li>
+              <li><a href="teachers.html">Teachers</a></li>
+              <li><a href="events.html">Events</a></li>
+              <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Pages</a>
+                <ul class="dropdown-menu">
+                  <li><a href="about.html">About Us</a></li>
+                  <li><a href="courses.html">Courses</a></li>
+                  <li><a href="course-single.html">Course Single</a></li>
+                  <li><a href="gallery.html">Gallery</a></li>
+                  <li class="dropdown-submenu dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Sub Menu</span></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="news.html">News</a></li>
+                </ul>
+              </li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
+      <section class="probootstrap-section probootstrap-section-colored">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-left section-heading probootstrap-animate">
+              <h1>Courses</h1>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="probootstrap-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <!--<div class="probootstrap-flex-block">-->
+                <div class="probootstrap-text probootstrap-animate">
+                  <!--<div class="text-uppercase probootstrap-uppercase">All Courses</div>-->
+
+                  <div class="search">
+                    <input name="searchbox" type="text" size="80" placeholder="Search Courses (Name/ ID)" style="text-align: center;">
+                  </div>
+
+                  <br><br>
+
+                  <p style="float: right;"><a href="#" class="btn btn-primary">Create</a></p>
+
+                  <br>
+                  <h3>List of Courses</h3>
+                  <!--<div class="text-uppercase probootstrap-uppercase">List of Courses</div>-->
+                  <br>
+
+                  <!--scrolling text-->
+                  <div id="div1" style="height: 300px;position:relative;">
+                    <div id="div2" style="max-height:100%;overflow:auto;">
+                      <div id="div3" style="height:1500px;">
+                        <table id='engineerlist'>
+                          <tr><div style="font-weight: 200;"></div>
+                            <td>Courses</td>
+                            <td>CourseID</td>
+
+                            <th> </th>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <h3>Chemical Engineering</h3>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis explicabo veniam labore ratione illo vero voluptate a deserunt incidunt odio aliquam commodi blanditiis voluptas error non rerum temporibus optio accusantium!</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">2,928 students enrolled</span></p>
+                </div>
+                <div class="probootstrap-image probootstrap-animate" style="background-image: url(img/slider_3.jpg)">
+                  <a href="https://vimeo.com/45830194" class="btn-video popup-vimeo"><i class="icon-play3"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="probootstrap-section probootstrap-section-colored probootstrap-bg probootstrap-custom-heading probootstrap-tab-section" style="background-image: url(img/slider_2.jpg)">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-center section-heading probootstrap-animate">
+              <h2 class="mb0">Courses</h2>
+            </div>
+          </div>
+        </div>
+        <div class="probootstrap-tab-style-1">
+          <ul class="nav nav-tabs probootstrap-center probootstrap-tabs no-border">
+            <li class="active"><a data-toggle="tab" href="#enrolled-courses">Enrolled</a></li>
+            <li><a data-toggle="tab" href="#browse-courses">Browse</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="probootstrap-section probootstrap-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              
+              <div class="tab-content">
+
+                <div id="enrolled-courses" class="tab-pane fade in active">
+                  
+                  <div class="row" id="enrolled-courses-content">
+                    <!-- <div class="col-md-6">
+                      <div class="probootstrap-service-2 probootstrap-animate">
+                        <div class="image">
+                          <div class="image-bg">
+                            <img src="img/img_sm_1.jpg" alt="Free Bootstrap Template by uicookies.com">
+                          </div>
+                        </div>
+                        <div class="text">
+                          <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                          <h3>Application Design</h3>
+                          <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                          <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">2,928 students enrolled</span></p>
+                        </div>
+                      </div>
+        
+                      <div class="probootstrap-service-2 probootstrap-animate">
+                        <div class="image">
+                          <div class="image-bg">
+                            <img src="img/img_sm_3.jpg" alt="Free Bootstrap Template by uicookies.com">
+                          </div>
+                        </div>
+                        <div class="text">
+                          <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                          <h3>Chemical Engineering</h3>
+                          <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                          <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">7,202 students enrolled</span></p>
+                        </div>
+                      </div>
+        
+                    </div>
+                    <div class="col-md-6">
+                      <div class="probootstrap-service-2 probootstrap-animate">
+                        <div class="image">
+                          <div class="image-bg">
+                            <img src="img/img_sm_2.jpg" alt="Free Bootstrap Template by uicookies.com">
+                          </div>
+                        </div>
+                        <div class="text">
+                          <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                          <h3>Math Major</h3>
+                          <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                          <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">12,582 students enrolled</span></p>
+                        </div>
+                      </div>
+        
+                      <div class="probootstrap-service-2 probootstrap-animate">
+                        <div class="image">
+                          <div class="image-bg">
+                            <img src="img/img_sm_4.jpg" alt="Free Bootstrap Template by uicookies.com">
+                          </div>
+                        </div>
+                        <div class="text">
+                          <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                          <h3>English Major</h3>
+                          <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                          <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">9,582 students enrolled</span></p>
+                        </div>
+                      </div>
+        
+                    </div> -->
+                  </div>
+
+                  <!-- END row -->
+                  <div class="row">
+                    <div class="col-md-12 text-center">
+                      <p><a href="#" class="btn btn-primary">View all news</a></p>  
+                    </div>
+                  </div>
+                </div>
+                <div id="browse-courses" class="tab-pane fade">
+                  <div class="row">
+                      
+
+                      <div id="accordion">
+                        <!-- <div class="card">
+                          <div class="card-header" id="headingThree">
+                            <h5 class="mb-0">
+                              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Collapsible Group Item #3
+                              </button>
+                            </h5>
+                          </div>
+                          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div class="card-body">
+                              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                            </div>
+                          </div>
+                        </div> -->
+                      </div>
+                  </div>
+        
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="probootstrap-service-2 probootstrap-animate">
+                        <div class="text">
+                          <h3>Application Design</h3>
+                          <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                          <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">30 slots available</span></p>
+                        </div>
+                        
+                        <div style='text-align: center; margin: auto;'>
+                          <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start: July 10, 2017</span><br>
+                          <span class="probootstrap-meta"><i class="icon-calendar2"></i> End: July 10, 2017</span>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12 text-center">
+                      <p><a href="#" class="btn btn-primary">View all courses</a></p>  
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="probootstrap-section probootstrap-bg-white probootstrap-border-top">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center section-heading probootstrap-animate">
+              <h2>Our Featured Courses</h2>
+              <p class="lead">Sed a repudiandae impedit voluptate nam Deleniti dignissimos perspiciatis nostrum porro nesciunt</p>
+            </div>
+          </div>
+          <!-- END row -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_1.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>Application Design</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">2,928 students enrolled</span></p>
+                </div>
+              </div>
+
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_3.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>Chemical Engineering</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">7,202 students enrolled</span></p>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-6">
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_2.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>Math Major</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">12,582 students enrolled</span></p>
+                </div>
+              </div>
+
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_4.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>English Major</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">9,582 students enrolled</span></p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="probootstrap-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_1.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>Application Design</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">2,928 students enrolled</span></p>
+                </div>
+              </div>
+
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_3.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>Chemical Engineering</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">7,202 students enrolled</span></p>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-6">
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_2.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>Math Major</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">12,582 students enrolled</span></p>
+                </div>
+              </div>
+
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_4.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>English Major</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">9,582 students enrolled</span></p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_1.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>Application Design</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">2,928 students enrolled</span></p>
+                </div>
+              </div>
+
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_3.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>Chemical Engineering</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">7,202 students enrolled</span></p>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-6">
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_2.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>Math Major</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">12,582 students enrolled</span></p>
+                </div>
+              </div>
+
+              <div class="probootstrap-service-2 probootstrap-animate">
+                <div class="image">
+                  <div class="image-bg">
+                    <img src="img/img_sm_4.jpg" alt="Free Bootstrap Template by uicookies.com">
+                  </div>
+                </div>
+                <div class="text">
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> July 10, 2017</span>
+                  <h3>English Major</h3>
+                  <p>Laboriosam pariatur modi praesentium deleniti molestiae officiis atque numquam quos quis nisi voluptatum architecto rerum error.</p>
+                  <p><a href="#" class="btn btn-primary">Enroll now</a> <span class="enrolled-count">9,582 students enrolled</span></p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+      
+      <section class="probootstrap-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center section-heading probootstrap-animate">
+              <h2>Meet Our Qualified Teachers</h2>
+              <p class="lead">Sed a repudiandae impedit voluptate nam Deleniti dignissimos perspiciatis nostrum porro nesciunt</p>
+            </div>
+          </div>
+          <!-- END row -->
+
+          <div class="row">
+            <div class="col-md-3 col-sm-6">
+              <div class="probootstrap-teacher text-center probootstrap-animate">
+                <figure class="media">
+                  <img src="img/person_1.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+                </figure>
+                <div class="text">
+                  <h3>Chris Worth</h3>
+                  <p>Physical Education</p>
+                  <ul class="probootstrap-footer-social">
+                    <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+                    <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+                    <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+                    <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="probootstrap-teacher text-center probootstrap-animate">
+                <figure class="media">
+                  <img src="img/person_5.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+                </figure>
+                <div class="text">
+                  <h3>Janet Morris</h3>
+                  <p>English Teacher</p>
+                  <ul class="probootstrap-footer-social">
+                    <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+                    <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+                    <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+                    <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix visible-sm-block visible-xs-block"></div>
+            <div class="col-md-3 col-sm-6">
+              <div class="probootstrap-teacher text-center probootstrap-animate">
+                <figure class="media">
+                  <img src="img/person_6.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+                </figure>
+                <div class="text">
+                  <h3>Linda Reyez</h3>
+                  <p>Math Teacher</p>
+                  <ul class="probootstrap-footer-social">
+                    <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+                    <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+                    <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+                    <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="probootstrap-teacher text-center probootstrap-animate">
+                <figure class="media">
+                  <img src="img/person_7.jpg" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+                </figure>
+                <div class="text">
+                  <h3>Jessa Sy</h3>
+                  <p>Physics Teacher</p>
+                  <ul class="probootstrap-footer-social">
+                    <li class="twitter"><a href="#"><i class="icon-twitter"></i></a></li>
+                    <li class="facebook"><a href="#"><i class="icon-facebook2"></i></a></li>
+                    <li class="instagram"><a href="#"><i class="icon-instagram2"></i></a></li>
+                    <li class="google-plus"><a href="#"><i class="icon-google-plus"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      
+      <section class="probootstrap-cta">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <h2 class="probootstrap-animate" data-animate-effect="fadeInRight">Get your admission now!</h2>
+              <a href="#" role="button" class="btn btn-primary btn-lg btn-ghost probootstrap-animate" data-animate-effect="fadeInLeft">Enroll</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer class="probootstrap-footer probootstrap-bg">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="probootstrap-footer-widget">
+                <h3>About The School</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro provident suscipit natus a cupiditate ab minus illum quaerat maxime inventore Ea consequatur consectetur hic provident dolor ab aliquam eveniet alias</p>
+                <h3>Social</h3>
+                <ul class="probootstrap-footer-social">
+                  <li><a href="#"><i class="icon-twitter"></i></a></li>
+                  <li><a href="#"><i class="icon-facebook"></i></a></li>
+                  <li><a href="#"><i class="icon-github"></i></a></li>
+                  <li><a href="#"><i class="icon-dribbble"></i></a></li>
+                  <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                  <li><a href="#"><i class="icon-youtube"></i></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-3 col-md-push-1">
+              <div class="probootstrap-footer-widget">
+                <h3>Links</h3>
+                <ul>
+                  <li><a href="#">Home</a></li>
+                  <li><a href="#">Courses</a></li>
+                  <li><a href="#">Teachers</a></li>
+                  <li><a href="#">News</a></li>
+                  <li><a href="#">Contact</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="probootstrap-footer-widget">
+                <h3>Contact Info</h3>
+                <ul class="probootstrap-contact-info">
+                  <li><i class="icon-location2"></i> <span>198 West 21th Street, Suite 721 New York NY 10016</span></li>
+                  <li><i class="icon-mail"></i><span>info@domain.com</span></li>
+                  <li><i class="icon-phone2"></i><span>+123 456 7890</span></li>
+                </ul>
+              </div>
+            </div>
+           
+          </div>
+          <!-- END row -->
+          
+        </div>
+
+        <div class="probootstrap-copyright">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8 text-left">
+                <p>&copy; 2017 <a href="https://uicookies.com/">uiCookies:Enlight</a>. All Rights Reserved. Designed &amp; Developed with <i class="icon icon-heart"></i> by <a href="https://uicookies.com/">uicookies.com</a></p>
+              </div>
+              <div class="col-md-4 probootstrap-back-to-top">
+                <p><a href="#" class="js-backtotop">Back to top <i class="icon-arrow-long-up"></i></a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+    <!-- END wrapper -->
+
+    <script>
+      var UserID = localStorage.id;
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200){
+          var data = JSON.parse(this.responseText).data.courses
+          console.log(data)
+          
+          for (course in data){
+            console.log(course)
+            collapsibleID = data[course].CourseID + data[course].CourseTitle
+            courseTitle = data[course].CourseTitle
+            courseDescription = data[course].CourseDescription     
+            greyout = data[course].GreyOut
+            prereqList = data[course].prereqList
+            prereqHTML = 'Pre-requisities: '
+            prereqCompletedHTML = ''
+            if (greyout){
+              prereqCompletedHTML = 'style="color:red;"'
+            }
+            if (prereqList.length == 0){
+              prereqHTML += 'None'
+            }
+            else{
+              for (prereq in prereqList){
+                if (prereq < prereqList.length - 1){
+                  prereqHTML += prereqList[prereq] + ', '
+                }
+                else{
+                  prereqHTML += prereqList[prereq]
+                }
+              }
+            }
+            console.log(greyout)
+            if (greyout){
+              pointer = 'none'
+              opacity = 0.6
+            }
+            else{
+              pointer = 'auto'
+              opacity = 1
+            }
+            
+            document.getElementById('accordion').innerHTML += `
+            <div class="card" style='pointer-events: ${pointer}; opacity:${opacity}'>
+              <div class="card-header" id="heading-${collapsibleID}">
+                <h5 class="mb-0">
+                    <div class="probootstrap-service-2">
+                      <div class="text">
+                        <h3> <b> ${courseTitle} </b> </h3>
+                        <br>
+                        <p>${courseDescription}</p>
+                        <br>
+                        <p ${prereqCompletedHTML}> ${prereqHTML} </p>
+                      </div>
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#${collapsibleID}" aria-expanded="false" aria-controls="${collapsibleID}">
+                          Show Classes
+                      </button>
+                    </div>
+                    
+                </h5>
+              </div>
+              <div id="${collapsibleID}" class="collapse" aria-labelledby="heading-${collapsibleID}" data-parent="#accordion">
+              </div>
+            </div>
+            `
+            if (data[course].classList.length > 0){
+              for (aClass of data[course].classList){
+                classID = "Class " + aClass.ClassID
+                seniorEngineer = aClass.TrainerList
+                availability = aClass.RemainingSlot
+                startDate = new Date(aClass.StartDate)
+                classGreyout = aClass.GreyOut
+                applicationStatus = aClass.Status
+                console.log(applicationStatus)
+                var date = startDate.getDate();
+                var month = startDate.getMonth(); //Be careful! January is 0 not 1
+                var year = startDate.getFullYear();
+                var startDateString = date + "/" +(month + 1) + "/" + year;
+
+                endDate = new Date(aClass.EndDate)
+                var date = endDate.getDate();
+                var month = endDate.getMonth(); //Be careful! January is 0 not 1
+                var year = endDate.getFullYear();
+                var endDateString = date + "/" +(month + 1) + "/" + year;
+                classPeriod = startDateString + ' - ' + endDateString
+                trainerHTML = ''
+                for (let i = 0; i < seniorEngineer.length; i++){
+                  if (i == 0){
+                    trainerHTML += `<tr>
+                      <td style='width:50%' rowspan="${seniorEngineer.length}"> Senior Engineer </td>
+                      <td style='width:50%'> ${seniorEngineer[i]} </td>
+                    </tr>`
+                  }
+                  else{
+                    trainerHTML += `<tr>
+                      <td style='width:50%'> ${seniorEngineer[i]} </td>
+                    </tr>`
+                  }
+                }
+                styleHTML = ''
+                if (classGreyout){
+                  styleHTML += 'pointer-events: none; opacity: 0.4'
+                }
+                appliedHTML = ''
+                disabled = ''
+                if (applicationStatus == 'applied'){
+                  appliedHTML += '<tr> <td style="padding-bottom:20px"> <b> Already Applied </b> </td> </tr>'
+                  disabled = 'disabled'
+                }
+                document.getElementById(`${collapsibleID}`).innerHTML += `
+                
+                <div class="card-body" style="${styleHTML}">
+                  <span style='width:100%'> <b> ${classID} </b> </span>
+                  </br>
+                  </br>
+                  <table style='width:100%'>
+                    ${trainerHTML}
+
+                    <tr>
+                      <td style='width:50%'> Period </td>
+                      <td style='width:50%'> ${classPeriod} </td>
+                    </tr>
+
+                    <tr>
+                      <td style='width:50%'> Availability </td>
+                      <td style='width:50%'> ${availability + '/' + aClass.ClassSize} </td>
+                    </tr>
+                    <tr>
+                      <td style='width:50%;padding-top:30px;'>  </td>
+                    </tr>
+                    ${appliedHTML}
+                  </table>
+                  <button type="button" class="btn btn-primary" ${disabled} onclick="enrolClass(${data[course].CourseID}, ${aClass.ClassID}, ${UserID})"> Enrol </button>
+                  <hr>
+                </div>
+
+                `
+              }
+            }
+            else{
+              document.getElementById(`${collapsibleID}`).innerHTML += `
+                
+                <div class="card-body">
+                  NO CLASSES AVAILABLE FOR THIS COURSE
+                  </br>
+                  </br>
+                </div>
+
+                `
+            }
+          }
+        }
+      }
+      request.open('GET', 'http://localhost:5001/courses-all/' + UserID)
+      request.send()
+
+      function enrolClass(CourseID, ClassID, UserID){
+        console.log("called")
+        var request = new XMLHttpRequest();
+        var send_value = {CourseID: CourseID, ClassID: ClassID, UserID: UserID}
+        request.onreadystatechange = function(){
+          let x = false
+          if (this.status == 201 && this.readyState == 4){
+            x = true
+            if (x){
+            response = JSON.parse(this.responseText)
+            window.alert(response.message)
+            location.reload();
+            }
+            else{
+              window.alert('Something went wrong. Please try again.')
+            }
+          }
+          
+        }
+        request.open('POST', 'http://localhost:5001/self-enrol')
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(send_value))
+      }
+
+      /*
+
+      Steps to take:
+
+      1. get all courses -- stored in courseList
+      2. Check for courses completed (so that it won't be shown and to filter out prereqs)
+        a. store completed in completedList
+        b. store prereqs in coursesPrereq --> an object with CourseID as keys and list of prereqs as values
+      3. Filter courses by prereqs --> store in notEligible
+      4. Get classes per course -- NOT DONE (Create a dictionary of courses --> Make query to classes --> Include each class into its corresponding course dictionary)
+      5. Check Registration date -- NOT DONE (For each class in course dictionary from no. 4, check their registration date, if expired, remove from dictionary)
+      6. Check if they have applied previously -- NOT DONE (Make a call to classLearner table (for this particular user) --> For each class in course dictionary from no. 4
+                                                            --> check if this student applied based on class ID --> remove from dictionary or mark to grey out if yes)
+      7. Check class size -- NOT DONE (Make a call to classLearner table (query.all()) --> make a dictionary of courses with a value of dictionary with class as keys and total num. of rows as values
+                                      (e.g., {course: {class: classSize}}) --> check with each classes in no. 4 dictionary --> if classSize in no. 4 dict == classSize in dict made just now --> mark to grey out)
+      8. List out the modified dictionary in no. 4 into the UI.
+
+      */
+
+      // LEARNER'S ENROLLED COURSES
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200){
+          var data = JSON.parse(this.responseText);
+          var learner_ongoing_courses = data.data.learner_courses;
+          console.log(learner_ongoing_courses)
+          for (var each_course in learner_ongoing_courses){
+            var ClassID = learner_ongoing_courses[each_course].ClassID;
+            var CourseID = learner_ongoing_courses[each_course].CourseID;
+            var CourseTitle = learner_ongoing_courses[each_course].CourseTitle;
+            var ClassStartDate = learner_ongoing_courses[each_course].ClassStartDate;
+            var ClassEndDate = learner_ongoing_courses[each_course].ClassEndDate;
+            var LearnerID = learner_ongoing_courses[each_course].LearnerID;
+            var Status = learner_ongoing_courses[each_course].Status;
+            console.log("course")
+            document.getElementById('enrolled-courses-content').innerHTML += `
+            <div class="col-md-6">
+              <div class="probootstrap-service-2 probootstrap-animate">                
+                <div class="text" style='width: 100%'>
+                  <h3>${CourseTitle} - Class: ${ClassID}</h3><br>
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start Date: ${ClassStartDate}</span><br>
+                  <span class="probootstrap-meta"><i class="icon-calendar2"></i> End Date: ${ClassEndDate}</span><br><br>
+                  <p>Progress: #pending<br> 
+                    Section 4 out of 12</p>
+                </div>
+              </div>
+              </div>`
+          }
+        }
+      };
+      request.open('GET', 'http://localhost:5002/learner_ongoing_courses/' + UserID, false);
+      request.send();
+    </script>
+  </body>
+</html>

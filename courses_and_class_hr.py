@@ -39,7 +39,7 @@ class course(db.Model):
 
 
 @app.route('/courses')
-def get_all_courses():
+def get_all_courses_hr():
     all_courses = course.query.all()
     print(all_courses)
     return jsonify({
