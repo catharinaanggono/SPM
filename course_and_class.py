@@ -1539,7 +1539,7 @@ def distribution(ClassID):
         }
     })
 
-
+#Get All Courses
 @app.route('/courses')
 def get_all_courses_hr():
     all_courses = Course.query.all()
@@ -1552,7 +1552,7 @@ def get_all_courses_hr():
             }
         })
 
-
+#Create Course
 @app.route("/create_course", methods=["POST"])
 def create_course():
     data = request.get_json()
@@ -1580,6 +1580,52 @@ def create_course():
             "message": "Course is successfully created",
             "data": course.json()
             
+        }
+    ), 201
+
+#Get All Trainers
+@app.route("/get_trainers")
+def get_all_senior_engineeers():
+    trainers = User.query.filter_by(UserType="Senior Engineer").all()
+    if len(trainers):
+        return jsonify({
+            "code": 200,
+            "data": {
+                "trainers": [trainer.json() for trainer in trainers]
+            }
+        })
+    return jsonify({
+        "code": 404,
+        "message": "There are no trainers."
+    }), 404
+
+#Create Class
+@app.route("/create_class", methods=["POST"])
+def create_class():
+    data = request.get_json()
+    print(data)
+    CourseID = data['CourseID']
+    ClassSize = data['ClassSize']
+    StartDate = data['StartDate']
+    EndDate = data['EndDate']
+    RegistrationStartDate = data['RegStartDate']
+    RegistrationEndDate = data['RegEndDate']
+    TrainerIDList = data['TrainerIDList']
+    cl = CourseClass(CourseID, None, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate)
+
+    db.session.add(cl)
+    db.session.commit()
+
+    for TrainerID in TrainerIDList:
+        classTrainer = TrainerClass(CourseID, cl.ClassID, TrainerID)
+        print(classTrainer)
+        db.session.add(classTrainer)
+    db.session.commit()
+
+    return jsonify(
+        {
+            "code": 201,
+            "message": "Class is successfully created"
         }
     ), 201
 
@@ -1698,7 +1744,7 @@ def view_course_hr():
 
 
 @app.route('/create-class/<CourseID>')
-def create_class(CourseID):
+def create_class_hr(CourseID):
     return render_template('create-class.html', CourseID=CourseID)
 
 
