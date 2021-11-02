@@ -1,7 +1,7 @@
 import unittest
 import flask_testing
 import json
-from course_and_class import app, db, SectionMaterial, ClassTaken, User, course, course_class, course_prereq
+from course_and_class import app, db, SectionMaterial, ClassTaken, User, Course, CourseClass, CoursePrereq
 from datetime import datetime
 
 class TestApp(flask_testing.TestCase):
