@@ -307,11 +307,14 @@ class StudentQuizResult(db.Model):
 def get_quiz_attempts(LearnerID, CourseID, ClassID):
     sections = db.session.query(Section.SectionID).filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).all()
     result = db.session.query(StudentQuizResult.SectionID).filter_by(CourseID = CourseID).filter_by(ClassID = ClassID).filter_by(LearnerID = LearnerID).all()
+    print(sections)
     allowed_sections = []
     for a_section in sections:
         if a_section not in result:
             allowed_sections.append(a_section[0])
             break
+        else:
+            allowed_sections.append(a_section[0])
    
     return {'allowed_sections': allowed_sections}
 
@@ -781,6 +784,8 @@ def view_material(CourseID, ClassID, SectionID, url):
     else:
         abort(403)
 
+
+
         # ungraded quiz
 class Quiz(db.Model):
     __tablename__ = 'quiz'
@@ -801,6 +806,41 @@ class Quiz(db.Model):
 
     def json(self):
         return{"QuizID": self.QuizID, "CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "QuizTitle": self.QuizTitle, "QuizTimer": self.QuizTimer}
+
+@app.route('/get-section-quiz/<CourseID>/<ClassID>/<SectionID>/<LearnerID>')
+def get_section_quiz(CourseID, ClassID, SectionID, LearnerID):
+    materialProgress = MaterialProgress.query.filter_by(LearnerID=LearnerID, CourseID=CourseID, ClassID=ClassID, SectionID=SectionID).count()
+    sectionMaterialCount = SectionMaterial.query.filter_by(CourseID=CourseID, ClassID=ClassID, SectionID=SectionID).count()
+    print(materialProgress)
+    quiz = Quiz.query.filter_by(CourseID=CourseID, ClassID=ClassID, SectionID=SectionID).first()
+    if materialProgress == sectionMaterialCount:    
+        return jsonify({
+            "code": 200,
+            "data": quiz.json(),
+            "greyOut": False
+        })
+    else:
+        return jsonify({
+            "code": 200,
+            "data": quiz.json(),
+            "greyOut": True
+        })
+
+@app.route('/get-section-quiz-trainer/<CourseID>/<ClassID>/<SectionID>')
+def get_section_quiz_trainer(CourseID, ClassID, SectionID):
+
+    quiz = Quiz.query.filter_by(CourseID=CourseID, ClassID=ClassID, SectionID=SectionID).first()
+    if quiz:    
+        return jsonify({
+            "code": 200,
+            "data": quiz.json()
+        })
+    else:
+        return jsonify({
+            "code": 404,
+            "message": "No quizzes found for this section"
+        })
+    
 
 class Question(db.Model):
     __tablename__ = 'question'

@@ -296,6 +296,50 @@
                       styleHTML += 'pointer-events: none; opacity: 0.4'
                       document.getElementById(`${i}-${sectionID}`).style = styleHTML
                     }
+                    var requestGetQuiz = new XMLHttpRequest()
+                    requestGetQuiz.onreadystatechange = function(){
+                      if (this.readyState == 4 && this.status == 200){
+                        response = JSON.parse(this.responseText)
+                        console.log(response)
+                        quizTitle = response.data.QuizTitle
+                        quizID = response.data.QuizID
+                        quizTimer = response.data.QuizTimer
+                        if (response.greyOut == true){
+                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
+                          </hr>
+                          <div class="card-body">
+                                <div class='row'>
+                                  <div class ='col-md-8' style='pointer-events: none; opacity: 0.4'>
+                                    <span style="width:80%"> <a href='http://localhost:5001/take-ungraded-quiz/${quizID}'> <b> Quiz: ${quizTitle} </b> </a>  </span> 
+                                  </div>
+                                  <div class='col-md-4'>
+                                    <b> ${quizTimer} </b>
+                                  </div>
+                                </div>
+                                <hr>
+                            </div>
+                          `
+                        }
+                        else{
+                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
+                          </hr>
+                          <div class="card-body">
+                                <div class='row'>
+                                  <div class ='col-md-8'>
+                                    <span style="width:80%"> <a href='http://localhost:5001/take-ungraded-quiz/${quizID}'> <b> Quiz: ${quizTitle} </b> </a>  </span> 
+                                  </div>
+                                  <div class='col-md-4'>
+                                    <b> ${quizTimer} </b>
+                                  </div>
+                                </div>
+                                <hr>
+                            </div>
+                          `
+                        }
+                      }
+                    }
+                    requestGetQuiz.open("GET", `http://localhost:5001/get-section-quiz/{{ CourseID }}/{{ ClassID }}/${sectionID}/1`, false)
+                    requestGetQuiz.send()
                 }
                 
             }
