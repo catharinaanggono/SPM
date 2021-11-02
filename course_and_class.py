@@ -1750,6 +1750,9 @@ def create_course_hr():
 def assign_learner(CourseID, ClassID):
     return render_template('assign-learner.html', CourseID=CourseID, ClassID=ClassID)
 
+@app.route('/progress-tracker/<ClassID>')
+def progress_tracker(ClassID):
+    return render_template('progress_tracker.html', ClassID=ClassID)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)

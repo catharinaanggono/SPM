@@ -1007,12 +1007,16 @@
                 }
                 document.getElementById('courses-taught-content').innerHTML += `
                 ${newRow}
-                <div class="col-md-6" onclick='viewCourseTaught(${CourseID}, ${ClassID})'>
+                <div class="col-md-6" >
                   <div class="probootstrap-service-2">                
                     <div class="text" style='width: 100%'>
                       <h3>${course.CourseTitle} - Class: ${ClassID}</h3><br>
                       <span class="probootstrap-meta"><i class="icon-calendar2"></i> Start Date: ${cl.StartDate}</span><br>
                       <span class="probootstrap-meta"><i class="icon-calendar2"></i> End Date: ${cl.EndDate}</span>
+                      <br>
+                      <button onclick='viewCourseTaught(${CourseID}, ${ClassID})'> View Section </button>
+                      <br>
+                      <button onclick='viewProgress(${ClassID})'> View Progress </button>
                     </div>
                   </div>
                 </div>
@@ -1077,6 +1081,10 @@
       }
       function viewCourseTaught(CourseID, ClassID){
         window.location.href = `http://localhost:5001/view-section-trainer/${CourseID}/${ClassID}`
+      }
+
+      function viewProgress(ClassID){
+        window.location.href = `http://localhost:5001/progress-tracker/${ClassID}`
       }
     </script>
   </body>
