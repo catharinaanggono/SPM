@@ -723,6 +723,26 @@ def get_course_details(CourseID):
         "message": "There are no classes."
     }), 404
 
+@app.route('/remove-material', methods=['POST'])
+def remove_material():
+    data = request.get_json()
+    courseID = data['CourseID']
+    classID = data['ClassID']
+    sectionID = data['SectionID']
+    material_content = data['MaterialContent']
+
+    material = SectionMaterial.query.filter_by(CourseID=courseID, ClassID=classID, SectionID=sectionID, MaterialContent=material_content).first()
+    if os.path.exists('static/course_material/' + str(courseID) + '/' + str(classID) + '/' + str(sectionID) + '/' + str(material_content)):
+        os.remove('static/course_material/' + str(courseID) + '/' + str(classID) + '/' + str(sectionID) + '/' + str(material_content))
+    
+    db.session.delete(material)
+    db.session.commit()
+
+    return jsonify({
+        "code": 200,
+        "message": "Deletion of material is successful"
+    }), 200
+
 
 @app.route('/class-details/<string:ClassID>')
 def get_class_details(ClassID):
@@ -744,9 +764,9 @@ def get_class_details(ClassID):
 def create_section_page(CourseID, ClassID):
     return render_template('create-section.html', CourseID=CourseID, ClassID=ClassID)
 
-@app.route('/add-section-material/<CourseID>/<ClassID>/<SectionID>')
-def test_template(CourseID, ClassID, SectionID):
-    return render_template('add-section-material.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID)
+@app.route('/add-section-material/<CourseID>/<ClassID>/<SectionID>/<SectionName>')
+def test_template(CourseID, ClassID, SectionID, SectionName):
+    return render_template('add-section-material.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID, SectionName=SectionName)
 
 @app.route('/view-section-material/<CourseID>/<ClassID>')
 def section_material_template(CourseID, ClassID):
@@ -1470,6 +1490,10 @@ def create_ungraded_quiz_template(CourseID, ClassID, SectionID):
 @app.route('/create-graded-quiz/<CourseID>')
 def create_graded_quiz_template(CourseID):
     return render_template('create-graded-quiz.html', CourseID=CourseID)
+
+@app.route('/view-section-trainer/<CourseID>/<ClassID>')
+def view_section_page_trainer(CourseID, ClassID):
+    return render_template('view-section-material-trainer.html', CourseID=CourseID, ClassID=ClassID)
 
 @app.route('/take-ungraded-quiz/<QuizID>')
 def take_ungraded_quiz(QuizID):
