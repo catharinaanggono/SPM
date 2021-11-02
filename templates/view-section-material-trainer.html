@@ -238,21 +238,38 @@
                     var original = ''
                     for (let j = 0; j < secMatList.length; j++){
                         materialContent = secMatList[j].MaterialContent
-                        
-                        document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
-                        <div class="card-body" style="">
-                            <div class='row'>
-                              <div class ='col-md-8'>
-                                <span style="width:80%"> <b> <a href=
-                                  'http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
+
+                        if (!materialContent.includes('</a>')){
+                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
+                          <div class="card-body" style="">
+                              <div class='row'>
+                                <div class ='col-md-8'>
+                                  <span style="width:80%"> <b> <a href=
+                                    'http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
+                                </div>
+                                <div class='col-md-4'>
+                                  <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
+                                </div>
                               </div>
-                              <div class='col-md-4'>
-                                <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
+                              <hr>
+                          </div>
+                          `
+                        }
+                        else{
+                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
+                          <div class="card-body" style="">
+                              <div class='row'>
+                                <div class ='col-md-8'>
+                                  <span style="width:80%"> <b> ${materialContent} </b> </span>
+                                </div>
+                                <div class='col-md-4'>
+                                  <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
+                                </div>
                               </div>
-                            </div>
-                            <hr>
-                        </div>
-                        `
+                              <hr>
+                          </div>
+                          `
+                        }
 
                         document.getElementById(`remove-material-${i}-${sectionNameNoSpace}`).addEventListener('click', function(){removeMat(courseID, classID, sectionID, materialContent)})
                     }
