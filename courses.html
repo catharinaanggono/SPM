@@ -787,7 +787,7 @@
                 var withdrawButton = ''
                 
                 console.log(applicationStatus)
-                if (applicationStatus == 'applied'){
+                if (applicationStatus == 'self_enrolled'){
                   withdrawButton = `<button class="btn btn-warning" onclick="withdrawApplication(${data[course].CourseID}, ${aClass.ClassID}, ${UserID}, '${data[course].CourseTitle}')"> Withdraw Application </button> <hr>` 
                   appliedHTML += `<tr> <td style="padding-bottom:20px"> <b> Already Applied </b> </td> </tr>`
                   disabled = 'disabled '

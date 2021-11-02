@@ -130,7 +130,7 @@ class MaterialProgress(db.Model):
 class CourseClass(db.Model):
     __tablename__ = 'class'
 
-    CourseID = db.Column(db.Integer, primary_key=True)
+    CourseID = db.Column(db.Integer)
     ClassID = db.Column(db.Integer, primary_key=True)
     StartDate = db.Column(db.DateTime, nullable=False)
     EndDate = db.Column(db.DateTime, nullable=False)
@@ -139,9 +139,8 @@ class CourseClass(db.Model):
     RegistrationEndDate = db.Column(db.Date, nullable=False)
 
 
-    def __init__(self, CourseID, ClassID, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate):
+    def __init__(self, CourseID, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate):
         self.CourseID = CourseID
-        self.ClassID = ClassID
         self.StartDate = StartDate
         self.EndDate = EndDate
         self.ClassSize = ClassSize
@@ -768,7 +767,7 @@ def get_all_courses(UserID):
                     trainerList.append(trainerName)
             if [a_class.CourseID, a_class.ClassID] in applied_courses:
                 a_class.GreyOut = True
-                a_class.Status = 'applied'
+                a_class.Status = 'self_enrolled'
             if [a_class.CourseID, a_class.ClassID] in rejected_courses:
                 a_class.Status = 'rejected'
             currentlyEnrolled = ClassTaken.query.filter(CourseID == a_class.CourseID, ClassTaken.ClassID == a_class.ClassID, ClassTaken.ApplicationStatus.in_(["hr_enrolled", "self_approved"])) # check remaining class sizes
@@ -805,7 +804,7 @@ def self_enrol():
     courseID = data['CourseID']
     classID = data['ClassID']
     
-    apply_class = ClassTaken(courseID, classID, userID, 'applied')
+    apply_class = ClassTaken(courseID, classID, userID, 'self_enrolled')
 
     check = ClassTaken.query.filter_by(CourseID=courseID, ClassID=classID, LearnerID=userID, ApplicationStatus='rejected').first()
     if check:
@@ -1609,11 +1608,11 @@ def create_class():
     RegistrationStartDate = data['RegStartDate']
     RegistrationEndDate = data['RegEndDate']
     TrainerIDList = data['TrainerIDList']
-    cl = CourseClass(CourseID, None, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate)
+    cl = CourseClass(CourseID, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate)
 
     db.session.add(cl)
     db.session.commit()
-
+    print(cl.json())
     for TrainerID in TrainerIDList:
         classTrainer = TrainerClass(CourseID, cl.ClassID, TrainerID)
         print(classTrainer)
