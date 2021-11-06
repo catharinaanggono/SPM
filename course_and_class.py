@@ -1661,6 +1661,16 @@ def accept_application():
     course = Course.query.filter_by(CourseID=CourseID).first()
     application.CourseTitle = course.CourseTitle
     application.ApplicationStatus = "self_approved"
+    now = datetime.now()
+    # cl = CourseClass.query.filter_by(CourseID == CourseID).filter_by(ClassID == ClassID).first() 
+
+    # if now >= cl.StartDate:
+    #     return jsonify(
+    #         {
+    #             "code": 400,
+    #             "message": "Unable to accept application because class has started"
+    #         }
+    #     ), 400
 
     try:
         db.session.commit()

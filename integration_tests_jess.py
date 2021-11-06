@@ -1,7 +1,7 @@
 import unittest
 import flask_testing
 import json
-from course_and_class import app, db, ClassTaken, User, Course
+from course_and_class import app, db, ClassTaken, User, Course, CourseClass
 from datetime import datetime
 
 class TestApp(flask_testing.TestCase):
@@ -103,32 +103,52 @@ class TestViewApplication(TestApp):
         })
 
 
-        def test_reject_application(self):
+    def test_approve_application_error(self):
+        class1 = CourseClass(1, 3, datetime.strptime('05-11-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('28-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('25-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('01-11-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
 
-            request_body = {
-            "CourseID": 1,
-            "ClassID": 2,
-            "LearnerID": 7
+
+        request_body = {
+          "CourseID": 1,
+          "ClassID": 3,
+          "LearnerID": 6
+        }
+
+        response = self.client.post("/accept_application",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
+
+        self.assertEqual(response.json,{
+            "code": 400,
+            "message": "Unable to accept application because class has started"
+        })
+
+
+    def test_reject_application(self):
+
+        request_body = {
+        "CourseID": 1,
+        "ClassID": 2,
+        "LearnerID": 7
+        }
+
+        response = self.client.post("/reject_application",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
+
+        self.assertEqual(response.json,{
+            "code": 201,
+            "message": "Application has been rejected",
+            "data": {
+                "CourseID": 1, 
+                "ClassID": 2, 
+                "LearnerID": 7, 
+                "ApplicationStatus": "rejected", 
+                "UserName": "Aaron", 
+                "CourseTitle": "WAD",
+                "ClassStartDate": "",
+                "ClassEndDate": ""
             }
-
-            response = self.client.post("/reject_application",
-                                        data=json.dumps(request_body),
-                                        content_type='application/json')
-
-            self.assertEqual(response.json,{
-                "code": 201,
-                "message": "Application has been rejected",
-                "data": {
-                    "CourseID": 1, 
-                    "ClassID": 2, 
-                    "LearnerID": 7, 
-                    "ApplicationStatus": "rejected", 
-                    "UserName": "Aaron", 
-                    "CourseTitle": "WAD",
-                    "ClassStartDate": "",
-                    "ClassEndDate": ""
-                }
-            })
+        })
 
 if __name__ == '__main__':
     unittest.main()

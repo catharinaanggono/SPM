@@ -1,7 +1,7 @@
 import unittest
 import flask_testing
 import json
-from course_and_class import app, db, User, course, course_class, Section, Quiz, Question, QuestionAnswer, FinalQuiz, FinalQuizQuestion, FinalQuizQuestionAnswer
+from course_and_class import app, db, User, Course, CourseClass, Section, Quiz, Question, QuestionAnswer, FinalQuiz, FinalQuizQuestion, FinalQuizQuestionAnswer
 from datetime import datetime
 
 class TestApp(flask_testing.TestCase):
@@ -19,8 +19,8 @@ class TestApp(flask_testing.TestCase):
     def setUp(self):
         db.create_all()
         user_1 = User(1, 'Brenda', 'Senior Engineer')
-        course_1 = course(1, 'Test Course 1', 'Test Course 1 Description', 'Test Course 1 Badge')
-        class_1 = course_class(1, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        course_1 = Course(1, 'Test Course 1', 'Test Course 1 Description', 'Test Course 1 Badge')
+        class_1 = CourseClass(1, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
         section_1 = Section(1, 1, "Test Section 1")
         db.session.add(user_1)
         db.session.add(course_1)
