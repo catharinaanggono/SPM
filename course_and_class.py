@@ -1881,9 +1881,29 @@ def create_course_hr():
 def assign_learner(CourseID, ClassID):
     return render_template('assign-learner.html', CourseID=CourseID, ClassID=ClassID)
 
-@app.route('/progress-tracker/<ClassID>')
-def progress_tracker(ClassID):
-    return render_template('progress_tracker.html', ClassID=ClassID)
+@app.route('/progress-tracker/<CourseID>/<ClassID>')
+def progress_tracker(CourseID, ClassID):
+    return render_template('progress_tracker.html', ClassID=ClassID, CourseID=CourseID)
+
+@app.route('/home')
+def home():
+    return render_template('index.html')
+
+@app.route('/learner-acct')
+def learner_acct():
+    return render_template('learner_acct.html', UserID = 1)
+
+@app.route('/view-engineers')
+def view_engineers():
+    return render_template('view_engineers.html')
+
+@app.route('/view-application')
+def view_applications():
+    return render_template('view_application.html')
+
+@app.route('/hr-home')
+def hr_home():
+    return render_template('/hr_home.html')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)

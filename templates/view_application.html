@@ -51,31 +51,9 @@
     <div class="probootstrap-page-wrapper">
       <!-- Fixed navbar -->
       
-      <nav class="navbar navbar-default probootstrap-navbar">
-        <div class="container">
-          <div class="navbar-header">
-            <!-- <div class="btn-more js-btn-more visible-xs">
-              <a href="#"><i class="icon-dots-three-vertical "></i></a>
-            </div> -->
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a href="hr_home.html"><img src='img/lms_logo.png' width='100px' height='100px'></a>
-          </div>
+      {% include 'header_hr.html' %}
 
-          <div id="navbar-collapse" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="index.html">Home</a></li>
-              <li><a href="courses.html">Forum</a></li>
-              <li><a style="color: grey;">Chat (Coming soon)</a></li>
-              <li><a href="events.html">Account</a></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+      {% include 'secondary_navbar_hr.html' %}
       
       <section class="probootstrap-section probootstrap-section-colored">
         <div class="container">
@@ -119,21 +97,7 @@
       </section>
 
 
-        <footer class="probootstrap-footer probootstrap-bg">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="probootstrap-footer-widget">
-                <h3>Contact Info</h3>
-                <ul class="probootstrap-contact-info">
-                  <li><i class="icon-location2"></i> <span>Prinsep Street</span></li>
-                  <li><i class="icon-mail"></i><span>spm@smu.com</span></li>
-                  <li><i class="icon-phone2"></i><span>+123 456 7890</span></li>
-                </ul>
-              </div>
-            </div>
-        </div>
-      </footer>
+      {% include 'footer_student.html' %}
 
     </div>
     <!-- END wrapper -->

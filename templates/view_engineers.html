@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>View Engineers</title>
+    <meta name="description" content="Free Bootstrap Theme by uicookies.com">
+    <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
+    
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <!--[if lt IE 9]>
+      <script src="js/vendor/html5shiv.min.js"></script>
+      <script src="js/vendor/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+      .accordion__button{
+        cursor: pointer;
+        width: 100%;
+        padding: 1px;
+      }
+
+      /* .tr, th, td {
+          padding-inline-start:80px;
+          padding-inline-end: 50px;
+      } */
+      
+      /* table, tr, th, td {
+          padding: 20px;     
+      } */    
+      
+      table{
+        border-collapse: collapse;
+        box-sizing:0 5px 10px lightgrey;
+      }
+      tr{
+        box-shadow:0 5px 10px lightgrey;
+      }
+      .design{
+        box-shadow:0 5px 10px lightgrey;
+        font-size: 17px;
+        text-transform:uppercase;
+        background-color: grey;
+        color: white;
+      }
+
+
+    </style>
+
+
+  </head>
+  <body>
+
+    <div class="probootstrap-search" id="probootstrap-search">
+      <a href="#" class="probootstrap-close js-probootstrap-close"><i class="icon-cross"></i></a>
+      <form action="#">
+        <input type="search" name="s" id="search" placeholder="Search a keyword and hit enter...">
+      </form>
+    </div>
+    
+    <div class="probootstrap-page-wrapper">
+      <!-- Fixed navbar -->
+      
+ <!-- first nav bar -->
+      {% include 'header_hr.html' %}
+
+      {% include 'secondary_navbar_hr.html' %}
+      
+      <section class="probootstrap-section probootstrap-section-colored">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-left section-heading probootstrap-animate">
+              <h1>Engineers</h1>
+            </div>
+          </div>
+        </div>
+      </section>
+
+     
+      
+
+      <section class="probootstrap-section probootstrap-section-sm">
+        <div class="container">
+          <div class="row align-middle" id='EngineerList'>
+            <div class='row'  style='font-weight: bold; padding:20px;'>
+              <div class='col-md-3'> <!--TAKE THE COURSE ID FROM THE TABLE-->
+                User ID
+              </div>
+              <div class='col-md-3'> 
+                User Name
+              </div>
+              <div class='col-md-3'> 
+                User Type
+              </div>
+              <div class='col-md-3'> 
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+
+
+      {% include 'footer_student.html' %}
+
+    </div>
+    <!-- END wrapper -->
+    <script>
+      localStorage.id = 1
+
+      // to use GET request
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+
+            var data = JSON.parse(this.responseText);
+            console.log(data)
+            console.log(data.data.user)
+            
+            //to get the course data from py file
+            users_data = data.data.user
+            
+            // window.location.replace(window.location.href)
+
+            //get course title and push into list
+            var user_id = []
+            var user_name = []
+            var user_type = []
+         
+            for (user in users_data){
+                user_id.push(users_data[user]["UserID"])
+                user_name.push(users_data[user]["UserName"])
+                user_type.push(users_data[user]["UserType"])
+            }
+         
+            console.log(user_id)
+            console.log(user_name)
+            console.log(user_type)
+
+
+            //to input the data into webpage
+
+            var engineer_row= document.getElementById("EngineerList")
+            console.log(engineer_row)
+            for (i in users_data){
+                console.log(i)
+                engineer_row.innerHTML += `
+                      <div class='row'>
+                        <div class='row' style='background-color:rgba(211, 183, 153, 0.5); padding: 20px; box-shadow:0 5px 10px lightgrey;'>
+                          <div class='col-md-3'>${user_id[i]}</div>
+                          
+                          <div class='col-md-3'>${user_name[i]}</div>
+                          <div class='col-md-3'>${user_type[i]}</div>
+                          
+                      
+                          <div class='col-md-3' style='width:10%'><button class="btn btn-link collapsed" data-toggle="collapse" aria-expanded="false">
+                          Show Details </button></div>
+
+                        </div>
+
+                        <div class='row' id="${user_id[i]}" style='padding: 20px; box-shadow:0 5px 10px lightgrey;'></div>
+                      </div>
+                      <br>
+                      `
+                // table.innerHTML += `<table style="width: 1vw">
+                //     <tr>
+                //        <td>${user_id[i]}</td>
+                //         <td>${user_name[i]}</td>
+                //         <td>${user_type[i]}</td>
+
+                //         <td><button class="btn btn-link collapsed" data-toggle="collapse" aria-expanded="false")'>
+                //           Show Details </button></td>
+                          
+                //       </tr>
+                //     </table>
+
+                //     <span id="${user_id[i]}"></span>
+                //     <br><br>
+                //     `
+            } 
+          }
+      };
+      request.open("GET", "http://localhost:5001/users");
+      request.send();
+
+
+
+      // to use GET request
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+
+            var data = JSON.parse(this.responseText);
+            console.log(data)
+            console.log(data.data.learner)
+            // window.location.replace(window.location.href)
+            learner_data = data.data.learner
+
+            //to get course title n push into the course_title list
+            var user_id = []
+            var learner_id = []
+            var course_id = []
+            var status = []
+
+
+            for(learner in learner_data){
+              user_id.push(learner_data[learner]['LearnerID'])
+              learner_id.push(learner_data[learner]['LearnerID'])
+              course_id.push(learner_data[learner]['CourseID'])
+              status.push(learner_data[learner]['ApplicationStatus'])
+            }
+
+            console.log(user_id)
+            console.log(learner_id)
+            console.log(course_id)
+            console.log(status)
+
+
+            // input data into webpage
+
+            for(i in learner_data){
+              console.log(learner_id[i])
+              var table = document.getElementById(user_id[i])
+
+              table.innerHTML   = `
+                  <div class='col-md-6' >Course ID: ${course_id[i]}</div>
+                  <div class='col-md-6' >Status: ${status[i]}</div>
+                  <div class='row'></div>`
+
+              // table.innerHTML = `<table id=${user_id[i]}>
+              //   <tr>
+              //     <td>Learner ID: ${learner_id[i]}</td>
+              //     <td>Course ID: ${course_id[i]}</td>
+              //     <td>Status: ${status[i]}</td>
+              //   </tr>
+              // </table>
+
+              // `
+            }
+            
+            
+          }
+      };
+      request.open("GET", "http://localhost:5001/learners");
+      request.send();
+
+    </script>
+
+    <script src="js/scripts.min.js"></script>
+    <script src="js/main.min.js"></script>
+    <script src="js/custom.js"></script>
+
+  </body>
+</html>

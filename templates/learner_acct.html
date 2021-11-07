@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
+    <title>Account</title>
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
@@ -215,17 +215,17 @@
                 var badge = course_list[i].Badge;
                 var title = course_list[i].CourseTitle;
                 var end_date = new Date(classes[i].EndDate);
-
                 //console.log(course_list[i].CourseTitle)
                 //console.log(classes[i].ClassID)
                 //console.log(end_date.getDate(), end_date.getMonth(), end_date.getFullYear())
+                console.log(`"{{ url_for('static', filename='img/') }}"`)
 
                 // to create more cards with the courses that is completed
                 document.getElementById("user_details").innerHTML += `
                 <div class="col-md-3">
                   <div class="probootstrap-teacher text-center">
                     <figure class="media">
-                      <img src="img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
+                      <img src="/static/img/${badge}" alt="Free Bootstrap Template by uicookies.com" class="img-responsive">
                     </figure>
                     <div class="text">
                       <h3>${title}</h3>
