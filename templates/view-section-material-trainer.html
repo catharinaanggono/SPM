@@ -164,7 +164,7 @@
                           </div>
                           `
                         }
-                        document.getElementById(`${j}-${sectionNameNoSpace}-material`).addEventListener('click', function(){removeMat(courseID, classID, sectionID, materialContent)})
+                        document.getElementById(`remove-material-${j}-${sectionNameNoSpace}`).addEventListener('click', function(){removeMat(courseID, classID, sectionID, materialContent)})
 
                     }
                     var requestGetQuiz = new XMLHttpRequest()
