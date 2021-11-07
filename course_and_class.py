@@ -1611,16 +1611,20 @@ def create_class():
     db.session.add(cl)
     db.session.commit()
     print(cl.json())
+
     for TrainerID in TrainerIDList:
         classTrainer = TrainerClass(CourseID, cl.ClassID, TrainerID)
         print(classTrainer)
         db.session.add(classTrainer)
+        
     db.session.commit()
 
     return jsonify(
         {
             "code": 201,
-            "message": "Class is successfully created"
+            "message": "Class is successfully created",
+            "class": cl.json(),
+            "trainers": TrainerIDList
         }
     ), 201
 
