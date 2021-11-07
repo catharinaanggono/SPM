@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '']], 
+                extensions: [], userRemoteConfigs: [[credentialsId: 'cat', 
+                url: 'git@github.com:catharinaanggono/SPM.git']]])            }
+        }
+        stage('Test') {
+            steps {
+                sh '''
+                pip3 install Flask-Testing
+                pip3 install Flask-SQLAlchemy
+                pip3 install flask-cors
+                pip3 install python-dotenv
+                python3 integration_tests_wellson.py
+                python3 integration_tests_catharina.py
+                python3 integration_test_riv.py
+                python3 integration_tests_jess.py
+                '''
+            }
+        }
+    }
+}
