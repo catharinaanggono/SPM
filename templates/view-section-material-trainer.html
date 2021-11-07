@@ -29,9 +29,29 @@
       }
     </style>
 
+    <script>
+      function removeMat(courseID, classID, sectionID, materialContent){
+          requestBody = {
+            "CourseID": courseID,
+            "ClassID": classID,
+            "SectionID": sectionID,
+            "MaterialContent": materialContent
+          }
+          request = new XMLHttpRequest()
+          request.onreadystatechange = function(){
+            if (this.status == 200 && this.readyState == 4){
+              window.alert('FILE HAS BEEN REMOVED.')
+              location.reload()
+            }
+          }
+          request.open('POST', HOST + '/remove-material')
+          request.setRequestHeader("Content-type", "application/json");          
+          request.send(JSON.stringify(requestBody))
+        }
+    </script>
     
   </head>
-  <body>
+  <body onload="loadEvents()">
 
     <div class="probootstrap-search" id="probootstrap-search">
       <a href="#" class="probootstrap-close js-probootstrap-close"><i class="icon-cross"></i></a>
@@ -87,7 +107,7 @@
 
     
     <script>
-        
+        var eventLists = {}
         var request = new XMLHttpRequest()
         request.onreadystatechange = function(){
             if (this.readyState == 4 && this.status == 200){
@@ -132,7 +152,7 @@
 
                     for (let j = 0; j < secMatList.length; j++){
                         materialContent = secMatList[j].MaterialContent
-
+                        console.log(materialContent)
                         if (!materialContent.includes('</a>')){
                           document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
                           <div class="card-body" style="">
@@ -148,6 +168,7 @@
                               <hr>
                           </div>
                           `
+
                         }
                         else{
                           console.log(materialContent)
@@ -165,8 +186,10 @@
                           </div>
                           `
                         }
-                        document.getElementById(`remove-material-${j}-${sectionNameNoSpace}`).addEventListener('click', function(){removeMat(courseID, classID, sectionID, materialContent)})
-
+                        eventLists[`remove-material-${j}-${sectionNameNoSpace}`] = [courseID, classID, sectionID, materialContent]
+                        // document.getElementById(`remove-material-${j}-${sectionNameNoSpace}`).addEventListener('click', function(){
+                        //   removeMat(courseID, classID, sectionID, materialContent)}, 
+                        // false)
                     }
                     var requestGetQuiz = new XMLHttpRequest()
                     requestGetQuiz.onreadystatechange = function(){
@@ -207,27 +230,19 @@
           window.location.href = HOST + `/add-section-material/${CourseID}/${ClassID}/${SectionID}/${SectionName}`
         }
 
-        function removeMat(courseID, classID, sectionID, materialContent){
-          requestBody = {
-            "CourseID": courseID,
-            "ClassID": classID,
-            "SectionID": sectionID,
-            "MaterialContent": materialContent
-          }
-          request = new XMLHttpRequest()
-          request.onreadystatechange = function(){
-            if (this.status == 200 && this.readyState == 4){
-              window.alert('FILE HAS BEEN REMOVED.')
-              location.reload()
-            }
-          }
-          request.open('POST', HOST + '/remove-material')
-          request.setRequestHeader("Content-type", "application/json");          
-          request.send(JSON.stringify(requestBody))
-        }
+        
 
         function createSection(CourseID, ClassID){          
           window.location.href = HOST + `/create-new-section/${CourseID}/${ClassID}`
+        }
+
+        function loadEvents(){
+          for (event in eventLists){
+            console.log(event)
+            document.getElementById(event).addEventListener('click', function(){
+              removeMat(eventLists[event][0], eventLists[event][1], eventLists[event][2], eventLists[event][3])
+            })
+          }
         }
     </script>
   </body>
