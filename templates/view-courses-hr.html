@@ -14,6 +14,8 @@
     <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
+
 
 
     <!--[if lt IE 9]>
@@ -731,7 +733,7 @@
           }
         }
       }
-      request.open('GET', 'http://localhost:5001/courses-all/' + UserID)
+      request.open('GET', HOST + '/courses-all/' + UserID)
       request.send()
 
       function enrolClass(CourseID, ClassID, UserID){
@@ -753,7 +755,7 @@
           }
           
         }
-        request.open('POST', 'http://localhost:5001/self-enrol')
+        request.open('POST', HOST + '/self-enrol')
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
       }
@@ -809,7 +811,7 @@
           }
         }
       };
-      request.open('GET', 'http://localhost:5002/learner_ongoing_courses/' + UserID, false);
+      request.open('GET', HOST + '/learner_ongoing_courses/' + UserID, false);
       request.send();
     </script>
   </body>

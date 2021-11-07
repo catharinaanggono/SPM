@@ -26,8 +26,75 @@
         textarea{
             width: 100%;
             height:10%;
-            
         }
+        .topic{
+          /* background-color: rgb(83, 77, 99); */
+          background-color: rgb(137, 136, 141);
+          box-shadow: 0 5px 10px lightgrey;
+          padding: 10px;
+          height: 33px;
+          color: white;
+        }
+
+        .discussionheader{
+          background-color: rgb(137, 136, 141);
+          padding: 10px;
+          height: 25px;
+          color: white;
+        }
+        .user{
+          font-size: 18px;
+          font: weight 600px;;
+          /* font-family:'Times New Roman', Times, serif */
+        }
+        .box{
+          border: 2px solid rgb(61, 60, 60);
+          width: auto;
+          height: 200px;
+          font-size: 20px;
+          padding: 10px;
+        }
+        .user{
+          text-align: left;
+          background-color: rgb(247, 247, 247);
+          height:45px;
+          padding: 10px;
+        }
+        .response{
+          background-color: rgb(253, 251, 251);  
+        }
+        button{
+          background-color: rgb(104, 103, 103);
+          color: white;
+        }
+        textarea{
+          font-size: 15px;
+          padding: 10px;
+        }
+        .thread {
+          background-color: rgb(238, 236, 236);
+          height: 200px;
+          border: 1px solid black;
+          padding: 10px;
+        }
+        table{
+          background-color: rgb(247, 247, 247);
+          width: 100%;
+          border: 1px solid black;
+          border-collapse: collapse;
+          /* padding: 10px; */
+        }
+        .discussions{
+          /* padding: 10px; */
+          border: 1px solid black;
+          width: 100%;
+          /* padding:5px; */
+        }
+        th {
+          padding: 5px;
+        }
+     
+
     </style>
   </head>
   <body>
@@ -125,78 +192,9 @@
           <div class="row">
             <div class="col-md-12"> 
               <div class="row probootstrap-gutter0">
-                <!-- <div class="col-md-4" id="probootstrap-sidebar"> -->
-                  <!-- <div class="probootstrap-sidebar-inner probootstrap-overlap probootstrap-animate">
-                    
-                  </div>
-                </div>
-                <div class="probootstrap-section probootstrap-section-sm">
-                    
-                    
-                  <h2>Description</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime rerum possimus maiores, natus fugiat quibusdam dolorem. Dolore, odit ipsum, commodi distinctio repellendus vel tempore accusamus ea assumenda totam aut tempora. Illum sed harum, doloremque magnam nostrum. Fuga tempora corrupti unde ratione, placeat voluptates dicta asperiores est, ad voluptatem dolor, delectus sapiente voluptatum! Rerum magnam ducimus voluptas dolorum consectetur ex facilis quaerat sapiente eaque consequuntur perspiciatis nesciunt tenetur quibusdam corrupti voluptates consequatur repudiandae, quisquam aperiam veniam. Architecto voluptas blanditiis provident modi cumque a eius nam dignissimos numquam ducimus earum odit ipsam, reiciendis assumenda id quasi dolore, totam impedit molestias? Alias, ipsa!</p>
-                  <p>Velit natus alias eligendi architecto rem, itaque distinctio? Excepturi obcaecati fuga ratione. Dolore in ipsam rem ullam nemo error aperiam dolores eius, doloremque blanditiis placeat fugiat libero id atque, recusandae, voluptate laboriosam, distinctio omnis ab. Eius obcaecati, laudantium ex voluptatum voluptas, cum vitae molestiae quam est omnis nulla, quis velit? Esse natus tempore molestias deserunt, tempora illum labore, fuga animi totam dolore doloribus doloremque laudantium velit distinctio, non cumque dolorem delectus quia quibusdam? Amet, consectetur. Reprehenderit unde, eveniet temporibus, quae possimus magni. Dolore quo eveniet, distinctio dicta quisquam? Aliquid libero dolore provident, beatae odit facilis quasi dolorum sit ad minus!</p>
-                  <p>Tenetur, soluta natus porro, cumque vitae, iste accusamus beatae repudiandae quidem magnam sunt, nihil reprehenderit facere eveniet non sint aliquid. Ipsam totam nostrum, modi veritatis quidem maiores dolor minima incidunt non ratione qui quas, quasi aut sit obcaecati iure. Corporis, rem? Reprehenderit sequi, tenetur, libero nobis beatae ut doloremque obcaecati ipsa? Itaque numquam ratione et veniam porro magnam expedita ad laboriosam dolorum debitis omnis mollitia id eum minus necessitatibus ipsam consequuntur sed tempora assumenda, repudiandae culpa atque? Ad ut porro praesentium, earum voluptatum maxime, deserunt, omnis dolorem veniam cumque et officia veritatis, nam perferendis ex facilis sit sapiente at accusamus?</p>
-                  <p><a href="#" class="btn btn-primary">Enroll with this course now</a> <span class="enrolled-count">2,928 students enrolled</span></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      <section class="probootstrap-cta">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-              <h2 class="probootstrap-animate" data-animate-effect="fadeInRight">Get your admission now!</h2>
-              <a href="#" role="button" class="btn btn-primary btn-lg btn-ghost probootstrap-animate" data-animate-effect="fadeInLeft">Enroll</a>
-            </div>
-          </div>
-        </div>
-      </section>
-      <footer class="probootstrap-footer probootstrap-bg">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="probootstrap-footer-widget">
-                <h3>About The School</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro provident suscipit natus a cupiditate ab minus illum quaerat maxime inventore Ea consequatur consectetur hic provident dolor ab aliquam eveniet alias</p>
-                <h3>Social</h3>
-                <ul class="probootstrap-footer-social">
-                  <li><a href="#"><i class="icon-twitter"></i></a></li>
-                  <li><a href="#"><i class="icon-facebook"></i></a></li>
-                  <li><a href="#"><i class="icon-github"></i></a></li>
-                  <li><a href="#"><i class="icon-dribbble"></i></a></li>
-                  <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                  <li><a href="#"><i class="icon-youtube"></i></a></li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-3 col-md-push-1">
-              <div class="probootstrap-footer-widget">
-                <h3>Links</h3>
-                <ul>
-                  <li><a href="#">Home</a></li>
-                  <li><a href="#">Courses</a></li>
-                  <li><a href="#">Teachers</a></li>
-                  <li><a href="#">News</a></li>
-                  <li><a href="#">Contact</a></li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="probootstrap-footer-widget">
-                <h3>Contact Info</h3>
-                <ul class="probootstrap-contact-info">
-                  <li><i class="icon-location2"></i> <span>198 West 21th Street, Suite 721 New York NY 10016</span></li>
-                  <li><i class="icon-mail"></i><span>info@domain.com</span></li>
-                  <li><i class="icon-phone2"></i><span>+123 456 7890</span></li>
-                </ul>
-              </div>
-            </div>
-           
-          </div>
+
+
+               
           <!-- END row -->
           
         </div>
@@ -206,42 +204,57 @@
             <div class="row">
               <div class="col-md-12 forum">
                 <div id="div1" style="height: 2000px; width: 1000px; position:relative;">
+
+                  <div class="header" style="border: 2px solid black; padding: 10px;">
+                    <div class="topic" id="topic" style="font-size: 30px;">
+                      Topic: 
+                    </div>
+                    <div class="topic" id="forumid" style="text-align: right;">Forum ID: </div>
                     
-                        <div class="header">
-                            <h4 class="title">
-                                Thread 1
-                            </h4
-                            <div class="bottom">
-                                <p class="timestamp">
-                                    10/10/2021
-                
-                                </p>
-                                <p class="comment-count">
-                                    4 Comments
-                                </p>
-                            </div>
-                            <textarea></textarea>
-                            <button>Add Comment</button>
-                        
-                
-                        <div class="header">
-                            <h4 class="title">
-                                Thread 2
-                            </h4
-                            <div class="bottom">
-                                <p class="timestamp">
-                                    09/20/2021
-                
-                                </p>
-                                <p class="comment-count">
-                                    10 Comments
-                                </p>
-                            </div>
-                        
-                        <textarea></textarea>
-                        <button>Add Comment</button>
+                    <div class="user" id="user">Username: </div>
+                    <div class="user" id="time" style="text-align: right;"></div>
+                    <br>
+                    <div class="box" id="details"></div>
+                  </div>
+
+                  <br>
+
+                  <div class="header2" style="border: 2px solid black; padding: 10px;">
+                    <div class="discussionheader" id="discussionheader" style="font-size: 25px;">Discussion</div>
+                    <div class="discussionheader" id="forumid" style="text-align: right;"> </div>
+
                     
 
+                    <table id="discussions" class="tablediscussion" style="padding: 10px;">
+                      <tr class="tabledesign" style="padding: 10px;">
+                        <th></th>
+                        <th style="text-align: right;"></th>
+                        
+                      </tr>
+
+                      <!-- <tr>Did you check</tr> -->
+
+                      
+
+                    </table>
+
+
+                  </div>
+                  
+
+                  <br><br><br>
+                  <div class="response">
+                    <div class="textbox" id="textbox">
+                      <textarea style="height: 110px;"></textarea>
+                    </div>
+
+                    <form action="submit" method="POST">
+                      <input type="submit">
+                    </form>
+                   
+                  </div>
+                    
+                       
 
 
 
@@ -249,6 +262,8 @@
 
                
               </div>
+
+
               <div class="col-md-4 probootstrap-back-to-top">
                 <!-- <p><a href="#" class="js-backtotop">Back to top <i class="icon-arrow-long-up"></i></a></p> -->
               </div>
@@ -259,6 +274,200 @@
 
     </div>
     <!-- END wrapper -->
+
+    <script>
+      localStorage.id = 1
+
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+          var data = JSON.parse(this.responseText);
+          console.log(data)
+          console.log(data.data.forum)
+          forum_data = data.data.forum
+
+          var course_id = []
+          var forum_id = []
+          var forum_title = []
+          var user_id = []
+          var forum_details = []
+          var forum_created = []
+         
+
+          for(forum in forum_data){
+            course_id.push(forum_data[forum]['CourseID'])
+            forum_id.push(forum_data[forum]['ForumID'])
+            forum_title.push(forum_data[forum]['ForumTitle'])
+            user_id.push(forum_data[forum]['UserID'])
+            forum_details.push(forum_data[forum]['ForumDetails'])
+            forum_created.push(forum_data[forum]['ForumCreated'])
+          }
+
+          console.log(course_id)
+          console.log(forum_id)
+          console.log(forum_title)
+          console.log(user_id)
+          console.log(forum_details)
+          console.log(forum_created)
+
+          
+
+          var id = document.getElementById("forumid")
+          console.log(id)
+          id.innerHTML += `${forum_id[0]}
+          `
+          var topic = document.getElementById("topic")
+          topic.innerHTML += `${forum_title[0]}
+          `
+          var userid = document.getElementById("user")
+          userid.innerHTML += `${user_id[0]}
+          `
+          var details = document.getElementById("details")
+          details.innerHTML += `${forum_details[0]}
+          `
+          var time = document.getElementById("time")
+          time.innerHTML += `${forum_created[0]}
+          `
+
+          // var id = document.getElementById("forumid")
+          // for(i in forum_id){
+          //   id.innerHTML += `${forum_id[i]}
+          //   `
+          // }
+
+          // var userid = document.getElementById("user")
+          // for(i in user_id){
+          //   userid.innerHTML += `${user_id[i]}
+          //   `
+          // }
+
+          // var topic = document.getElementById("topic")
+          // for(i in forum_title){
+          //   console.log(forum_title[i])
+          //   topic.innerHTML += `${forum_title[i]}
+          //   `
+          // }
+          // var details = document.getElementById("details")
+          // for(i in forum_details){
+          //   console.log(forum_details[i])
+          //   details.innerHTML += `${forum_details}
+          //   `
+          // }
+          // var time = document.getElementById("time")
+          // for(i in forum_created){
+          //   console.log(forum_created[i])
+          //   time.innerHTML += `${forum_created}
+          //   `
+          // }
+          
+        }
+      };
+      request.open("GET", "http://localhost:5003/forum");
+      request.send();
+
+
+
+
+
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+          var data = JSON.parse(this.responseText);
+          console.log(data)
+          console.log(data.data.reply)
+          forum_reply_data = data.data.reply
+
+          var forum_id = []
+          var reply_id = []
+          var reply_content = []
+          var user_id = []
+          var reply_time = []
+
+          for (reply in forum_reply_data){
+            forum_id.push(forum_reply_data[reply]['ForumID'])
+            reply_id.push(forum_reply_data[reply]['ReplyID'])
+            reply_content.push(forum_reply_data[reply]['ReplyContent'])
+            user_id.push(forum_reply_data[reply]['UserID'])
+            reply_time.push(forum_reply_data[reply]['ReplyTime'])
+          }
+
+          console.log(forum_id)
+          console.log(reply_id)
+          console.log(reply_content)
+          console.log(user_id)
+          console.log(reply_time)
+
+          // var id = document.getElementById("forum_id")
+          // for (i in forum_id){
+          //   id.innerHTML += `${forum_id}
+          //   `
+          // }
+
+          var table = document.getElementById("discussions")
+          for(i in reply_content){
+            console.log(i)
+            console.log(reply_content[i])
+            table.innerHTML += `<table class="discussions">
+              <tr class="border">
+                <th style="padding-left:10px;">${user_id[i]}</th>
+                <th style="text-align:right; padding-right:10px;">${reply_time[i]}</th>
+              <tr>
+              <tr class="border" style="padding: 10px;">
+                <td style="padding-left:10px;">${reply_content[i]}</td>
+              </tr>
+              <br>
+            `
+          }
+        }
+
+      };
+      request.open("GET", "http://localhost:5003/forumreply");
+      request.send();
+
+
+
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function (){
+        if (this.readyState == 4 && this.status == 200){
+
+          var data = JSON.parse(this.responseText);
+          console.log(data)
+          console.log(data.data.user)
+          user_data = data.data.user
+
+          var user_id =[]
+          var user_name = []
+          var user_type = []
+
+          for (user in user_data){
+            user_id.push(user_data[user]['UserID'])
+            user_name.push(user_data[user]['UserName'])
+            user_type.push(user_data[user]['UserType'])
+          }
+
+          console.log(user_id)
+          console.log(user_name)
+          console.log(user_type)
+      
+      
+      //     for (i in user_id){
+      //       console.log(user_id[i])
+      //       if(user_id[i] === userid_table[i]){
+      //         pass
+      //       }
+      //     }
+
+        }
+      };
+      request.open("GET", "http://localhost:5003/users");
+      request.send();
+
+    </script>
     
 
     <script src="js/scripts.min.js"></script>
@@ -268,45 +477,3 @@
   </body>
 </html>
 
-
-
-
-
-
-<!-- <body>
-    <ol>
-        <li class="row">
-            <a href="/item">
-            <h4 class="title">
-                Thread 1
-            </h4
-            <div class="bottom">
-                <p class="timestamp">
-                    10/10/2021
-
-                </p>
-                <p class="comment-count">
-                    4 Comments
-                </p>
-            </div>
-          </a>
-        </li>
-
-        <li class="row">
-            <a href="/item">
-            <h4 class="title">
-                Thread 2
-            </h4
-            <div class="bottom">
-                <p class="timestamp">
-                    09/20/2021
-
-                </p>
-                <p class="comment-count">
-                    10 Comments
-                </p>
-            </div>
-          </a>
-        </li>
-    </ol>
-</body> -->

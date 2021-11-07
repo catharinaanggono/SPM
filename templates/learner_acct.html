@@ -13,6 +13,8 @@
     <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
+
 
     <!--[if lt IE 9]>
       <script src="js/vendor/html5shiv.min.js"></script>
@@ -187,7 +189,7 @@
             
           } 
       };
-      request.open("GET", `http://localhost:5001/user/{{ UserID }}`, true); //hardcoded userid!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      request.open("GET", HOST + `/user/{{ UserID }}`, true); //hardcoded userid!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       request.send();
 
 
@@ -243,7 +245,7 @@
               }
             }
           };
-        request.open("POST", "http://localhost:5001/learner-courses")
+        request.open("POST", HOST + "/learner-courses")
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
       }

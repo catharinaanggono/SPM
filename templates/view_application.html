@@ -16,6 +16,8 @@
     <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
+
 
   
     <style>
@@ -145,7 +147,7 @@
         }
 
       };
-      request.open("GET", "http://localhost:5001/applications")
+      request.open("GET", HOST + "/applications")
       request.send();
       
 
@@ -182,7 +184,7 @@
             }
         };
         // console.log(JSON.stringify(send_value))
-        request.open("POST", "http://localhost:5001/accept_application")
+        request.open("POST", HOST + "/accept_application")
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
 
@@ -230,7 +232,7 @@
             }
         };
         // console.log(JSON.stringify(send_value))
-        request.open("POST", "http://localhost:5001/reject_application")
+        request.open("POST", HOST + "/reject_application")
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
 
