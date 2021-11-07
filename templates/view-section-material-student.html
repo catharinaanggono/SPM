@@ -31,8 +31,22 @@
 
     
   </head>
-  <body>
+  <body onload='replaceLink()'>
+    <script>
+      function replaceLink(){
+        var anchor = document.getElementsByTagName('a')
+        for (anc of anchor){
+            anc.href = anc.href.replace('http://localhost:5001', HOST)
+            console.log(anc.href)
+        }
+      }
 
+      function openMaterial(SectionID, file){
+        request = new XMLHttpRequest()
+        request.open('GET', HOST + `/open-material/{{ CourseID }}/{{ ClassID }}/${SectionID}/${file}/1`)
+        request.send()
+      }
+    </script>
     <div class="probootstrap-search" id="probootstrap-search">
       <a href="#" class="probootstrap-close js-probootstrap-close"><i class="icon-cross"></i></a>
       <form action="#">
@@ -77,11 +91,14 @@
         var allowedSections = []
         var request = new XMLHttpRequest()
         request.onreadystatechange = function(){
-          data = JSON.parse(this.responseText)['allowed_sections']
-          allowedSections = data
+          if (this.status == 200 && this.readyState == 4){
+            data = JSON.parse(this.responseText)['allowed_sections']
+            allowedSections = data
+          }
         }
-        request.open('GET', HOST + '/get-learner-quiz/1/{{ CourseID }}/{{ ClassID }}') // '1' refers to LearnerID --> currently for test purposes
+        request.open('GET', HOST + '/get-learner-quiz/1/{{ CourseID }}/{{ ClassID }}', false) // '1' refers to LearnerID --> currently for test purposes
         request.send()
+        
         var request = new XMLHttpRequest()
         request.onreadystatechange = function(){
             if (this.readyState == 4 && this.status == 200){
@@ -127,6 +144,8 @@
                     progressBarList = []
                     var original = ''
                     for (let j = 0; j < secMatList.length; j++){
+                        materialId = secMatList[j].MaterialID
+                        materialTitle = secMatList[j].MaterialTitle
                         materialContent = secMatList[j].MaterialContent
                         original = 'NOT OPENED'
                         var requestProgress = new XMLHttpRequest()
@@ -143,14 +162,14 @@
 
                           }
                         }
-                        requestProgress.open("GET", HOST + `/check-opened-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}/1`, false)
+                        requestProgress.open("GET", HOST + `/check-opened-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialId}/1`, false)
                         requestProgress.send()
-                        console.log(progressBarList)
+                        
                         document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
                         <div class="card-body" style="">
                             <div class='row'>
                               <div class ='col-md-8'>
-                                <span style="width:80%"> <b> <a href = 'http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
+                                <span style="width:80%"> <b> <a href='http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialId}/1'> ${materialTitle} </a> </b> </span>
                               </div>
                               <div class='col-md-4'>
                                 <span> ${original} </span>
@@ -225,14 +244,10 @@
                 
             }
         }
-        request.open('GET', HOST + '/view-section/{{ CourseID }}/{{ ClassID }}')
+        request.open('GET', HOST + '/view-section/{{ CourseID }}/{{ ClassID }}', false)
         request.send()
 
-      var anchor = document.getElementsByTagName('a')
-      for (anc of anchor){
-          anc.href = anc.href.replace('http://localhost:5001', HOST)
-          console.log(anc.href)
-      }
+    
     </script>
   </body>
 </html>

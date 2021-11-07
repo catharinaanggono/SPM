@@ -51,7 +51,7 @@
     </script>
     
   </head>
-  <body onload="loadEvents()">
+  <body onload="loadEvents(); replaceLink();">
 
     <div class="probootstrap-search" id="probootstrap-search">
       <a href="#" class="probootstrap-close js-probootstrap-close"><i class="icon-cross"></i></a>
@@ -151,40 +151,26 @@
                     secMatList = data[idx].SectionMaterialList
 
                     for (let j = 0; j < secMatList.length; j++){
+                        materialId = secMatList[j].MaterialID
+                        materialTitle = secMatList[j].MaterialTitle
                         materialContent = secMatList[j].MaterialContent
                         console.log(materialContent)
-                        if (!materialContent.includes('</a>')){
-                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
-                          <div class="card-body" style="">
-                              <div class='row'>
-                                <div class ='col-md-8'>
-                                  <span style="width:80%"> <b> <a href='http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
-                                </div>
-                                <div class='col-md-4'>
-                                  <button id='remove-material-${j}-${sectionNameNoSpace}'> Remove Material </button>
-                                </div>
+                        document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
+                        <div class="card-body" style="">
+                            <div class='row'>
+                              <div class ='col-md-8'>
+                                <span style="width:80%"> <b> <a href='http://localhost:5001/view-material-trainer/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialId}'> ${materialTitle} </a> </b> </span>
                               </div>
-                              <hr>
-                          </div>
-                          `
+                              <div class='col-md-4'>
+                                <button id='remove-material-${j}-${sectionNameNoSpace}'> Remove Material </button>
+                              </div>
+                            </div>
+                            <hr>
+                        </div>
+                        `
 
-                        }
-                        else{
-                          console.log(materialContent)
-                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
-                          <div class="card-body" style="">
-                              <div class='row'>
-                                <div class ='col-md-8'>
-                                  <span style="width:80%"> <b> ${materialContent} </b> </span>
-                                </div>
-                                <div class='col-md-4'>
-                                  <button id='remove-material-${j}-${sectionNameNoSpace}' > Remove Material </button>
-                                </div>
-                              </div>
-                              <hr>
-                          </div>
-                          `
-                        }
+                        
+                        
                         eventLists[`remove-material-${j}-${sectionNameNoSpace}`] = [courseID, classID, sectionID, materialContent]
                         // document.getElementById(`remove-material-${j}-${sectionNameNoSpace}`).addEventListener('click', function(){
                         //   removeMat(courseID, classID, sectionID, materialContent)}, 
@@ -243,10 +229,12 @@
             })
           }
         }
-        var anchor = document.getElementsByTagName('a')
-        for (anc of anchor){
-            anc.href = anc.href.replace('http://localhost:5001', HOST)
-            console.log(anc.href)
+        function replaceLink(){
+          var anchor = document.getElementsByTagName('a')
+          for (anc of anchor){
+              anc.href = anc.href.replace('http://localhost:5001', HOST)
+              console.log(anc.href)
+          }
         }
     </script>
   </body>

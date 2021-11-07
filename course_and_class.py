@@ -1,4 +1,4 @@
-from flask import Flask, json, request, jsonify, render_template, abort
+from flask import Flask, json, request, jsonify, render_template, abort, redirect
 from flask.globals import session
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
@@ -70,10 +70,12 @@ class Course(db.Model):
 class SectionMaterial(db.Model):
     __tablename__ = 'sectionMaterial'
 
-    CourseID = db.Column(db.Integer, primary_key=True)
-    ClassID = db.Column(db.Integer, primary_key=True)
-    SectionID = db.Column(db.Integer, primary_key=True)
-    MaterialContent = db.Column(db.String(255), primary_key=True)
+    CourseID = db.Column(db.Integer)
+    ClassID = db.Column(db.Integer)
+    SectionID = db.Column(db.Integer)
+    MaterialID = db.Column(db.Integer, primary_key=True)
+    MaterialTitle = db.Column(db.String(255))
+    MaterialContent = db.Column(db.String(255))
     '''
     CourseID INT NOT NULL,
     ClassID INT NOT NULL,
@@ -81,10 +83,11 @@ class SectionMaterial(db.Model):
     MaterialContent TEXT NOT NULL,
     '''
 
-    def __init__(self, CourseID, ClassID, SectionID, MaterialContent):
+    def __init__(self, CourseID, ClassID, SectionID, MaterialTitle, MaterialContent):
         self.CourseID = CourseID
         self.ClassID = ClassID
         self.SectionID = SectionID
+        self.MaterialTitle = MaterialTitle
         self.MaterialContent = MaterialContent
 
     def create_path(self):
@@ -107,27 +110,27 @@ class SectionMaterial(db.Model):
             os.mkdir(section_path)
     
     def json(self):
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialContent": self.MaterialContent}
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialID": self.MaterialID, "MaterialTitle": self.MaterialTitle, "MaterialContent": self.MaterialContent}
 
 
 class MaterialProgress(db.Model):
-    __tablename__ = 'materialProgress'
+    __tablename__ = 'MaterialProgress'
 
-    CourseID = db.Column(db.Integer, primary_key=True)
-    ClassID = db.Column(db.Integer, primary_key=True)
-    SectionID = db.Column(db.Integer, primary_key=True)
-    MaterialContent = db.Column(db.String(255), primary_key=True)
+    CourseID = db.Column(db.Integer)
+    ClassID = db.Column(db.Integer)
+    SectionID = db.Column(db.Integer)
+    MaterialID = db.Column(db.Integer, primary_key=True)
     LearnerID = db.Column(db.Integer, primary_key=True)
 
-    def __init__(self, CourseID, ClassID, SectionID, MaterialContent, LearnerID):
+    def __init__(self, CourseID, ClassID, SectionID, MaterialID, LearnerID):
         self.CourseID = CourseID
         self.ClassID = ClassID
         self.SectionID = SectionID
-        self.MaterialContent = MaterialContent
+        self.MaterialID = MaterialID
         self.LearnerID = LearnerID
 
     def json(self):
-        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialContent": self.MaterialContent, "LearnerID": self.LearnerID}
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialID": self.MaterialID, "LearnerID": self.LearnerID}
 
 class CourseClass(db.Model):
     __tablename__ = 'class'
@@ -533,12 +536,12 @@ def show_section(CourseID, ClassID):
         }
 
 
-@app.route('/open-material/<string:CourseID>/<string:ClassID>/<string:SectionID>/<string:MaterialContent>/<string:LearnerID>')
-def open_material(CourseID, ClassID, SectionID, MaterialContent, LearnerID):
-    opened = MaterialProgress.query.filter_by(CourseID = CourseID, ClassID=ClassID, SectionID=SectionID, MaterialContent = MaterialContent, LearnerID = LearnerID).first()
+@app.route('/open-material/<CourseID>/<ClassID>/<SectionID>/<string:MaterialID>/<string:LearnerID>')
+def open_material(CourseID, ClassID, SectionID, MaterialID, LearnerID):
+    opened = MaterialProgress.query.filter_by(MaterialID = MaterialID, LearnerID = LearnerID).first()
     if not opened:
         try:
-            db.session.add(MaterialProgress(CourseID, ClassID, SectionID, MaterialContent, LearnerID))
+            db.session.add(MaterialProgress(CourseID, ClassID, SectionID, MaterialID, LearnerID))
             db.session.commit()
             return jsonify({
                 "code": 201,
@@ -556,9 +559,9 @@ def open_material(CourseID, ClassID, SectionID, MaterialContent, LearnerID):
         })
 
 
-@app.route('/check-opened-material/<string:CourseID>/<string:ClassID>/<string:SectionID>/<string:MaterialContent>/<string:LearnerID>')
-def check_opened(CourseID, ClassID, SectionID, MaterialContent, LearnerID):
-    opened = MaterialProgress.query.filter_by(CourseID = CourseID, ClassID=ClassID, SectionID=SectionID, MaterialContent = MaterialContent, LearnerID = LearnerID).first()
+@app.route('/check-opened-material/<string:CourseID>/<string:ClassID>/<string:SectionID>/<string:MaterialID>/<string:LearnerID>')
+def check_opened(CourseID, ClassID, SectionID, MaterialID, LearnerID):
+    opened = MaterialProgress.query.filter_by(CourseID = CourseID, ClassID=ClassID, SectionID=SectionID, MaterialID = MaterialID, LearnerID = LearnerID).first()
     if opened:
         return jsonify({
             'code': 200,
@@ -587,9 +590,11 @@ def add_material_link(CourseID, ClassID, SectionID):
     for a_link in data:
         material_title = a_link['title']
         material_content_raw = a_link['link']
+        
+        
         if security_input_check(material_title) and security_input_check(material_content_raw):
-            material_content = '<a href="https://' + material_content_raw + '"> ' + material_title + '</a>'
-            section_material = SectionMaterial(CourseID, ClassID, SectionID, material_content)
+            
+            section_material = SectionMaterial(CourseID, ClassID, SectionID, material_title, material_content_raw)
             db.session.add(section_material)
     try:
         db.session.commit()
@@ -608,22 +613,21 @@ def add_material_link(CourseID, ClassID, SectionID):
 def add_material_file(CourseID, ClassID, SectionID):
     files = request.files
     for file in files:
-        section_material = SectionMaterial(CourseID, ClassID, SectionID, files[file].filename)
+        section_material = SectionMaterial(CourseID, ClassID, SectionID, files[file].filename, files[file].filename)
         section_material.create_path()
         files[file].save('static/course_material/{}/{}/{}/{}'.format(CourseID, ClassID, SectionID, files[file].filename))
         db.session.add(section_material)
     try:
         db.session.commit()
     except:
-        return {
-            'code': 500,
-            'message': 'Upload Files Failed'
-        }
-    return {
-        'code': 201,
-        'message': 'Upload Files Sucessful'
-    }
-
+        return jsonify(
+            {
+                "code": 500
+            }
+        )
+    return jsonify({
+        "code": 201
+    })
 
 @app.route('/create-section', methods=['POST'])
 def create_section():
@@ -1847,15 +1851,34 @@ def section_material_template(CourseID, ClassID):
     return render_template('view-section-material-student.html', CourseID=CourseID, ClassID=ClassID)
 
 
-@app.route('/view-material/<CourseID>/<ClassID>/<SectionID>/<url>')
-def view_material(CourseID, ClassID, SectionID, url):
+@app.route('/view-material/<CourseID>/<ClassID>/<SectionID>/<url>/<userid>')
+def view_material(CourseID, ClassID, SectionID, url, userid):
     allowed_sections = get_quiz_attempts('1', CourseID, ClassID)['allowed_sections']
     
     if int(SectionID) in allowed_sections:
-        return render_template('view-file.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID, url=url)
+        sectMat = SectionMaterial.query.filter_by(MaterialID=url).first()
+        if userid:
+            open_material(CourseID, ClassID, SectionID, url, userid)
+            
+        content = sectMat.MaterialContent
+        if 'https://' in content:
+            return redirect(content)
+        return render_template('view-file.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID, url=content)
     else:
         abort(403)
 
+@app.route('/view-material-trainer/<CourseID>/<ClassID>/<SectionID>/<url>')
+def view_material_trainer(CourseID, ClassID, SectionID, url):
+    allowed_sections = get_quiz_attempts('1', CourseID, ClassID)['allowed_sections']
+    
+    if int(SectionID) in allowed_sections:
+        sectMat = SectionMaterial.query.filter_by(MaterialID=url).first()
+        content = sectMat.MaterialContent
+        if 'https://' in content:
+            return redirect(content)
+        return render_template('view-file.html', CourseID=CourseID, ClassID=ClassID, SectionID=SectionID, url=content)
+    else:
+        abort(403)
 
 @app.route('/after-assign')
 def after_assign():

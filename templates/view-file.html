@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
+    <title> View File </title>
     <meta name="description" content="Free Bootstrap Theme by uicookes.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -81,7 +81,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12 text-left section-heading probootstrap-animate">
-              <h1>About The School</h1>
+              <h1> View File </h1>
             </div>
           </div>
         </div>
@@ -130,10 +130,9 @@
 
 
     
-    <script>   
-        request = new XMLHttpRequest()
-        request.open('GET', HOST + `/open-material/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}/{{ url }}/1`)
-        request.send()
+    <script>
+        
+        
         
         var file = " {{ url }} "
         "{% set url_safe = url | safe %}"
@@ -146,7 +145,7 @@
 
             var thePdf = null;
             var scale = 1;
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+            pdfjsLib.GlobalWorkerOptions.workerSrc = `{{ url_for('static', filename='js/pdf.worker.js') }}`;
 
             pdfjsLib.getDocument(url_used).promise.then(function(pdf) {
                 thePdf = pdf;
