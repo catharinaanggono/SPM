@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
     
     <!--[if lt IE 9]>
       <script src="js/vendor/html5shiv.min.js"></script>
@@ -162,7 +163,7 @@
           request.onreadystatechange = function(){
 
           }
-          request.open("POST", `http://localhost:5001/uploader/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}` )
+          request.open("POST", HOST + `/uploader/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}` )
           request.setRequestHeader("Content-type", "application/json");
           request.send(JSON.stringify(linkList))
         }
@@ -194,7 +195,7 @@
               location.reload()
             }
           }
-          request_file.open("POST", `http://localhost:5001/uploader-file/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}`)
+          request_file.open("POST", HOST + `/uploader-file/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}`)
           request_file.send(formData)
         }
         else{

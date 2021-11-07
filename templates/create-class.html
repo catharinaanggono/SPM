@@ -15,6 +15,7 @@
     <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
 
     <script>
       localStorage.courseID = 1
@@ -155,7 +156,7 @@
         }
 
       };
-      request.open("GET", "http://localhost:5001/get_trainers")
+      request.open("GET", HOST + "/get_trainers")
       request.send();
 
 
@@ -201,12 +202,12 @@
 
               var data = JSON.parse(this.responseText);
               console.log(data)
-              window.location.href = `http://localhost:5001/view-courses`
+              window.location.href = HOST + `/view-courses`
 
             }
         };
         // console.log(JSON.stringify(send_value))
-        request.open("POST", "http://localhost:5001/create_class")
+        request.open("POST", HOST + "/create_class")
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
 

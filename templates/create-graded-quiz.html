@@ -14,6 +14,7 @@
     <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
 
     <!--[if lt IE 9]>
       <script src="js/vendor/html5shiv.min.js"></script>
@@ -487,7 +488,7 @@
               }
           };
           // console.log(JSON.stringify(send_value))
-          request.open("POST", "http://localhost:5001/create_graded_quiz")
+          request.open("POST", HOST + "/create_graded_quiz")
           request.setRequestHeader("Content-type", "application/json");
           request.send(JSON.stringify(quiz_send_value))
 
@@ -525,7 +526,7 @@
                 }
             };
             // console.log(JSON.stringify(send_value))
-            request.open("POST", "http://localhost:5001/create_graded_question", false)
+            request.open("POST", HOST + "/create_graded_question", false)
             request.setRequestHeader("Content-type", "application/json");
             request.send(JSON.stringify(qn_send_value))
           }
@@ -575,7 +576,7 @@
                 }
             };
             // console.log(JSON.stringify(send_value))
-            request.open("POST", "http://localhost:5001/create_graded_answer", false)
+            request.open("POST", HOST + "/create_graded_answer", false)
             request.setRequestHeader("Content-type", "application/json");
             request.send(JSON.stringify(ans_send_value))
           }
@@ -583,7 +584,7 @@
         }
 
         function redirect(){
-          window.location.href = "http://localhost:5001/successful-creation-hr";
+          window.location.href = HOST + "/successful-creation-hr";
         }
         
 
