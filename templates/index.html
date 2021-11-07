@@ -14,6 +14,7 @@
     <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
 
     <!-- VueJS & Axios -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
@@ -330,7 +331,7 @@
           }
         }
       }
-      request.open('GET', 'http://localhost:5001/courses-all/' + UserID)
+      request.open('GET', HOST + '/courses-all/' + UserID)
       request.send()
 
       function enrolClass(CourseID, ClassID, UserID){
@@ -351,7 +352,7 @@
           }
           
         }
-        request.open('POST', 'http://localhost:5001/self-enrol')
+        request.open('POST', HOST + '/self-enrol')
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
       }
@@ -430,7 +431,7 @@
           }
         }
       };
-      request.open('GET', 'http://localhost:5001/learner_ongoing_courses/' + UserID);
+      request.open('GET', HOST + '/learner_ongoing_courses/' + UserID);
       request.send();
 
       function withdrawApplication(CourseID, ClassID, UserID, CourseTitle){
@@ -504,7 +505,7 @@
             }
           }
         };
-        request.open('GET', 'http://localhost:5001/classes-taught/' + UserID, false);
+        request.open('GET', HOST + '/classes-taught/' + UserID, false);
         request.send();
       }
       
@@ -519,7 +520,7 @@
             console.log("!!!!!!!!!!!")
             }
           }
-        request.open('GET', 'http://localhost:5001/user-role/' + UserID, false);
+        request.open('GET', HOST + '/user-role/' + UserID, false);
         request.send();
         return data;
       }
@@ -534,7 +535,7 @@
             console.log("!!!!!!!!!!!")
             }
           }
-        request.open('GET', 'http://localhost:5001/course-details/' + CourseID, false);
+        request.open('GET', HOST + '/course-details/' + CourseID, false);
         request.send();
         return data;
       }
@@ -549,19 +550,19 @@
             console.log("!!!!!!!!!!!")
             }
           }
-        request.open('GET', 'http://localhost:5001/class-details/' + ClassID, false);
+        request.open('GET', HOST + '/class-details/' + ClassID, false);
         request.send();
         return data;
       }
       function viewSection(CourseID, ClassID){
-        window.location.href = `http://localhost:5001/view-section-material/${CourseID}/${ClassID}`
+        window.location.href = HOST + `/view-section-material/${CourseID}/${ClassID}`
       }
       function viewCourseTaught(CourseID, ClassID){
-        window.location.href = `http://localhost:5001/view-section-trainer/${CourseID}/${ClassID}`
+        window.location.href = HOST + `/view-section-trainer/${CourseID}/${ClassID}`
       }
 
       function viewProgress(CourseID, ClassID){
-        window.location.href = `http://localhost:5001/progress-tracker/${CourseID}/${ClassID}`
+        window.location.href = HOST + `/progress-tracker/${CourseID}/${ClassID}`
       }
     </script>
   </body>
