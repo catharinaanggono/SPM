@@ -5,9 +5,11 @@ from course_and_class import app, db, ClassTaken, User, Course, CourseClass
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
+from sqlalchemy.ext.declarative import declarative_base
+
 
 class TestApp(flask_testing.TestCase):
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:4ordX9IZBFbU@3.140.60.132:3306/one_stop_lms_testing"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mariadb+mariadbconnector://root:4ordX9IZBFbU@3.140.60.132:3306/one_stop_lms_testing"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
     app.config.update({
@@ -20,7 +22,8 @@ class TestApp(flask_testing.TestCase):
         return app
 
     def setUp(self):
-        self.engine = sqlalchemy.create_engine("mysql+mysqlconnector://root:4ordX9IZBFbU@3.140.60.132:3306") # connect to server
+        self.engine = sqlalchemy.create_engine("mariadb+mariadbconnector://root:4ordX9IZBFbU@3.140.60.132:3306")
+        # self.engine = sqlalchemy.create_engine("mysql+mysqlconnector://root:4ordX9IZBFbU@3.140.60.132:3306") # connect to server
         self.engine.execute("""
         DROP DATABASE IF EXISTS one_stop_lms_testing;
         """)
