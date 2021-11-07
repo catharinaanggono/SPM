@@ -3,44 +3,108 @@ import flask_testing
 import json
 from course_and_class import app, db, ClassTaken, User, Course, CourseClass, TrainerClass
 from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
 
 class TestApp(flask_testing.TestCase):
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root@localhost:3306/one_stop_lms_testing"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
     app.config.update({
     'SQLALCHEMY_POOL_SIZE': None,
     'SQLALCHEMY_POOL_TIMEOUT': None
-})
+    })
+    db = SQLAlchemy(app)
 
     def create_app(self):
         return app
 
     def setUp(self):
-        db.create_all()
+        self.engine = sqlalchemy.create_engine("mysql+mysqlconnector://root@localhost:3306") # connect to server
+        self.engine.execute("""
+        DROP DATABASE IF EXISTS one_stop_lms_testing;
+        """)
+        self.engine.execute("""        
+        CREATE DATABASE one_stop_lms_testing;
+        """)
+        self.engine.execute("USE one_stop_lms_testing") # select new db
+        self.engine.execute("""CREATE TABLE IF NOT EXISTS userTable(
+        UserID INT NOT NULL AUTO_INCREMENT,
+        UserName TEXT NOT NULL,
+        UserType TEXT NOT NULL,
+        PRIMARY KEY (UserID)
+        );""")
+        self.engine.execute("""
+        CREATE table if not exists course(
+        CourseID INT NOT NULL AUTO_INCREMENT,
+        CourseTitle VARCHAR(50) NOT NULL,
+        CourseDescription TEXT NOT NULL,
+        Badge TEXT NOT NULL,
+        PRIMARY KEY (CourseID)
+        );
+        """)
+
+        self.engine.execute("""
+        CREATE table if not exists class(
+        CourseID INT NOT NULL,
+        ClassID INT NOT NULL AUTO_INCREMENT,
+        StartDate DATETIME NOT NULL,
+        EndDate DATETIME NOT NULL,
+        ClassSize INT NOT NULL,
+        RegistrationStartDate DATETIME NOT NULL,
+        RegistrationEndDate DATETIME NOT NULL,
+        PRIMARY KEY (ClassID),
+        FOREIGN KEY (CourseID) REFERENCES course(CourseID)
+        );
+        """)
+        self.engine.execute("""
+        CREATE TABLE IF NOT EXISTS classLearner(
+        CourseID INT NOT NULL,
+        ClassID INT NOT NULL,
+        LearnerID INT NOT NULL,
+        ApplicationStatus TEXT NOT NULL, -- self_enrolled, hr_enrolled, rejected, failed, ongoing, completed
+        PRIMARY KEY (ClassID, LearnerID),
+        FOREIGN KEY (CourseID, ClassID) REFERENCES class(CourseID, ClassID),
+        FOREIGN KEY (LearnerID) REFERENCES userTable(UserID) 
+        );""")
+        self.engine.execute("""
+        CREATE TABLE IF NOT EXISTS classTrainer(
+            CourseID INT NOT NULL,
+            ClassID INT NOT NULL,
+            TrainerID INT NOT NULL,
+            PRIMARY KEY (ClassID, TrainerID),
+            FOREIGN KEY (CourseID, ClassID) REFERENCES class(CourseID, ClassID),
+            FOREIGN KEY (TrainerID) REFERENCES userTable(UserID)
+        );
+        """)
+
+
         u1 = User(6, 'Lily', 'Junior Engineer')
         u2 = User(7, 'Aaron', 'Senior Engineer')
         u3 = User(8, 'Julie', 'Senior Engineer')
 
         course = Course(1, "WAD", "Course Desc", "badge test")
-        # cl = CourseClass(1, datetime.strptime('05-11-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('28-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('25-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('01-11-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
-        # cl.ClassID = 2
+        cl = CourseClass(1, datetime.strptime('05-11-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('28-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('25-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('01-11-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        cl.ClassID = 2
 
         app1 = ClassTaken(1, 2, 6, "applied")
         app2 = ClassTaken(1, 2, 7, "applied")
         
+        
+
         db.session.add(u1)
         db.session.add(u2)
         db.session.add(u3)
         db.session.add(course)
-        # db.session.add(cl)
+        db.session.commit()
+
+        db.session.add(cl)
+        db.session.commit()
+        
+
         db.session.add(app1)
         db.session.add(app2)
         db.session.commit()
-
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
 
 
 class TestCreateClass(TestApp):
@@ -49,32 +113,39 @@ class TestCreateClass(TestApp):
         y = datetime(2021, 11, 10, 10, 10, 10)
         request_body = {
           "CourseID": 1,
-          "StartDate": x,
-          "EndDate": x,
+          "StartDate": "2021-11-05T00:00:00.000000",
+          "EndDate": "2021-12-28T07:01:24.000000",
           "ClassSize": 20,
-          "RegStartDate": x,
-          "RegEndDate": x, 
+          "RegStartDate": "2021-10-25T00:00:00.000000",
+          "RegEndDate": "2021-11-01T00:00:00.000000", 
           "TrainerIDList": [7, 8]
         }
 
         response = self.client.post("/create_class",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
-
+        
         self.assertEqual(response.json,{
-            "code": 201,
-            "message": "Class is successfully created",
-            "class": {
-                "CourseID": 1,
-                "ClassID": 1,
-                "ClassSize": 20,
-                "StartDate": "Sat, 05 Nov 2021 00:00:00 GMT",
-                "EndDate": "Tue, 28 Dec 2021 00:00:00 GMT",
-                "RegistrationStartDate": "Mon, 25 Oct 2021 00:00:00 GMT",
-                "RegistrationEndDate": "Mon, 01 Nov 2021 00:00:00 GMT",
-                },
-            "trainers": [7, 8]
-        })
+   "class":{
+      "ClassID":3,
+      "ClassSize":20,
+      "CourseID":1,
+      "EndDate":"Tue, 28 Dec 2021 07:01:24 GMT",
+      "GreyOut":False,
+      "RegistrationEndDate":"Mon, 01 Nov 2021 00:00:00 GMT",
+      "RegistrationStartDate":"Mon, 25 Oct 2021 00:00:00 GMT",
+      "RemainingSlot":False,
+      "StartDate":"Fri, 05 Nov 2021 00:00:00 GMT",
+      "Status":"",
+      "TrainerList":False
+   },
+   "code":201,
+   "message":"Class is successfully created",
+   "trainers":[
+      7,
+      8
+   ]
+})
 
 
 
@@ -126,7 +197,6 @@ class TestViewApplication(TestApp):
         response = self.client.post("/accept_application",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
-
         self.assertEqual(response.json,{
             "code": 201,
             "message": "Application has been accepted",
@@ -174,7 +244,6 @@ class TestViewApplication(TestApp):
         response = self.client.post("/reject_application",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
-
         self.assertEqual(response.json,{
             "code": 201,
             "message": "Application has been rejected",

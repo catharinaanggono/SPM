@@ -1600,7 +1600,6 @@ def get_all_senior_engineeers():
 @app.route("/create_class", methods=["POST"])
 def create_class():
     data = request.get_json()
-    print(data)
     CourseID = data['CourseID']
     ClassSize = data['ClassSize']
     StartDate = data['StartDate']
@@ -1612,11 +1611,9 @@ def create_class():
 
     db.session.add(cl)
     db.session.commit()
-    print(cl.json())
 
     for TrainerID in TrainerIDList:
         classTrainer = TrainerClass(CourseID, cl.ClassID, TrainerID)
-        print(classTrainer)
         db.session.add(classTrainer)
         
     db.session.commit()
@@ -1701,7 +1698,6 @@ def accept_application():
 @app.route("/reject_application", methods=['POST'])
 def reject_application():
     data = request.get_json()
-    print(data)
     CourseID = data['CourseID']
     ClassID = data['ClassID']
     LearnerID = data['LearnerID']
