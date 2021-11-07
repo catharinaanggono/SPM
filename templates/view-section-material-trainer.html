@@ -134,7 +134,7 @@
                         materialContent = secMatList[j].MaterialContent
 
                         if (!materialContent.includes('</a>')){
-                          document.getElementById(`${j}-${sectionNameNoSpace}-material`).innerHTML +=`
+                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
                           <div class="card-body" style="">
                               <div class='row'>
                                 <div class ='col-md-8'>
@@ -150,7 +150,7 @@
                           `
                         }
                         else{
-                          document.getElementById(`${j}-${sectionNameNoSpace}-material`).innerHTML +=`
+                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
                           <div class="card-body" style="">
                               <div class='row'>
                                 <div class ='col-md-8'>
