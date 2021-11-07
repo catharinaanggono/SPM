@@ -446,7 +446,7 @@
               return 
           }
         }
-        request.open('POST', `http://localhost:5001/withdraw-application/${CourseID}/${ClassID}/${UserID}`)
+        request.open('POST', HOST + `/withdraw-application/${CourseID}/${ClassID}/${UserID}`)
         request.setRequestHeader("Content-type", "application/json")
         request.send(sendValue)
       }

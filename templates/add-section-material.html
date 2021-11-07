@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
+    <title>Add Section Material</title>
     <meta name="description" content="Free Bootstrap Theme by uicookes.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     
@@ -44,7 +44,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12 text-left section-heading probootstrap-animate">
-              <h1>About The School</h1>
+              <h1>Add Section Material</h1>
             </div>
           </div>
         </div>
@@ -192,7 +192,7 @@
           request_file.onreadystatechange = function(){
             if (this.status == 200 && this.readyState == 4){
               window.alert('FILE HAS BEEN UPLOADED')
-              location.reload()
+              window.location.href = HOST + `/view-section-trainer/{{ CourseID }}/{{ ClassID }}`
             }
           }
           request_file.open("POST", HOST + `/uploader-file/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}`)

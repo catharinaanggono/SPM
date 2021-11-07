@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS sectionMaterial(
     FOREIGN KEY (SectionID) REFERENCES section(SectionID)
 );
 
-ALTER TABLE `sectionmaterial` ADD INDEX( `MaterialContent`);
+ALTER TABLE `sectionMaterial` ADD INDEX( `MaterialContent`);
 
 CREATE TABLE IF NOT EXISTS quiz(
     CourseID INT NOT NULL,
@@ -310,14 +310,13 @@ insert into userTable(UserName, UserType) values ('Aaron', 'Junior Engineer');
 insert into userTable(UserName, UserType) values ('Fred', 'Junior Engineer');
 insert into class(CourseID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize) values (1, '2021-10-20 09:00:00', '2022-02-20 09:00:00', '2021-10-01 09:00:00', '2021-10-18 09:00:00', 50);
 insert into class(CourseID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize) values (1, '2021-11-30 09:00:00', '2022-03-31 09:00:00', '2021-10-01 09:00:00', '2021-11-23 09:00:00', 50);
-insert into class(CourseID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize) values (2, '2021-12-31 09:00:00', '2022-04-31 09:00:00', '2021-10-01 09:00:00', '2021-12-24 09:00:00', 50);
 insert into class(CourseID, StartDate, EndDate, RegistrationStartDate, RegistrationEndDate, ClassSize) values (3, '2021-11-20 09:00:00', '2022-12-30 09:00:00', '2021-11-01 09:00:00', '2021-11-08 09:00:00', 45);
-insert into classTrainer(CourseID, ClassID, TrainerID) values (1, 1, 1);
-insert into classTrainer(CourseID, ClassID, TrainerID) values (3, 2, 2);
+insert into classTrainer(CourseID, ClassID, TrainerID) values (1, 1, 2);
+insert into classTrainer(CourseID, ClassID, TrainerID) values (3, 2, 2)
 insert into LearnerCourse(CourseID, LearnerID, Status) values (1, 1, "completed");
 insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 3, 'ongoing');
 insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (2, 3, 4, 'self_enrolled');
 insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 5, 'ongoing');
 insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (1, 1, 4, 'hr_enrolled');
 insert into classLearner(ClassID, CourseID, LearnerID, ApplicationStatus) values (2, 3, 3, 'rejected');
-
+INSERT INTO `classLearner`(`CourseID`, `ClassID`, `LearnerID`, `ApplicationStatus`) VALUES ('1','1','1','hr_enrolled')

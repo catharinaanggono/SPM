@@ -51,7 +51,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12 text-left section-heading probootstrap-animate">
-              <h1>About The School</h1>
+              <h1>View Section</h1>
             </div>
           </div>
         </div>
@@ -139,10 +139,10 @@
                               <div class='row'>
                                 <div class ='col-md-8'>
                                   <span style="width:80%"> <b> <a href=
-                                    'http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
+                                    HOST + '/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
                                 </div>
                                 <div class='col-md-4'>
-                                  <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
+                                  <button id='remove-material-${j}-${sectionNameNoSpace}'> Remove Material </button>
                                 </div>
                               </div>
                               <hr>
@@ -150,6 +150,7 @@
                           `
                         }
                         else{
+                          console.log(materialContent)
                           document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
                           <div class="card-body" style="">
                               <div class='row'>
@@ -157,15 +158,15 @@
                                   <span style="width:80%"> <b> ${materialContent} </b> </span>
                                 </div>
                                 <div class='col-md-4'>
-                                  <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
+                                  <button id='remove-material-${j}-${sectionNameNoSpace}' > Remove Material </button>
                                 </div>
                               </div>
                               <hr>
                           </div>
                           `
                         }
+                        document.getElementById(`remove-material-${j}-${sectionNameNoSpace}`).addEventListener('click', function(){removeMat(courseID, classID, sectionID, materialContent)})
 
-                        document.getElementById(`remove-material-${i}-${sectionNameNoSpace}`).addEventListener('click', function(){removeMat(courseID, classID, sectionID, materialContent)})
                     }
                     var requestGetQuiz = new XMLHttpRequest()
                     requestGetQuiz.onreadystatechange = function(){
@@ -199,7 +200,7 @@
                 
             }
         }
-        request.open('GET', 'http://localhost:5001/view-section/{{ CourseID }}/{{ ClassID }}')
+        request.open('GET', HOST + '/view-section/{{ CourseID }}/{{ ClassID }}', false)
         request.send()
 
         function addMaterial(CourseID, ClassID, SectionID, SectionName){
@@ -220,7 +221,7 @@
               location.reload()
             }
           }
-          request.open('POST', 'http://localhost:5001/remove-material')
+          request.open('POST', HOST + '/remove-material')
           request.setRequestHeader("Content-type", "application/json");          
           request.send(JSON.stringify(requestBody))
         }
