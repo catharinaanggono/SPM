@@ -16,6 +16,7 @@
 <script>
     var anchor = document.getElementsByTagName('a')
     for (anc of anchor){
-        anc.href = HOST + anc.href
+        anc.href = anc.href.replace('http://localhost:5001', HOST)
+        console.log(anc.href)
     }
 </script>
