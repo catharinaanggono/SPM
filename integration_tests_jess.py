@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 
 class TestApp(flask_testing.TestCase):
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root@localhost:3306/one_stop_lms_testing"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:4ordX9IZBFbU@3.140.60.132:5001/one_stop_lms_testing"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
     app.config.update({
