@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS sectionMaterial(
     FOREIGN KEY (SectionID) REFERENCES section(SectionID)
 );
 
-ALTER TABLE `sectionmaterial` ADD INDEX( `MaterialContent`);
+ALTER TABLE `sectionMaterial` ADD INDEX( `MaterialContent`);
 
 CREATE TABLE IF NOT EXISTS quiz(
     CourseID INT NOT NULL,

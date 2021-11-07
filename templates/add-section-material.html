@@ -192,7 +192,7 @@
           request_file.onreadystatechange = function(){
             if (this.status == 200 && this.readyState == 4){
               window.alert('FILE HAS BEEN UPLOADED')
-              location.reload()
+              window.location.href = HOST + `/view-section-trainer/{{ CourseID }}/{{ ClassID }}`
             }
           }
           request_file.open("POST", HOST + `/uploader-file/{{ CourseID }}/{{ ClassID }}/{{ SectionID }}`)
