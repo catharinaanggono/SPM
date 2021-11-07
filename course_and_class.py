@@ -1607,25 +1607,42 @@ def create_class():
     RegistrationStartDate = data['RegStartDate']
     RegistrationEndDate = data['RegEndDate']
     TrainerIDList = data['TrainerIDList']
-    cl = CourseClass(CourseID, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate)
 
-    db.session.add(cl)
-    db.session.commit()
-
-    for TrainerID in TrainerIDList:
-        classTrainer = TrainerClass(CourseID, cl.ClassID, TrainerID)
-        db.session.add(classTrainer)
-        
-    db.session.commit()
-
-    return jsonify(
+    if not TrainerIDList:
+        return jsonify(
         {
-            "code": 201,
-            "message": "Class is successfully created",
-            "class": cl.json(),
-            "trainers": TrainerIDList
+            "code": 400,
+            "message": "Trainer is not selected"
         }
-    ), 201
+    ), 500
+    else:
+        try:
+            cl = CourseClass(CourseID, StartDate, EndDate, ClassSize, RegistrationStartDate, RegistrationEndDate)
+            db.session.add(cl)
+            db.session.commit()
+            for TrainerID in TrainerIDList:
+                classTrainer = TrainerClass(CourseID, cl.ClassID, TrainerID)
+                db.session.add(classTrainer)
+            db.session.commit()
+            return jsonify(
+            {
+                "code": 201,
+                "message": "Class is successfully created",
+                "class": cl.json(),
+                "trainers": TrainerIDList
+            }
+        ), 201
+
+        except:
+            return jsonify(
+            {
+                "code": 500,
+                "message": "An error occurred while creating class",
+            }
+        ), 500
+
+    
+    
 
 #Get All Self-Enrol Applications
 @app.route('/applications')
@@ -1658,41 +1675,47 @@ def accept_application():
     CourseID = data['CourseID']
     ClassID = data['ClassID']
     LearnerID = data['LearnerID']
-    application = ClassTaken.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).filter_by(LearnerID=LearnerID).first()
-    user = User.query.filter_by(UserID=LearnerID).first()
-    application.UserName = user.UserName
-    course = Course.query.filter_by(CourseID=CourseID).first()
-    application.CourseTitle = course.CourseTitle
-    application.ApplicationStatus = "self_approved"
+
+    cl = CourseClass.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).first() 
     now = datetime.now()
-    # cl = CourseClass.query.filter_by(CourseID == CourseID).filter_by(ClassID == ClassID).first() 
 
-    # if now >= cl.StartDate:
-    #     return jsonify(
-    #         {
-    #             "code": 400,
-    #             "message": "Unable to accept application because class has started"
-    #         }
-    #     ), 400
-
-    try:
-        db.session.commit()
-
-    except:
+    if now >= cl.StartDate:
         return jsonify(
             {
-                "code": 500,
-                "message": "An error occurred accepting the application"
+                "code": 400,
+                "message": "Unable to accept application because class has started"
             }
-        ), 500
+        ), 400
 
-    return jsonify(
-        {
-            "code": 201,
-            "message": "Application has been accepted",
-            "data": application.json()
-        }
-    ), 201
+    else:
+
+        try:
+            application = ClassTaken.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).filter_by(LearnerID=LearnerID).first()
+            user = User.query.filter_by(UserID=LearnerID).first()
+            application.UserName = user.UserName
+            course = Course.query.filter_by(CourseID=CourseID).first()
+            application.CourseTitle = course.CourseTitle
+            application.ApplicationStatus = "self_approved"
+        
+        
+            db.session.commit()
+
+            return jsonify(
+            {
+                "code": 201,
+                "message": "Application has been accepted",
+                "data": application.json()
+            }
+        ), 201
+
+        except:
+            return jsonify(
+                {
+                    "code": 500,
+                    "message": "An error occurred accepting the application"
+                }
+            ), 500
+
 
 #Reject Self-Enrol Application
 @app.route("/reject_application", methods=['POST'])
@@ -1701,31 +1724,45 @@ def reject_application():
     CourseID = data['CourseID']
     ClassID = data['ClassID']
     LearnerID = data['LearnerID']
-    application = ClassTaken.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).filter_by(LearnerID=LearnerID).first()
-    user = User.query.filter_by(UserID=LearnerID).first()
-    application.UserName = user.UserName
-    course = Course.query.filter_by(CourseID=CourseID).first()
-    application.CourseTitle = course.CourseTitle
-    application.ApplicationStatus = "rejected"
+    cl = CourseClass.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).first() 
+    now = datetime.now()
 
-    try:
-        db.session.commit()
-    
-    except:
+    if now >= cl.StartDate:
         return jsonify(
             {
-                "code": 500,
-                "message": "An error occurred rejecting the application"
+                "code": 400,
+                "message": "Unable to reject application because class has started"
             }
-        ), 500
+        ), 400
 
-    return jsonify(
-        {
-            "code": 201,
-            "message": "Application has been rejected",
-            "data": application.json()
-        }
-    ), 201
+    else:
+
+        try:
+            application = ClassTaken.query.filter_by(CourseID=CourseID).filter_by(ClassID=ClassID).filter_by(LearnerID=LearnerID).first()
+            user = User.query.filter_by(UserID=LearnerID).first()
+            application.UserName = user.UserName
+            course = Course.query.filter_by(CourseID=CourseID).first()
+            application.CourseTitle = course.CourseTitle
+            application.ApplicationStatus = "rejected"
+        
+        
+            db.session.commit()
+
+            return jsonify(
+            {
+                "code": 201,
+                "message": "Application has been rejected",
+                "data": application.json()
+            }
+        ), 201
+
+        except:
+            return jsonify(
+                {
+                    "code": 500,
+                    "message": "An error occurred rejecting the application"
+                }
+            ), 500
 
 
 @app.route("/learner_ongoing_courses/<string:UserID>")
