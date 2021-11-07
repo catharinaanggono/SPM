@@ -9,7 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 
 class TestApp(flask_testing.TestCase):
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:4ordX9IZBFbU@localhost:3306/one_stop_lms_testing"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:4ordX9IZBFbU@127.0.0.1:3306/one_stop_lms_testing"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
     app.config.update({
@@ -23,7 +23,7 @@ class TestApp(flask_testing.TestCase):
 
     def setUp(self):
         # self.engine = sqlalchemy.create_engine("mariadb+mariadbconnector://app_user:Password123!@127.0.0.1:3306/company")
-        self.engine = sqlalchemy.create_engine("mysql+mysqlconnector://root:4ordX9IZBFbU@localhost:3306") # connect to server
+        self.engine = sqlalchemy.create_engine("mysql+mysqlconnector://root:4ordX9IZBFbU@127.0.0.1:3306") # connect to server
         self.engine.execute("""
         DROP DATABASE IF EXISTS one_stop_lms_testing;
         """)
