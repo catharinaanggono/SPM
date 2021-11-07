@@ -36,7 +36,7 @@ class LearnerCourse(db.Model):
             self.class_start_date = ''
             self.class_end_date = ''
         return{"LearnerID": self.LearnerID, "CourseID": self.CourseID, "CourseTitle": self.course_title, "ClassID": self.course_class_id,  "ClassStartDate": self.class_start_date, "ClassEndDate": self.class_end_date, "Status": self.Status}
-# asd
+
 class classLearner(db.Model):
     __tablename__ = 'classLearner'
 
