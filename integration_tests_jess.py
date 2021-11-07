@@ -1,7 +1,7 @@
 import unittest
 import flask_testing
 import json
-from course_and_class import app, db, ClassTaken, User, Course, CourseClass, TrainerClass
+from course_and_class import app, db, ClassTaken, User, Course, CourseClass
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
