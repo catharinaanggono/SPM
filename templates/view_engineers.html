@@ -15,6 +15,8 @@
     <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
+
     <!--[if lt IE 9]>
       <script src="js/vendor/html5shiv.min.js"></script>
       <script src="js/vendor/respond.min.js"></script>
@@ -188,7 +190,7 @@
             } 
           }
       };
-      request.open("GET", "http://localhost:5001/users");
+      request.open("GET", HOST + "/users");
       request.send();
 
 
@@ -250,7 +252,7 @@
             
           }
       };
-      request.open("GET", "http://localhost:5001/learners");
+      request.open("GET", HOST + "/learners");
       request.send();
 
     </script>
