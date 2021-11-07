@@ -20,7 +20,8 @@ class TestApp(flask_testing.TestCase):
         db.create_all()
         user_1 = User(1, 'Brenda', 'Senior Engineer')
         course_1 = Course(1, 'Test Course 1', 'Test Course 1 Description', 'Test Course 1 Badge')
-        class_1 = CourseClass(1, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class_1 = CourseClass(1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class_1.ClassID = 1
         section_1 = Section(1, 1, "Test Section 1")
         db.session.add(user_1)
         db.session.add(course_1)

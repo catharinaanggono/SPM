@@ -22,8 +22,10 @@ class TestApp(flask_testing.TestCase):
         course1 = Course(3, "WAD1", "Teach about programming", "python_badge.png")
         course2 = Course(4, "WAD2", "Teach about programming", "python_badge.png")
         prereq1 = CoursePrereq(4, 3)
-        class1 = CourseClass(3, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
-        class2 = CourseClass(4, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class1 = CourseClass(3, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class2 = CourseClass(4, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class1.ClassID = 1
+        class2.ClassID = 2
         learner1 = User(1, "Jhonny", "Senior Engineer")
         
 
@@ -97,8 +99,9 @@ class TestRetrieveLearner(TestApp):
     def test_no_prereq(self):
         
         course3 = Course(1, "SPM", "Teach about programming", "python_badge.png")
-        class3 = CourseClass(1, 1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
-        
+        class3 = CourseClass(1, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class3.ClassID = 3
+
         db.session.add(course3)
         db.session.add(class3)
 
@@ -171,7 +174,7 @@ class TestAssignLeaner(TestApp):
         response = self.client.post("/assign_learners",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
-
+        print(response.json)
         self.assertEqual(response.json,{
         "code": 500,
         "data":[{'ApplicationStatus': 'ongoing',
@@ -180,20 +183,22 @@ class TestAssignLeaner(TestApp):
                 'ClassStartDate': '',
                 'CourseID': 3,
                 'CourseTitle': '',
-                'LearnerID': 1}],
+                'LearnerID': 1,
+                'UserName': ""}],
         "message": "An error occured while adding course, the following learner has already been assigned to this class"
         })
 
     def test_class_availability(self):
 
-        class4 = CourseClass(3, 2, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 0, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
-        
+        class4 = CourseClass(3, datetime.strptime('31-12-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('30-06-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 0, datetime.strptime('01-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('31-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        class4.ClassID = 4
+
         db.session.add(class4)
 
         request_body = {
           "CourseID": "3",
-          "ClassID": "2",
-          "data": [[3, 2, 1, "hr_enrolled"]]
+          "ClassID": "4",
+          "data": [[3, 4, 1, "hr_enrolled"]]
         }
 
         response = self.client.post("/assign_learners",

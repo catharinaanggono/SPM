@@ -202,7 +202,9 @@ class ClassTaken(db.Model):
             self.class_start_date = ''
         if not hasattr(self, 'class_end_date'):
             self.class_end_date = ''
-        
+        return_dict = {}
+        if hasattr(self, 'UserName'):
+            return_dict['UserName'] = self.UserName
         return{
                 "CourseID": self.CourseID, 
                 "ClassID": self.ClassID, 
