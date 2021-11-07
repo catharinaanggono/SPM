@@ -134,7 +134,7 @@
                         materialContent = secMatList[j].MaterialContent
 
                         if (!materialContent.includes('</a>')){
-                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
+                          document.getElementById(`${j}-${sectionNameNoSpace}-material`).innerHTML +=`
                           <div class="card-body" style="">
                               <div class='row'>
                                 <div class ='col-md-8'>
@@ -142,7 +142,7 @@
                                     HOST + '/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
                                 </div>
                                 <div class='col-md-4'>
-                                  <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
+                                  <button id='remove-material-${j}-${sectionNameNoSpace}'> Remove Material </button>
                                 </div>
                               </div>
                               <hr>
@@ -150,22 +150,22 @@
                           `
                         }
                         else{
-                          document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
+                          document.getElementById(`${j}-${sectionNameNoSpace}-material`).innerHTML +=`
                           <div class="card-body" style="">
                               <div class='row'>
                                 <div class ='col-md-8'>
                                   <span style="width:80%"> <b> ${materialContent} </b> </span>
                                 </div>
                                 <div class='col-md-4'>
-                                  <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
+                                  <button id='remove-material-${j}-${sectionNameNoSpace}' > Remove Material </button>
                                 </div>
                               </div>
                               <hr>
                           </div>
                           `
                         }
+                        document.getElementById(`${j}-${sectionNameNoSpace}-material`).addEventListener('click', function(){removeMat(courseID, classID, sectionID, materialContent)})
 
-                        document.getElementById(`remove-material-${i}-${sectionNameNoSpace}`).addEventListener('click', function(){removeMat(courseID, classID, sectionID, materialContent)})
                     }
                     var requestGetQuiz = new XMLHttpRequest()
                     requestGetQuiz.onreadystatechange = function(){
