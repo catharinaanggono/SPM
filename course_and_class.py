@@ -1647,7 +1647,7 @@ def create_class():
 #Get All Self-Enrol Applications
 @app.route('/applications')
 def get_all_pending_applications():
-    applications = ClassTaken.query.filter_by(ApplicationStatus="applied").all()
+    applications = ClassTaken.query.filter_by(ApplicationStatus="self_enrolled").all()
 
     for application in applications:
         user = User.query.filter_by(UserID=application.LearnerID).first()
