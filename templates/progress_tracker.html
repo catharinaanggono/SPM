@@ -45,17 +45,23 @@
       <section class="probootstrap-section probootstrap-section-sm">
         <div class="container">
               <div class="row probootstrap-gutter0">
-                <div class="col-md-4 col-sm-6" style="height:100%">
+                <div class="col-md-4 col-sm-4" style="height:100%">
                   <div class="probootstrap-teacher text-center probootstrap-animate" >
                     <canvas id="final_grade_distribution" style="height:100%"></canvas>
                   </div>
                 </div>
-                <div class="col-md-4 col-sm-6">
-                  <!-- <div class="probootstrap-teacher text-center probootstrap-animate" style="height:100%">
+                <div class="col-md-4 col-sm-4">
+                  <div class="probootstrap-teacher text-center probootstrap-animate" style="height:100%">
                     <canvas id="section_status" style="height:100%"></canvas>
-                  </div> -->
+                  </div>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                  <div class="probootstrap-teacher text-center probootstrap-animate">
+                    <canvas id="course_status"></canvas>
+                  </div>
                 </div>
               </div>
+
                 <div class="row probootstrap-gutter0">
                   <div class="col-md-4 col-sm-6">
                   </div>
@@ -67,20 +73,17 @@
                 <div class="col-md-4 col-sm-6">
                 </div>
               </div>
+
               </div>
                 <div class="row probootstrap-gutter0">
                   <div class="col-md-3 col-sm-6">
                   </div>
-                <div class="col-md-3 col-sm-6">
-                  <div class="probootstrap-teacher text-center probootstrap-animate">
-                    <canvas id="course_status"></canvas>
-                  </div>
-                </div>
-                <div class="col-md-3 col-sm-6">
+
+                <!-- <div class="col-md-3 col-sm-6">
                   <div class="probootstrap-teacher text-center probootstrap-animate">
                     <canvas id="section_grade" style="width:100%"></canvas>
                   </div>
-                </div>
+                </div> -->
                 <div class="col-md-3 col-sm-6">
                 </div>
                 </div>
@@ -272,25 +275,25 @@
           });
 
           //chart for section status
-          // var ctx3 = document.getElementById('section_status').getContext('2d');
-          // var myChart = new Chart(ctx3, {
-          //     type: 'bar',
-          //     data: {
-          //         labels: section_label,
-          //         datasets: getdata(section_value),
-          //     },
-          //     options: {
-          //       plugins: {
-          //         legend: {
-          //             display: true
-          //         },
-          //         title: {
-          //             display: true,
-          //             text: 'Section Status'
-          //         }
-          //       }
-          //     }
-          // });
+          var ctx3 = document.getElementById('section_status').getContext('2d');
+          var myChart = new Chart(ctx3, {
+              type: 'bar',
+              data: {
+                  labels: section_label,
+                  datasets: getdata(section_value),
+              },
+              options: {
+                plugins: {
+                  legend: {
+                      display: true
+                  },
+                  title: {
+                      display: true,
+                      text: 'Section Status'
+                  }
+                }
+              }
+          });
 
 
           //chart for the final grade distribution
@@ -336,46 +339,46 @@
           });
 
           //chart for the amount of pass/fail for each section
-          var ctx5 = document.getElementById('section_grade').getContext('2d');
-          var chart = new Chart(ctx5, {
-          type: 'bar',
-          data: {
-              labels: sections_quiz, // responsible for how many bars are gonna show on the chart
-              // create 12 datasets, since we have 12 items
-              // data[0] = labels[0] (data for first bar - 'Standing costs') | data[1] = labels[1] (data for second bar - 'Running costs')
-              // put 0, if there is no data for the particular bar
-              datasets: [{
-                label: 'Pass',
-                data: section_quiz_pass,
-                backgroundColor: '#22aa99'
-              }, {
-                label: 'Fail',
-                data: section_quiz_fail,
-                backgroundColor: '#994499'
-              }]
-          },
-          options: {
-              responsive: false,
-              plugins: {
-                  legend: {
-                      display: true,
-                      position: 'right'
-                  },
-                  title: {
-                      display: true,
-                      text: 'Section Quiz Pass/Fail'
-                  }
-                },
-              scales: {
-                x: {
-                    stacked: true // this should be set to make the bars stacked
-                },
-                y: {
-                    stacked: true // this also..
-                }
-              }
-          }
-        });
+        //   var ctx5 = document.getElementById('section_grade').getContext('2d');
+        //   var chart = new Chart(ctx5, {
+        //   type: 'bar',
+        //   data: {
+        //       labels: sections_quiz, // responsible for how many bars are gonna show on the chart
+        //       // create 12 datasets, since we have 12 items
+        //       // data[0] = labels[0] (data for first bar - 'Standing costs') | data[1] = labels[1] (data for second bar - 'Running costs')
+        //       // put 0, if there is no data for the particular bar
+        //       datasets: [{
+        //         label: 'Pass',
+        //         data: section_quiz_pass,
+        //         backgroundColor: '#22aa99'
+        //       }, {
+        //         label: 'Fail',
+        //         data: section_quiz_fail,
+        //         backgroundColor: '#994499'
+        //       }]
+        //   },
+        //   options: {
+        //       responsive: false,
+        //       plugins: {
+        //           legend: {
+        //               display: true,
+        //               position: 'right'
+        //           },
+        //           title: {
+        //               display: true,
+        //               text: 'Section Quiz Pass/Fail'
+        //           }
+        //         },
+        //       scales: {
+        //         x: {
+        //             stacked: true // this should be set to make the bars stacked
+        //         },
+        //         y: {
+        //             stacked: true // this also..
+        //         }
+        //       }
+        //   }
+        // });
 
 
         } 

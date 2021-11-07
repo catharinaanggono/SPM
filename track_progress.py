@@ -118,9 +118,10 @@ class studentQuizResult(db.Model):
 
 @app.route('/learner_distribution_chart/<string:ClassID>')
 def distribution(ClassID):
+
     #get all the learnerID using the classID
     learners = classLearner.query.filter_by(ClassID = ClassID).all()
-
+    
     #the list of learners ID in the class
     learnerIDs = []
     course_status = []
@@ -152,7 +153,7 @@ def distribution(ClassID):
         else:
             status_output[status] = 1
 
-    #print(status_output)
+    print(status_output)
 
     #_____________________________________________________________________Number of completed sections in the class (section status)____________________________
     

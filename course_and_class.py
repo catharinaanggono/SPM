@@ -126,6 +126,8 @@ class MaterialProgress(db.Model):
         self.MaterialContent = MaterialContent
         self.LearnerID = LearnerID
 
+    def json(self):
+        return {"CourseID": self.CourseID, "ClassID": self.ClassID, "SectionID": self.SectionID, "MaterialContent": self.MaterialContent, "LearnerID": self.LearnerID}
 
 class CourseClass(db.Model):
     __tablename__ = 'class'
@@ -1462,21 +1464,22 @@ def distribution(ClassID):
     #_____________________________________________________________________Number of completed sections in the class (section status)____________________________
     
 
-    # sections = MaterialProgress.query.filter_by(ClassID = ClassID).all()
+    sections = MaterialProgress.query.filter_by(ClassID = ClassID).all()
 
-    # #section_output = {"Section1":{'completed':0, "imcomplete":0}, "Section2":{...}}
+    #section_output = {"1":{'completed':0, "imcomplete":0}, "2":{...}}
 
-    # section_output = {}
-    # for section in sections:
-    #     #print(section.json()['SectionID'])
-    #     if section.json()['SectionID'] in section_output:
-    #         if section.json()['STATUS'] == 1:
-    #             section_output[section.json()['SectionID']]['completed'] += 1
-    #         else:
-    #             section_output[section.json()['SectionID']]['incomplete'] += 1
-    #     else:
-    #         section_output[section.json()['SectionID']] = {'completed':0, 'incomplete':0}
+    section_output = {}
 
+    for section in sections:
+        #print(section.json())
+        if section.json()["SectionID"] in section_output:
+            section_output[section.json()["SectionID"]]['completed'] += 1
+        else:
+            section_output[section.json()['SectionID']] = {"completed":1}
+
+    for key in section_output:
+        section_output[key]['incomplete'] = len(learnerIDs) - section_output[key]['completed']
+    
     #print(section_output)
 
     #_____________________________________________________________________Final quiz distribution____________________________
@@ -1530,7 +1533,7 @@ def distribution(ClassID):
         "data": {
             "user_type_distribution": user_output,
             "course_status": status_output,
-            # "section_status": section_output,
+            "section_status": section_output,
             "final_grade":final_grade_output,
             "section_quiz_result": quiz_result_output
         }

@@ -259,7 +259,7 @@
              
                   <td style='width:20%'>Registration Start Date: ${registration_start[i]}</td>
                   <td style='width:20%'>Registration End Date: ${registration_end[i]}</td>
-                  <td style='width:10%'> <a href=HOST + '/assign-learner/${course_id[i]}/${class_id[i]}'> Assign Learners </a> </td>
+                  <td style='width:10%'> <a href='http://localhost:5001/assign-learner/${course_id[i]}/${class_id[i]}'> Assign Learners </a> </td>
                 </tr>
               </table>
                 `
@@ -312,6 +312,15 @@
       requestClass.open("GET", HOST + "/classes", false);
       requestClass.send();
 
+
+      var anchor = document.getElementsByTagName('a')
+      for (anc of anchor){
+          anc.href = anc.href.replace('http://localhost:5001', HOST)
+          console.log(anc.href)
+      }
+
+
+      
     </script>
 
   </body>
