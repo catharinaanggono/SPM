@@ -142,7 +142,7 @@
                                     HOST + '/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
                                 </div>
                                 <div class='col-md-4'>
-                                  <button id='remove-material-${i}-${sectionNameNoSpace}' onclick="removeMat(${courseID}, ${classID}, ${sectionID}, '${materialContent}')"> Remove Material </button>
+                                  <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
                                 </div>
                               </div>
                               <hr>
@@ -157,13 +157,14 @@
                                   <span style="width:80%"> <b> ${materialContent} </b> </span>
                                 </div>
                                 <div class='col-md-4'>
-                                  <button id='remove-material-${i}-${sectionNameNoSpace}' onclick="removeMat(${courseID}, ${classID}, ${sectionID}, '${materialContent}')"> Remove Material </button>
+                                  <button id='remove-material-${i}-${sectionNameNoSpace}' > Remove Material </button>
                                 </div>
                               </div>
                               <hr>
                           </div>
                           `
                         }
+                        document.getElementById(`${i}-${sectionNameNoSpace}-material`).addEventListener('click', function(){removeMat(courseID, classID, sectionID, materialContent)})
 
                     }
                     var requestGetQuiz = new XMLHttpRequest()
