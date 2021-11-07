@@ -9,7 +9,8 @@ from sqlalchemy.ext.declarative import declarative_base
 
 
 class TestApp(flask_testing.TestCase):
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:4ordX9IZBFbU@3.140.60.132:3306/one_stop_lms_testing"
+    # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:4ordX9IZBFbU@3.140.60.132:3306/one_stop_lms_testing"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root@localhost:3306/one_stop_lms_testing"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
     app.config.update({
@@ -22,8 +23,8 @@ class TestApp(flask_testing.TestCase):
         return app
 
     def setUp(self):
-        # self.engine = sqlalchemy.create_engine("mariadb+mariadbconnector://app_user:Password123!@127.0.0.1:3306/company")
-        self.engine = sqlalchemy.create_engine("mysql+mysqlconnector://root:4ordX9IZBFbU@3.140.60.132:3306") # connect to server
+        # self.engine = sqlalchemy.create_engine("mysql+mysqlconnector://root:4ordX9IZBFbU@3.140.60.132:3306") # connect to server
+        self.engine = sqlalchemy.create_engine("mysql+mysqlconnector://root@localhost:3306") # connect to server
         self.engine.execute("""
         DROP DATABASE IF EXISTS one_stop_lms_testing;
         """)
@@ -90,8 +91,8 @@ class TestApp(flask_testing.TestCase):
         cl = CourseClass(1, datetime.strptime('30-11-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('28-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('25-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('01-11-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
         cl.ClassID = 2
 
-        app1 = ClassTaken(1, 2, 6, "applied")
-        app2 = ClassTaken(1, 2, 7, "applied")
+        app1 = ClassTaken(1, 2, 6, "self_enrolled")
+        app2 = ClassTaken(1, 2, 7, "self_enrolled")
         
         
 
