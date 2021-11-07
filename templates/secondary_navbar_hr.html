@@ -4,10 +4,18 @@
         <div class="navbar-header navbar-left">
         <div id="navbar-collapse" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-            <li><a href="http://localhost:5001/view-courses">Courses</a></li>
-            <li><a href="http://localhost:5001/view-engineers">Engineers</a></li>
-            <li><a href="http://localhost:5001/view-application">View Application</a></li>
+            <li><a href="/view-courses">Courses</a></li>
+            <li><a href="/view-engineers">Engineers</a></li>
+            <li><a href="/view-application">View Application</a></li>
         </ul>
         </div>
     </div>
 </nav>
+
+<script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
+<script>
+    var anchor = document.getElementsByTagName('a')
+    for (anc of anchor){
+        anc.href = HOST + anc.href
+    }
+</script>
