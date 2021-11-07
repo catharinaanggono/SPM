@@ -84,7 +84,7 @@ class TestApp(flask_testing.TestCase):
         u3 = User(8, 'Julie', 'Senior Engineer')
 
         course = Course(1, "WAD", "Course Desc", "badge test")
-        cl = CourseClass(1, datetime.strptime('05-11-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('28-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('25-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('01-11-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+        cl = CourseClass(1, datetime.strptime('30-11-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('28-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('25-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('01-11-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
         cl.ClassID = 2
 
         app1 = ClassTaken(1, 2, 6, "applied")
@@ -108,9 +108,8 @@ class TestApp(flask_testing.TestCase):
 
 
 class TestCreateClass(TestApp):
-    def test_create_class(self):
-        x = "2021-10-11T07:01:24.000000"
-        y = datetime(2021, 11, 10, 10, 10, 10)
+    def test_create_class_assign_multiple_trainers(self):
+
         request_body = {
           "CourseID": 1,
           "StartDate": "2021-11-05T00:00:00.000000",
@@ -141,12 +140,64 @@ class TestCreateClass(TestApp):
    },
    "code":201,
    "message":"Class is successfully created",
-   "trainers":[
-      7,
-      8
-   ]
+   "trainers":[7,8]
 })
 
+    def test_create_class_assign_one_trainer(self):
+
+            request_body = {
+            "CourseID": 1,
+            "StartDate": "2021-11-05T00:00:00.000000",
+            "EndDate": "2021-12-28T07:01:24.000000",
+            "ClassSize": 25,
+            "RegStartDate": "2021-10-25T00:00:00.000000",
+            "RegEndDate": "2021-11-01T00:00:00.000000", 
+            "TrainerIDList": [7]
+            }
+
+            response = self.client.post("/create_class",
+                                        data=json.dumps(request_body),
+                                        content_type='application/json')
+            
+            self.assertEqual(response.json,{
+    "class":{
+        "ClassID":3,
+        "ClassSize":25,
+        "CourseID":1,
+        "EndDate":"Tue, 28 Dec 2021 07:01:24 GMT",
+        "GreyOut":False,
+        "RegistrationEndDate":"Mon, 01 Nov 2021 00:00:00 GMT",
+        "RegistrationStartDate":"Mon, 25 Oct 2021 00:00:00 GMT",
+        "RemainingSlot":False,
+        "StartDate":"Fri, 05 Nov 2021 00:00:00 GMT",
+        "Status":"",
+        "TrainerList":False
+    },
+    "code":201,
+    "message":"Class is successfully created",
+    "trainers":[7]
+    })
+
+    def test_create_class_no_trainer_selected(self):
+
+            request_body = {
+            "CourseID": 1,
+            "StartDate": "2021-11-05T00:00:00.000000",
+            "EndDate": "2021-12-28T07:01:24.000000",
+            "ClassSize": 25,
+            "RegStartDate": "2021-10-25T00:00:00.000000",
+            "RegEndDate": "2021-11-01T00:00:00.000000", 
+            "TrainerIDList": []
+            }
+
+            response = self.client.post("/create_class",
+                                        data=json.dumps(request_body),
+                                        content_type='application/json')
+            
+            self.assertEqual(response.json,{
+            "code": 400,
+            "message": "Trainer is not selected"
+            })
 
 
 
@@ -213,24 +264,27 @@ class TestViewApplication(TestApp):
         })
 
 
-    # def test_approve_application_error(self):
-    #     class1 = CourseClass(1, 3, datetime.strptime('05-11-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('28-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('25-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('01-11-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+    def test_approve_application_after_class_started_error(self):
+        class1 = CourseClass(1, datetime.strptime('05-11-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('28-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('25-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('01-11-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
 
+        class1.ClassID = 3
+        db.session.add(class1)
+        db.session.commit()
 
-    #     request_body = {
-    #       "CourseID": 1,
-    #       "ClassID": 3,
-    #       "LearnerID": 6
-    #     }
+        request_body = {
+          "CourseID": 1,
+          "ClassID": 3,
+          "LearnerID": 6
+        }
 
-    #     response = self.client.post("/accept_application",
-    #                                 data=json.dumps(request_body),
-    #                                 content_type='application/json')
+        response = self.client.post("/accept_application",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
 
-    #     self.assertEqual(response.json,{
-    #         "code": 400,
-    #         "message": "Unable to accept application because class has started"
-    #     })
+        self.assertEqual(response.json,{
+            "code": 400,
+            "message": "Unable to accept application because class has started"
+        })
 
 
     def test_reject_application(self):
@@ -258,6 +312,30 @@ class TestViewApplication(TestApp):
                 "ClassEndDate": ""
             }
         })
+
+
+    def test_reject_application_after_class_started_error(self):
+        class1 = CourseClass(1, datetime.strptime('05-11-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('28-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('25-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('01-11-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
+
+        class1.ClassID = 3
+        db.session.add(class1)
+        db.session.commit()
+
+        request_body = {
+        "CourseID": 1,
+        "ClassID": 3,
+        "LearnerID": 6
+        }
+
+        response = self.client.post("/reject_application",
+                                    data=json.dumps(request_body),
+                                    content_type='application/json')
+
+        self.assertEqual(response.json,{
+            "code": 400,
+            "message": "Unable to reject application because class has started"
+        })
+
 
 if __name__ == '__main__':
     unittest.main()
