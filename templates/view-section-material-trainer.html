@@ -150,6 +150,7 @@
                           `
                         }
                         else{
+                          console.log(materialContent)
                           document.getElementById(`${i}-${sectionNameNoSpace}-material`).innerHTML +=`
                           <div class="card-body" style="">
                               <div class='row'>
@@ -199,7 +200,7 @@
                 
             }
         }
-        request.open('GET', HOST + '/view-section/{{ CourseID }}/{{ ClassID }}')
+        request.open('GET', HOST + '/view-section/{{ CourseID }}/{{ ClassID }}', false)
         request.send()
 
         function addMaterial(CourseID, ClassID, SectionID, SectionName){
