@@ -139,7 +139,7 @@
                               <div class='row'>
                                 <div class ='col-md-8'>
                                   <span style="width:80%"> <b> <a href=
-                                    'http://localhost:5001/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
+                                    HOST + '/view-material/{{ CourseID }}/{{ ClassID }}/${sectionID}/${materialContent}'> ${materialContent} </a> </b> </span>
                                 </div>
                                 <div class='col-md-4'>
                                   <button id='remove-material-${i}-${sectionNameNoSpace}'> Remove Material </button>
@@ -199,7 +199,7 @@
                 
             }
         }
-        request.open('GET', 'http://localhost:5001/view-section/{{ CourseID }}/{{ ClassID }}')
+        request.open('GET', HOST + '/view-section/{{ CourseID }}/{{ ClassID }}')
         request.send()
 
         function addMaterial(CourseID, ClassID, SectionID, SectionName){
@@ -220,7 +220,7 @@
               location.reload()
             }
           }
-          request.open('POST', 'http://localhost:5001/remove-material')
+          request.open('POST', HOST + '/remove-material')
           request.setRequestHeader("Content-type", "application/json");          
           request.send(JSON.stringify(requestBody))
         }
