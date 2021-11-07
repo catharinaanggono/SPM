@@ -5,6 +5,8 @@ from course_and_class import app, db, ClassTaken, User, Course, CourseClass
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
+from sqlalchemy.ext.declarative import declarative_base
+
 
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:4ordX9IZBFbU@3.140.60.132:3306/one_stop_lms_testing"
@@ -87,8 +89,8 @@ class TestApp(flask_testing.TestCase):
         cl = CourseClass(1, datetime.strptime('30-11-2021 00:00:00.000000', '%d-%m-%Y %H:%M:%S.%f'), datetime.strptime('28-12-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), 20, datetime.strptime('25-10-2021 00:00:00', '%d-%m-%Y %H:%M:%S'), datetime.strptime('01-11-2021 00:00:00', '%d-%m-%Y %H:%M:%S'))
         cl.ClassID = 2
 
-        app1 = ClassTaken(1, 2, 6, "applied")
-        app2 = ClassTaken(1, 2, 7, "applied")
+        app1 = ClassTaken(1, 2, 6, "self_enrolled")
+        app2 = ClassTaken(1, 2, 7, "self_enrolled")
         
         
 
@@ -216,7 +218,7 @@ class TestViewApplication(TestApp):
                         "CourseID": 1, 
                         "ClassID": 2, 
                         "LearnerID": 6, 
-                        "ApplicationStatus": "applied", 
+                        "ApplicationStatus": "self_enrolled", 
                         "UserName": "Lily", 
                         "CourseTitle": "WAD",
                         "ClassStartDate": "",
@@ -226,7 +228,7 @@ class TestViewApplication(TestApp):
                         "CourseID": 1, 
                         "ClassID": 2, 
                         "LearnerID": 7, 
-                        "ApplicationStatus": "applied", 
+                        "ApplicationStatus": "self_enrolled", 
                         "UserName": "Aaron", 
                         "CourseTitle": "WAD",
                         "ClassStartDate": "",
