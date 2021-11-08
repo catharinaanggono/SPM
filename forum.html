@@ -221,22 +221,11 @@
 
                   <div class="header2" style="border: 2px solid black; padding: 10px;">
                     <div class="discussionheader" id="discussionheader" style="font-size: 25px;">Discussion</div>
-                    <div class="discussionheader" id="forumid" style="text-align: right;"> </div>
+                    <div class="discussionheader" style="text-align: right;"> </div>
+                    <div class="discussion" style="text-align: right;"> </div>
+                    <div id='discussion'></div>
 
-                    
 
-                    <table id="discussions" class="tablediscussion" style="padding: 10px;">
-                      <tr class="tabledesign" style="padding: 10px;">
-                        <th></th>
-                        <th style="text-align: right;"></th>
-                        
-                      </tr>
-
-                      <!-- <tr>Did you check</tr> -->
-
-                      
-
-                    </table>
 
 
                   </div>
@@ -244,23 +233,13 @@
 
                   <br><br><br>
                   <div class="response">
-                    <div class="textbox" id="textbox">
+                    <div class="textbox" id="user_reply">
                       <textarea style="height: 110px;"></textarea>
                     </div>
 
-                    <form action="submit" method="POST">
-                      <input type="submit">
-                    </form>
+                    <button onclick='submit()'></button>
                    
                   </div>
-                    
-                       
-
-
-
-
-
-               
               </div>
 
 
@@ -276,8 +255,6 @@
     <!-- END wrapper -->
 
     <script>
-      localStorage.id = 1
-
       var request = new XMLHttpRequest();
 
       request.onreadystatechange = function () {
@@ -285,89 +262,26 @@
 
           var data = JSON.parse(this.responseText);
           console.log(data)
-          console.log(data.data.forum)
-          forum_data = data.data.forum
+          var forum_data = data.data;
+          //console.log(forum_data)
 
-          var course_id = []
-          var forum_id = []
-          var forum_title = []
-          var user_id = []
-          var forum_details = []
-          var forum_created = []
-         
-
-          for(forum in forum_data){
-            course_id.push(forum_data[forum]['CourseID'])
-            forum_id.push(forum_data[forum]['ForumID'])
-            forum_title.push(forum_data[forum]['ForumTitle'])
-            user_id.push(forum_data[forum]['UserID'])
-            forum_details.push(forum_data[forum]['ForumDetails'])
-            forum_created.push(forum_data[forum]['ForumCreated'])
-          }
-
-          console.log(course_id)
-          console.log(forum_id)
-          console.log(forum_title)
-          console.log(user_id)
-          console.log(forum_details)
-          console.log(forum_created)
-
+        
           
-
-          var id = document.getElementById("forumid")
-          console.log(id)
-          id.innerHTML += `${forum_id[0]}
-          `
-          var topic = document.getElementById("topic")
-          topic.innerHTML += `${forum_title[0]}
-          `
-          var userid = document.getElementById("user")
-          userid.innerHTML += `${user_id[0]}
-          `
-          var details = document.getElementById("details")
-          details.innerHTML += `${forum_details[0]}
-          `
-          var time = document.getElementById("time")
-          time.innerHTML += `${forum_created[0]}
-          `
-
-          // var id = document.getElementById("forumid")
-          // for(i in forum_id){
-          //   id.innerHTML += `${forum_id[i]}
-          //   `
-          // }
-
-          // var userid = document.getElementById("user")
-          // for(i in user_id){
-          //   userid.innerHTML += `${user_id[i]}
-          //   `
-          // }
-
-          // var topic = document.getElementById("topic")
-          // for(i in forum_title){
-          //   console.log(forum_title[i])
-          //   topic.innerHTML += `${forum_title[i]}
-          //   `
-          // }
-          // var details = document.getElementById("details")
-          // for(i in forum_details){
-          //   console.log(forum_details[i])
-          //   details.innerHTML += `${forum_details}
-          //   `
-          // }
-          // var time = document.getElementById("time")
-          // for(i in forum_created){
-          //   console.log(forum_created[i])
-          //   time.innerHTML += `${forum_created}
-          //   `
-          // }
-          
-        }
+          let forumid = forum_data['ForumID']
+          let title = forum_data['ForumTitle']
+          let details = forum_data['ForumDetails']
+          let date = forum_data['ForumCreated']
+          let username = forum_data['username']
+          //console.log(title)
+          document.getElementById("topic").innerText += ` ${title}`
+          document.getElementById("user").innerText += ` ${username}`
+          document.getElementById("forumid").innerText += ` ${forumid}`
+          document.getElementById("details").innerText += ` ${details}`
       };
-      request.open("GET", "http://localhost:5003/forum");
+      
+    }
+      request.open("GET", "http://localhost:5003/individual_forum/1"); //hardcoded!!!!!!!!!!!!!!!!!!!!
       request.send();
-
-
 
 
 
@@ -377,95 +291,47 @@
         if (this.readyState == 4 && this.status == 200) {
 
           var data = JSON.parse(this.responseText);
-          console.log(data)
-          console.log(data.data.reply)
-          forum_reply_data = data.data.reply
+          var forum_replies = data.data;
+          console.log(forum_replies)
 
-          var forum_id = []
-          var reply_id = []
-          var reply_content = []
-          var user_id = []
-          var reply_time = []
+          for(reply_index in forum_replies){
+            let forumid = forum_replies[reply_index]['ForumID']
+            let content = forum_replies[reply_index]['ReplyContent']
+            let replyid = forum_replies[reply_index]['ReplyID']
+            let time = forum_replies[reply_index]['ReplyTime']
+            let userid = forum_replies[reply_index]['UserID']
+            let username = forum_replies[reply_index]['userName']
 
-          for (reply in forum_reply_data){
-            forum_id.push(forum_reply_data[reply]['ForumID'])
-            reply_id.push(forum_reply_data[reply]['ReplyID'])
-            reply_content.push(forum_reply_data[reply]['ReplyContent'])
-            user_id.push(forum_reply_data[reply]['UserID'])
-            reply_time.push(forum_reply_data[reply]['ReplyTime'])
+            document.getElementById("discussion").innerHTML += `<div><b>${username}</b></div><div> Reply: <br>${content}</div><hr>`
+            
           }
-
-          console.log(forum_id)
-          console.log(reply_id)
-          console.log(reply_content)
-          console.log(user_id)
-          console.log(reply_time)
-
-          // var id = document.getElementById("forum_id")
-          // for (i in forum_id){
-          //   id.innerHTML += `${forum_id}
-          //   `
-          // }
-
-          var table = document.getElementById("discussions")
-          for(i in reply_content){
-            console.log(i)
-            console.log(reply_content[i])
-            table.innerHTML += `<table class="discussions">
-              <tr class="border">
-                <th style="padding-left:10px;">${user_id[i]}</th>
-                <th style="text-align:right; padding-right:10px;">${reply_time[i]}</th>
-              <tr>
-              <tr class="border" style="padding: 10px;">
-                <td style="padding-left:10px;">${reply_content[i]}</td>
-              </tr>
-              <br>
-            `
-          }
-        }
-
+ 
       };
-      request.open("GET", "http://localhost:5003/forumreply");
+      
+    }
+      request.open("GET", "http://localhost:5003/forum_replies/1"); //hardcoded!!!!!!!!!!!!!!!!!!!!
       request.send();
 
 
+    
 
-      var request = new XMLHttpRequest();
 
-      request.onreadystatechange = function (){
-        if (this.readyState == 4 && this.status == 200){
 
-          var data = JSON.parse(this.responseText);
-          console.log(data)
-          console.log(data.data.user)
-          user_data = data.data.user
 
-          var user_id =[]
-          var user_name = []
-          var user_type = []
+    
 
-          for (user in user_data){
-            user_id.push(user_data[user]['UserID'])
-            user_name.push(user_data[user]['UserName'])
-            user_type.push(user_data[user]['UserType'])
-          }
 
-          console.log(user_id)
-          console.log(user_name)
-          console.log(user_type)
-      
-      
-      //     for (i in user_id){
-      //       console.log(user_id[i])
-      //       if(user_id[i] === userid_table[i]){
-      //         pass
-      //       }
-      //     }
 
-        }
-      };
-      request.open("GET", "http://localhost:5003/users");
-      request.send();
+
+
+
+
+
+
+
+
+
+
 
     </script>
     

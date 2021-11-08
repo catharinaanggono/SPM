@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
+    <title>All Forum Page</title>
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     
@@ -133,23 +133,14 @@
               <br><br><br>
 
               <div class="row">
-                  <div class='col-md-12' id="question">
-                      <!-- Topic: Why is my pipeline not working? -->
-                      <!-- <div class="view" id="view" style="text-align: right;">
-                        <a href="forum.html">View</a>
-                    </div> -->
+                  <div id="forum">
+
                   </div>
                   
               </div>
 
               
         
-
-
-
-
-
-
 
             </div>
         </div>
@@ -184,16 +175,48 @@
     <!-- END wrapper -->
 
     <script>
-      localStorage.id = 1
-
       var request = new XMLHttpRequest();
 
       request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
 
           var data = JSON.parse(this.responseText);
-          console.log(data)
-          console.log(data.data.forum)
+          var forum_data = data.data;
+          console.log(forum_data)
+
+          for(forum_index in forum_data){
+            console.log(forum_data[forum_index])
+            let forumid = forum_data[forum_index]['ForumID']
+            let title = forum_data[forum_index]['ForumTitle']
+            let details = forum_data[forum_index]['ForumDetails']
+            let date = forum_data[forum_index]['ForumCreated']
+            let userid = forum_data[forum_index]['UserID']
+            let username = forum_data[forum_index]['UserName']
+            document.getElementById("forum").innerHTML += `<button onclick="next_page()"><div> ${title} </div><div> ${username}, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${date} </div></button><br>`
+
+          }
+          
+        }
+      };
+      request.open("GET", "http://localhost:5003/allforum");
+      request.send();
+
+
+      function next_page(){
+        window.location.href = "forum.html"
+      }
+
+    </script>
+    
+
+    <script src="js/scripts.min.js"></script>
+    <script src="js/main.min.js"></script>
+    <script src="js/custom.js"></script>
+
+  </body>
+</html>
+
+<!-- console.log(data.data.forum)
 
           forum_data = data.data.forum
 
@@ -231,29 +254,4 @@
                 </div>
               </div>
               <br>
-              `
-          }
-
-
-
-        }
-      };
-      request.open("GET", "http://localhost:5003/forum");
-      request.send();
-
-
-
-
-
-      
-
-    </script>
-    
-
-    <script src="js/scripts.min.js"></script>
-    <script src="js/main.min.js"></script>
-    <script src="js/custom.js"></script>
-
-  </body>
-</html>
-
+              ` -->
