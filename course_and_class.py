@@ -19,6 +19,43 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 db = SQLAlchemy(app)
 print(environ.get("dbURL"))
 
+class publicForum(db.Model):
+    __tablename__ = 'publicForum'
+
+    ForumID = db.Column(db.Integer, primary_key=True)
+    ForumTitle = db.Column(db.String(500), nullable=False)
+    UserID = db.Column(db.Integer, nullable=False)
+    ForumDetails = db.Column(db.Text)
+    ForumCreated = db.Column(db.DateTime)
+
+    def __init__(self, ForumID, ForumTitle, UserID, ForumDetails, ForumCreated):
+        self.ForumID = ForumID
+        self.ForumTitle = ForumTitle
+        self.UserID = UserID
+        self.ForumDetails = ForumDetails
+        self.ForumCreated = ForumCreated
+
+    def json(self):
+        return{"ForumID":self.ForumID, "ForumTitle":self.ForumTitle, "UserID":self.UserID, "ForumDetails":self.ForumDetails, "ForumCreated":self.ForumCreated}
+
+class publicForumReply(db.Model):
+    __tablename__ = 'publicForumReply'
+
+    ForumID = db.Column(db.Integer, nullable=False)
+    ReplyID = db.Column(db.Integer, primary_key=True)
+    ReplyContent = db.Column(db.Text)
+    UserID = db.Column(db.Integer, nullable=False)
+    ReplyTime = db.Column(db.DateTime)
+
+    def __init__(self, ForumID, ReplyID, ReplyContent, UserID, ReplyTime):
+        self.ForumID = ForumID
+        self.ReplyID = ReplyID
+        self.ReplyContent = ReplyContent
+        self.UserID = UserID
+        self.ReplyTime = ReplyTime
+
+    def json(self):
+        return{"ForumID":self.ForumID, "ReplyID":self.ReplyID, "ReplyContent":self.ReplyContent, "UserID":self.UserID, "ReplyTime":self.ReplyTime}
 
 class FinalStudentQuizResult(db.Model):
     __tablename__ = "finalStudentQuizResult"
@@ -1654,7 +1691,92 @@ def create_class():
         ), 500
 
     
+@app.route('/allforum')
+def get_all_forum():
+    forums = publicForum.query.all()
+    output = {}
+
+    for forum in forums:
+        current_forum_dict = forum.json()
+        username = User.query.filter_by(UserID=forum.json()['UserID']).first().json()['UserName']
+        current_forum_dict['UserName'] = username
+        output[forum.json()['ForumID']] = current_forum_dict
+
+    #print(output)
     
+    if (len(output)):
+        return jsonify({
+            "code": 200,
+            "message": "Forum exist",
+            'data': output 
+        }), 200
+    else:
+        return jsonify({
+            "code": 404,
+            "message": "Forum doesn't exist"
+        }), 404
+
+
+@app.route('/individual_forum/<string:ForumID>')
+def get_forum(ForumID):
+    forum = publicForum.query.filter_by(ForumID=ForumID).first()
+    username = User.query.filter_by(UserID=forum.json()['UserID']).first().json()['UserName']
+    #print(username)
+    output = forum.json()
+    output['username'] = username
+
+    return jsonify({
+            "code": 200,
+            "message": "Forum exist",
+            'data': output
+        }), 200
+
+@app.route('/forum_replies/<string:ForumID>')
+def get_forum_reply(ForumID):
+    forum_reply = publicForumReply.query.filter_by(ForumID=ForumID).all()
+    #print(forum_reply)
+    output = {}
+
+    for forum in forum_reply:
+        #print(forum.json())
+        current_forum_dict = forum.json()
+        username = User.query.filter_by(UserID=forum.json()['UserID']).first().json()['UserName']
+        current_forum_dict['userName'] = username
+        output[forum.json()['ReplyID']] = current_forum_dict
+    
+    #print(output)
+
+
+    return jsonify({
+            "code": 200,
+            "message": "Forum exist",
+            'data': output
+        }), 200
+
+
+@app.route('/user_reply', methods=["POST"])
+def submit_forum_reply():
+    data = request.get_json()
+    print(data)
+    data["ReplyTime"] = datetime.strptime(data['ReplyTime'], '%d-%m-%Y %H:%M:%S')
+
+    upload = publicForumReply(ReplyID=None, **data)
+    print(upload.json())
+
+    try:
+        db.session.add(upload)
+        db.session.commit()
+        print(100)
+    except:
+        return jsonify({
+            "code": 500,
+            "message": "An error occured while adding reply"
+        }), 500
+
+    return jsonify({
+        "code": 200,
+        "data": upload.json()
+    }), 200    
 
 #Get All Self-Enrol Applications
 @app.route('/applications')
@@ -1971,7 +2093,15 @@ def view_applications():
 
 @app.route('/hr-home')
 def hr_home():
-    return render_template('/hr_home.html')
+    return render_template('hr_home.html')
+
+@app.route('/all-forum')
+def all_forum():
+    return render_template('all_forum.html')
+
+@app.route('/forum')
+def forum():
+    return render_template('forum.html')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)

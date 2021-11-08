@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
+    <meta name="description" content="Free Bootstrap Theme by uicookies.com">
+    <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
+    
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700|Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-merged.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <!--[if lt IE 9]>
+      <script src="js/vendor/html5shiv.min.js"></script>
+      <script src="js/vendor/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        .forum{
+            box-shadow: lightgrey;
+            /* background-color: lightgrey; */
+        }
+        textarea{
+            width: 100%;
+            height:10%;
+        }
+        .topic{
+          /* background-color: rgb(83, 77, 99); */
+          background-color: rgb(137, 136, 141);
+          box-shadow: 0 5px 10px lightgrey;
+          padding: 10px;
+          height: 33px;
+          color: white;
+        }
+
+        .discussionheader{
+          background-color: rgb(137, 136, 141);
+          padding: 10px;
+          height: 25px;
+          color: white;
+        }
+        .user{
+          font-size: 18px;
+          font: weight 600px;;
+          /* font-family:'Times New Roman', Times, serif */
+        }
+        .box{
+          border: 2px solid rgb(61, 60, 60);
+          width: auto;
+          height: 200px;
+          font-size: 20px;
+          padding: 10px;
+        }
+        .user{
+          text-align: left;
+          background-color: rgb(247, 247, 247);
+          height:45px;
+          padding: 10px;
+        }
+        .response{
+          background-color: rgb(253, 251, 251);  
+        }
+        button{
+          background-color: rgb(104, 103, 103);
+          color: white;
+        }
+        textarea{
+          font-size: 15px;
+          padding: 10px;
+        }
+        .thread {
+          background-color: rgb(238, 236, 236);
+          height: 200px;
+          border: 1px solid black;
+          padding: 10px;
+        }
+        table{
+          background-color: rgb(247, 247, 247);
+          width: 100%;
+          border: 1px solid black;
+          border-collapse: collapse;
+          /* padding: 10px; */
+        }
+        .discussions{
+          /* padding: 10px; */
+          border: 1px solid black;
+          width: 100%;
+          /* padding:5px; */
+        }
+        th {
+          padding: 5px;
+        }
+     
+
+    </style>
+  </head>
+  <body>
+
+    <div class="probootstrap-search" id="probootstrap-search">
+      <a href="#" class="probootstrap-close js-probootstrap-close"><i class="icon-cross"></i></a>
+      <form action="#">
+        <input type="search" name="s" id="search" placeholder="Search a keyword and hit enter...">
+      </form>
+    </div>
+    
+    <div class="probootstrap-page-wrapper">
+      <!-- Fixed navbar -->
+      
+      <div class="probootstrap-header-top">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-9 col-md-9 col-sm-9 probootstrap-top-quick-contact-info">
+              <span><i class="icon-location2"></i>Brooklyn, NY 10036, United States</span>
+              <span><i class="icon-phone2"></i>+1-123-456-7890</span>
+              <span><i class="icon-mail"></i>info@uicookies.com</span>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 probootstrap-top-social">
+              <ul>
+                <li><a href="#"><i class="icon-twitter"></i></a></li>
+                <li><a href="#"><i class="icon-facebook2"></i></a></li>
+                <li><a href="#"><i class="icon-instagram2"></i></a></li>
+                <li><a href="#"><i class="icon-youtube"></i></a></li>
+                <li><a href="#" class="probootstrap-search-icon js-probootstrap-search"><i class="icon-search"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="navbar navbar-default probootstrap-navbar">
+        <div class="container">
+          <div class="navbar-header">
+            <div class="btn-more js-btn-more visible-xs">
+              <a href="#"><i class="icon-dots-three-vertical "></i></a>
+            </div>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html" title="uiCookies:Enlight">Enlight</a>
+          </div>
+
+          <div id="navbar-collapse" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="courses.html">Courses</a></li>
+              <li><a href="teachers.html">Teachers</a></li>
+              <li><a href="events.html">Events</a></li>
+              <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Pages</a>
+                <ul class="dropdown-menu">
+                  <li><a href="about.html">About Us</a></li>
+                  <li><a href="courses.html">Courses</a></li>
+                  <li class="active"><a href="course-single.html">Course Single</a></li>
+                  <li><a href="gallery.html">Gallery</a></li>
+                  <li class="dropdown-submenu dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Sub Menu</span></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                      <li><a href="#">Second Level Menu</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="news.html">News</a></li>
+                </ul>
+              </li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
+      <section class="probootstrap-section probootstrap-section-colored">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-left section-heading probootstrap-animate">
+              <h1>Forum Page</h1>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+
+      <section class="probootstrap-section probootstrap-section-sm">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12"> 
+              <div class="row probootstrap-gutter0">
+
+
+               
+          <!-- END row -->
+          
+        </div>
+
+        <div class="probootstrap-copyright">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12 forum">
+                <div id="div1" style="height: 2000px; width: 1000px; position:relative;">
+
+                  <div class="header" style="border: 2px solid black; padding: 10px;">
+                    <div class="topic" id="topic" style="font-size: 30px;">
+                      Topic: 
+                    </div>
+                    <div class="topic" style="text-align: right;">Forum ID: <span id="forumid"></span> </div>
+
+                    <div class="user" id="user">Username: </div>
+                    <div class="user" id="time" style="text-align: right;"></div>
+                    <br>
+                    <div class="box" id="details"></div>
+                  </div>
+
+                  <br>
+
+                  <div class="header2" style="border: 2px solid black; padding: 10px;">
+                    <div class="discussionheader" id="discussionheader" style="font-size: 25px;">Discussion</div>
+                    <div class="discussionheader" style="text-align: right;"> </div>
+                    <div class="discussion" style="text-align: right;"> </div>
+                    <div id='discussion'></div>
+
+
+
+
+                  </div>
+                  
+
+                  <br><br><br>
+                  <div class="response">
+                    <div class="textbox" >
+                      <textarea style="height: 110px;" id="user_reply"></textarea>
+                    </div>
+
+                    <button class='btn btn-info' onclick='submit()'> Submit</button>
+                   
+                  </div>
+              </div>
+
+
+              <div class="col-md-4 probootstrap-back-to-top">
+                <!-- <p><a href="#" class="js-backtotop">Back to top <i class="icon-arrow-long-up"></i></a></p> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+    <!-- END wrapper -->
+
+    <script>
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+          var data = JSON.parse(this.responseText);
+          console.log(data)
+          var forum_data = data.data;
+          //console.log(forum_data)
+
+        
+          
+          let forumid = forum_data['ForumID']
+          let title = forum_data['ForumTitle']
+          let details = forum_data['ForumDetails']
+          let date = forum_data['ForumCreated']
+          let username = forum_data['username']
+          //console.log(title)
+          document.getElementById("topic").innerText += ` ${title}`
+          document.getElementById("user").innerText += ` ${username}`
+          document.getElementById("forumid").innerText += ` ${forumid}`
+          document.getElementById("details").innerText += ` ${details}`
+      };
+      
+    }
+    request.open("GET", HOST + "/individual_forum/1"); //hardcoded!!!!!!!!!!!!!!!!!!!!
+    request.send();
+
+
+
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+          var data = JSON.parse(this.responseText);
+          var forum_replies = data.data;
+          console.log(forum_replies)
+
+          for(reply_index in forum_replies){
+            let forumid = forum_replies[reply_index]['ForumID']
+            let content = forum_replies[reply_index]['ReplyContent']
+            let replyid = forum_replies[reply_index]['ReplyID']
+            let time = forum_replies[reply_index]['ReplyTime']
+            let userid = forum_replies[reply_index]['UserID']
+            let username = forum_replies[reply_index]['userName']
+
+            document.getElementById("discussion").innerHTML += `<div><b>${username}</b></div><div> Reply: <br>${content}</div><hr>`
+            
+          }
+ 
+      };
+      
+    }
+    request.open("GET", HOST + "/forum_replies/1"); //hardcoded!!!!!!!!!!!!!!!!!!!!
+    request.send();
+
+
+    
+    function submit(){
+      var user_reply = document.getElementById("user_reply").value
+      var forumid = document.getElementById("forumid").textContent
+      var startDate = new Date()
+      var date = startDate.getDate();
+      var month = startDate.getMonth(); //Be careful! January is 0 not 1
+      var year = startDate.getFullYear();
+      var hour = startDate.getHours()
+      var min = startDate.getMinutes()
+      var sec = startDate.getSeconds()
+      var startDateString = date + "-" +(month + 1) + "-" + year + " " + hour + ":" + min + ":" + sec;
+      console.log(startDateString)
+      console.log(forumid)
+
+      send_value = {
+        ForumID: forumid,
+        ReplyContent: user_reply,
+        UserID: 1, // hardcoded!!!!!!!!!!!!!!!!!!!!!!
+        ReplyTime: startDateString
+      }
+
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+          // var data = JSON.parse(this.responseText);
+          // console.log(data)
+          location.reload();
+
+
+
+        };
+      }
+      request.open("POST", HOST + "/user_reply")
+      request.setRequestHeader("Content-type", "application/json");
+      request.send(JSON.stringify(send_value))
+
+    }
+
+    </script>
+    
+
+
+  </body>
+</html>
+
