@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS sectionMaterial(
     MaterialID INT AUTO_INCREMENT,
     MaterialTitle TEXT NOT NULL,
     MaterialContent TEXT NOT NULL,
-    PRIMARY KEY MaterialID,
+    PRIMARY KEY (MaterialID),
     FOREIGN KEY (CourseID) REFERENCES section(CourseID),
     FOREIGN KEY (ClassID) REFERENCES section(ClassID),
     FOREIGN KEY (SectionID) REFERENCES section(SectionID)
