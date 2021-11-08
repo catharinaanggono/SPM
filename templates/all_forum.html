@@ -42,6 +42,7 @@
           font-size: 16px;
           cursor: pointer;
           text-align: center;
+          color:white;
         }
 
     </style>
@@ -128,7 +129,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12 text-left section-heading probootstrap-animate">
-              <h1>Forum Page</h1>
+              <h1>Discussion Forums</h1>
             </div>
           </div>
         </div>
@@ -139,12 +140,8 @@
       <section class="probootstrap-section probootstrap-section-sm">
         <div class="container">
           <div class="row align-middle" id="allforum">
-              <div class="row">
-                  <div class='col-md-6' id="header" style="font-size: 25px;">All Discussion Forums</div>
-                
-              </div>
 
-              <br><br><br>
+              <br><br>
 
               <div class="row">
                   <div id="forum" class='col-md-12'>
@@ -206,7 +203,7 @@
             let date = forum_data[forum_index]['ForumCreated']
             let userid = forum_data[forum_index]['UserID']
             let username = forum_data[forum_index]['UserName']
-            document.getElementById("forum").innerHTML += `<button class='block' onclick="next_page(${forumid})"><div> ${title} </div><div> ${username}, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${date} </div></button><br><br>`
+            document.getElementById("forum").innerHTML += `<button class='block' onclick="next_page(${forumid})"><div> ${title} </div><div> ${username} <br> ${date} </div></button><br><br>`
 
           }
           
