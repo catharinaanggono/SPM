@@ -60,7 +60,7 @@
             <div class='col-md-6'>
               <form id='file-form' method="POST" enctype='multipart/form-data'>
                 <input type="file" multiple name='file' id="file" style="display: none;" onchange="javascript:updateList()"/>
-                <button class="btn btn-primary" onclick="document.getElementById('file').click();" > Upload File... </button>
+                <input type='button' class='btn btn-primary' onclick="document.getElementById('file').click();" value="Upload File..."/>  
               </form>
               <p>Selected files:</p>
               <div id="fileList"></div>
