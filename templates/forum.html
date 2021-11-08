@@ -312,7 +312,7 @@
       };
       
     }
-    request.open("GET", HOST + "/forum_replies/1"); //hardcoded!!!!!!!!!!!!!!!!!!!!
+    request.open("GET", HOST + `/forum_replies/{{ ForumID }}`); //hardcoded!!!!!!!!!!!!!!!!!!!!
     request.send();
 
 

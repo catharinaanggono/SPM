@@ -195,7 +195,7 @@
             let date = forum_data[forum_index]['ForumCreated']
             let userid = forum_data[forum_index]['UserID']
             let username = forum_data[forum_index]['UserName']
-            document.getElementById("forum").innerHTML += `<button onclick="next_page()"><div> ${title} </div><div> ${username}, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${date} </div></button><br>`
+            document.getElementById("forum").innerHTML += `<button onclick="next_page(${forumid})"><div> ${title} </div><div> ${username}, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${date} </div></button><br>`
 
           }
           
@@ -205,8 +205,8 @@
       request.send();
 
 
-      function next_page(){
-        window.location.href = "forum.html"
+      function next_page(ForumID){
+        window.location.href = HOST + "/forum/" + ForumID
       }
 
     </script>

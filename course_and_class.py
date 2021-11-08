@@ -2099,9 +2099,9 @@ def hr_home():
 def all_forum():
     return render_template('all_forum.html')
 
-@app.route('/forum')
-def forum():
-    return render_template('forum.html')
+@app.route('/forum/<ForumID>')
+def forum(ForumID):
+    return render_template('forum.html', ForumID=ForumID)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
