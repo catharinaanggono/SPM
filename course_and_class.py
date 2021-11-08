@@ -1468,23 +1468,28 @@ def distribution(ClassID):
     #_____________________________________________________________________Number of completed sections in the class (section status)____________________________
     
 
-    sections = MaterialProgress.query.filter_by(ClassID = ClassID).all()
+    sections_progress = MaterialProgress.query.filter_by(ClassID = ClassID).all()
+    all_section = Section.query.filter_by(ClassID = ClassID).all()
 
+    print(all_section)
+    
     #section_output = {"1":{'completed':0, "imcomplete":0}, "2":{...}}
-
     section_output = {}
 
-    for section in sections:
+    for each_section in all_section:
+        section_output[each_section.json()['SectionID']] = {"completed": 0, "incomplete": 0}
+
+    
+    for section in sections_progress:
         #print(section.json())
         if section.json()["SectionID"] in section_output:
             section_output[section.json()["SectionID"]]['completed'] += 1
-        else:
-            section_output[section.json()['SectionID']] = {"completed":1}
 
     for key in section_output:
         section_output[key]['incomplete'] = len(learnerIDs) - section_output[key]['completed']
     
-    #print(section_output)
+    print("------------------------")
+    print(section_output)
 
     #_____________________________________________________________________Final quiz distribution____________________________
     
