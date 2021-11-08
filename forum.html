@@ -209,8 +209,8 @@
                     <div class="topic" id="topic" style="font-size: 30px;">
                       Topic: 
                     </div>
-                    <div class="topic" id="forumid" style="text-align: right;">Forum ID: </div>
-                    
+                    <div class="topic" style="text-align: right;">Forum ID: <span id="forumid"></span> </div>
+
                     <div class="user" id="user">Username: </div>
                     <div class="user" id="time" style="text-align: right;"></div>
                     <br>
@@ -233,11 +233,11 @@
 
                   <br><br><br>
                   <div class="response">
-                    <div class="textbox" id="user_reply">
-                      <textarea style="height: 110px;"></textarea>
+                    <div class="textbox" >
+                      <textarea style="height: 110px;" id="user_reply"></textarea>
                     </div>
 
-                    <button onclick='submit()'></button>
+                    <button class='btn btn-info' onclick='submit()'> Submit</button>
                    
                   </div>
               </div>
@@ -280,8 +280,8 @@
       };
       
     }
-      request.open("GET", "http://localhost:5003/individual_forum/1"); //hardcoded!!!!!!!!!!!!!!!!!!!!
-      request.send();
+    request.open("GET", "http://localhost:5003/individual_forum/1"); //hardcoded!!!!!!!!!!!!!!!!!!!!
+    request.send();
 
 
 
@@ -309,12 +309,50 @@
       };
       
     }
-      request.open("GET", "http://localhost:5003/forum_replies/1"); //hardcoded!!!!!!!!!!!!!!!!!!!!
-      request.send();
+    request.open("GET", "http://localhost:5003/forum_replies/1"); //hardcoded!!!!!!!!!!!!!!!!!!!!
+    request.send();
 
 
     
+    function submit(){
+      var user_reply = document.getElementById("user_reply").value
+      var forumid = document.getElementById("forumid").textContent
+      var startDate = new Date()
+      var date = startDate.getDate();
+      var month = startDate.getMonth(); //Be careful! January is 0 not 1
+      var year = startDate.getFullYear();
+      var hour = startDate.getHours()
+      var min = startDate.getMinutes()
+      var sec = startDate.getSeconds()
+      var startDateString = date + "-" +(month + 1) + "-" + year + " " + hour + ":" + min + ":" + sec;
+      console.log(startDateString)
+      console.log(forumid)
 
+      send_value = {
+        ForumID: forumid,
+        ReplyContent: user_reply,
+        UserID: 1, // hardcoded!!!!!!!!!!!!!!!!!!!!!!
+        ReplyTime: startDateString
+      }
+
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+          // var data = JSON.parse(this.responseText);
+          // console.log(data)
+          location.reload();
+
+
+
+        };
+      }
+      request.open("POST", "http://localhost:5003/user_reply")
+      request.setRequestHeader("Content-type", "application/json");
+      request.send(JSON.stringify(send_value))
+
+    }
 
 
 

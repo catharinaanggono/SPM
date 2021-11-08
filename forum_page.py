@@ -1,4 +1,4 @@
-from flask import Flask, json, render_template, jsonify
+from flask import Flask, json, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
@@ -117,11 +117,11 @@ def get_forum(ForumID):
 @app.route('/forum_replies/<string:ForumID>')
 def get_forum_reply(ForumID):
     forum_reply = publicForumReply.query.filter_by(ForumID=ForumID).all()
-    print(forum_reply)
+    #print(forum_reply)
     output = {}
 
     for forum in forum_reply:
-        print(forum.json())
+        #print(forum.json())
         current_forum_dict = forum.json()
         username = User.query.filter_by(UserID=forum.json()['UserID']).first().json()['UserName']
         current_forum_dict['userName'] = username
@@ -135,6 +135,35 @@ def get_forum_reply(ForumID):
             "message": "Forum exist",
             'data': output
         }), 200
+
+
+@app.route('/user_reply', methods=["POST"])
+def submit_forum_reply():
+    data = request.get_json()
+    print(data)
+    data["ReplyTime"] = datetime.strptime(data['ReplyTime'], '%d-%m-%Y %H:%M:%S')
+
+    upload = publicForumReply(ReplyID=None, **data)
+    print(upload.json())
+
+    try:
+        db.session.add(upload)
+        db.session.commit()
+        print(100)
+    except:
+        return jsonify({
+            "code": 500,
+            "message": "An error occured while adding reply"
+        }), 500
+
+    return jsonify({
+        "code": 200,
+        "data": upload.json()
+    }), 200
+
+
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5003, debug=True)
