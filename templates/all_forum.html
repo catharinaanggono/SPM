@@ -33,6 +33,17 @@
            
        }
 
+       .block {
+          display: block;
+          width: 100%;
+          border: none;
+          background-color: #04AA6D;
+          padding: 14px 28px;
+          font-size: 16px;
+          cursor: pointer;
+          text-align: center;
+        }
+
     </style>
   </head>
   <body>
@@ -136,7 +147,7 @@
               <br><br><br>
 
               <div class="row">
-                  <div id="forum">
+                  <div id="forum" class='col-md-12'>
 
                   </div>
                   
@@ -195,7 +206,7 @@
             let date = forum_data[forum_index]['ForumCreated']
             let userid = forum_data[forum_index]['UserID']
             let username = forum_data[forum_index]['UserName']
-            document.getElementById("forum").innerHTML += `<button onclick="next_page(${forumid})"><div> ${title} </div><div> ${username}, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${date} </div></button><br>`
+            document.getElementById("forum").innerHTML += `<button class='block' onclick="next_page(${forumid})"><div> ${title} </div><div> ${username}, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${date} </div></button><br><br>`
 
           }
           
