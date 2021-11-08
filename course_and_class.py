@@ -1488,8 +1488,8 @@ def distribution(ClassID):
     for key in section_output:
         section_output[key]['incomplete'] = len(learnerIDs) - section_output[key]['completed']
     
-    print("------------------------")
-    print(section_output)
+    # print("------------------------")
+    # print(section_output)
 
     #_____________________________________________________________________Final quiz distribution____________________________
     
