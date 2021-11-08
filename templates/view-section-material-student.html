@@ -186,7 +186,7 @@
                       }
                     }
                     allCount = progressBarList.length
-                    percentage = openedCount*100/allCount 
+                    percentage = Number.parseFloat(openedCount*100/allCount).toFixed(2) 
                     progressTextHTML = `${percentage}% ${openedCount} out of ${allCount} material opened`
                     document.getElementById(`${i}-${sectionNameNoSpace}-progress-text`).innerHTML = progressTextHTML
                     progressBarHTML = `<div style='width:${percentage}%; height:20px; background-color:green'></div>`
