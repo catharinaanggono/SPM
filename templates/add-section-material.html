@@ -60,7 +60,7 @@
             <div class='col-md-6'>
               <form id='file-form' method="POST" enctype='multipart/form-data'>
                 <input type="file" multiple name='file' id="file" style="display: none;" onchange="javascript:updateList()"/>
-                <input type="button" value="Upload File..." onclick="document.getElementById('file').click();" />
+                <button class="btn btn-primary" onclick="document.getElementById('file').click();" > Upload File... </button>
               </form>
               <p>Selected files:</p>
               <div id="fileList"></div>
@@ -74,7 +74,7 @@
             <div class='col-md-9'>
               <input type='text' placeholder='Title' id='title-1'>
               <input type='text' placeholder='Link' size='50' id='link-1'>
-              <button onclick='addLink()'> Add More Links </button>
+              <button class="btn btn-primary" onclick='addLink()'> Add More Links </button>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@
         var output = document.getElementById('fileList');
         var children = "";
         for (var i = 0; i < input.files.length; ++i) {
-          children += `<span id='${input.files.item(i).name}'>` + input.files.item(i).name + ` <button onclick="removeFile('${input.files.item(i).name}')"> Remove File </button> </span>` + "<br>" ;
+          children += `<span id='${input.files.item(i).name}'>` + input.files.item(i).name + ` <button class="btn btn-danger" onclick="removeFile('${input.files.item(i).name}')"> Remove File </button> </span>` + "<br>" ;
         }
         output.innerHTML = children;
       }
