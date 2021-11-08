@@ -1477,7 +1477,7 @@ def distribution(ClassID):
     section_output = {}
 
     for each_section in all_section:
-        section_output[each_section.json()['SectionID']] = {"completed": 0, "incomplete": 0}
+        section_output[each_section.json()[each_section]] = {"completed": 0, "incomplete": 0}
 
     
     for section in sections_progress:
