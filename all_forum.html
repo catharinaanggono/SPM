@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
+    <title>All Forum Page</title>
     <meta name="description" content="Free Bootstrap Theme by uicookies.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     
@@ -27,8 +27,9 @@
        #header{
            box-shadow: 5px 6px 6px 5px lightgrey;
            padding: 10px;
-           
        }
+   
+
 
     </style>
   </head>
@@ -126,30 +127,21 @@
         <div class="container">
           <div class="row align-middle" id="allforum">
               <div class="row">
-                  <div class='col-md-6' id="header" style="font-size: 25px;">All Discussion Forums</div>
+                  <div class='col-md-12' id="header" style="font-size: 25px;">All Discussion Forums</div>
                 
               </div>
 
               <br><br><br>
 
               <div class="row">
-                  <div class='col-md-12' id="question">
-                      <!-- Topic: Why is my pipeline not working? -->
-                      <!-- <div class="view" id="view" style="text-align: right;">
-                        <a href="forum.html">View</a>
-                    </div> -->
+                  <div id="forum">
+
                   </div>
                   
               </div>
 
               
         
-
-
-
-
-
-
 
             </div>
         </div>
@@ -184,68 +176,36 @@
     <!-- END wrapper -->
 
     <script>
-      localStorage.id = 1
-
       var request = new XMLHttpRequest();
 
       request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
 
           var data = JSON.parse(this.responseText);
-          console.log(data)
-          console.log(data.data.forum)
+          var forum_data = data.data;
+          console.log(forum_data)
 
-          forum_data = data.data.forum
+          for(forum_index in forum_data){
+            console.log(forum_data[forum_index])
+            let forumid = forum_data[forum_index]['ForumID']
+            let title = forum_data[forum_index]['ForumTitle']
+            let details = forum_data[forum_index]['ForumDetails']
+            let date = forum_data[forum_index]['ForumCreated']
+            let userid = forum_data[forum_index]['UserID']
+            let username = forum_data[forum_index]['UserName']
+            document.getElementById("forum").innerHTML += `<button onclick="next_page()" style="background-color:rgb(249, 249, 249); width:100%; text-align:left; box-shadow:0 5px 5px lightgrey;"><div style="font-size:20px; color:rgb(104, 103, 103);"> ${title} </div><br><div style="font-size:16px;"> ${username}, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${date} </div></button><br><br>`
 
-          var course_id = []
-          var forum_id = []
-          var forum_title =[]
-          var user_id =[]
-          var forum_details =[]
-          var forum_created =[]
-
-          for (forum in forum_data){
-              forum_id.push(forum_data[forum]['ForumID'])
-              forum_title.push(forum_data[forum]['ForumTitle'])
-              forum_created.push(forum_data[forum]['ForumCreated'])
-              user_id.push(forum_data[forum]['UserID'])
           }
-
-          console.log(forum_id)
-          console.log(forum_title)
-          console.log(forum_created)
-
-          var title = document.getElementById("question")
-          console.log(title)
-
-          for(i in forum_title){
-              console.log(forum_title[i])
-              title.innerHTML += `
-              <div class='row'>
-                <div class='row' style="background-color:rgb(250, 250, 250); padding: 10px; box-shadow:0 5px 10px lightgrey;">
-                    <div class='col-md-9' style="font-size:20px;">${forum_title[i]}</div>
-                    <div class='col-md-9' stle="font-size:12px;">Submitted by: ${user_id[i]}</div>
-
-                    <div class='col-md-3'><button class="btn btn-link" style="text-align:right;"><a href="forum.html">
-                        View </button></div>
-                </div>
-              </div>
-              <br>
-              `
-          }
-
-
-
+          
         }
       };
-      request.open("GET", "http://localhost:5003/forum");
+      request.open("GET", "http://localhost:5003/allforum");
       request.send();
 
 
-
-
-
-      
+      function next_page(){
+        window.location.href = "forum.html"
+      }
 
     </script>
     
@@ -256,4 +216,3 @@
 
   </body>
 </html>
-
