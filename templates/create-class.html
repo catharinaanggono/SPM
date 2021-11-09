@@ -16,6 +16,8 @@
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
     <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
+    <link rel="icon" href="{{ url_for('static', filename='img/lms_icon.png') }}">
+
 
     <script>
       localStorage.courseID = 1
@@ -59,6 +61,10 @@
           </div>
         </div>
       </section>
+
+      <div id="errorMsg" style="display: none;" class="alert alert-danger" role="alert">
+        Unable to create class. Please check that all fields have been filled in and you have selected at least one trainer.
+      </div>
 
       <section class="probootstrap-section probootstrap-section-sm">
         <div class="container">
@@ -204,6 +210,9 @@
               console.log(data)
               window.location.href = HOST + `/view-courses`
 
+            }
+            else {
+              document.getElementById("errorMsg").style.display = ""
             }
         };
         // console.log(JSON.stringify(send_value))
