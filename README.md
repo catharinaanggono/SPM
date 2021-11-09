@@ -15,8 +15,18 @@
 
 ## 5. Run course_and_class.py --> python course_and_class.py
 
-## 
+## 6. Access the home page (as a learner/trainer) at http://localhost:5001/home
+
+## 7. Access the home page (as a HR/admin) at http://localhost:5001/hr-home
+
 
 ## Note:
+
 ## If there are any issues, please email us at wellsonah.2019@scis.smu.edu.sg
 
+## Future work:
+## As user logins have not yet been implemented, we have made the default user to UserID 1 -- which is a senior engineer who has classes enrolled and classes to teach.
+
+## As for HR/admin, there are no user restrictions as of now. There is no need to specify any login credentials as the page is currently "open" to all users.
+
+## When user logins are implemented, this will be fixed.
