@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 
+# IMPORTANT: For this TDD test, it will create a mock database in our cloud database
 
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:4ordX9IZBFbU@3.140.60.132:3306/one_stop_lms_testing"
