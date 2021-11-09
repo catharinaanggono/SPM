@@ -1,3 +1,6 @@
+# Done by
+# Catharina Anggono (email: catharinaa.2019@scis.smu.edu.sg)
+
 import unittest
 import flask_testing
 import json
