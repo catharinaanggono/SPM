@@ -6,6 +6,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from datetime import datetime
 import os
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -1841,6 +1842,8 @@ def accept_application():
         
         
             db.session.commit()
+            
+            delete_application(CourseID, LearnerID)
 
             return jsonify(
             {
@@ -1857,6 +1860,14 @@ def accept_application():
                     "message": "An error occurred accepting the application"
                 }
             ), 500
+
+#Delete Self-Enrol Application
+def delete_application(CourseID, LearnerID):
+    applications = ClassTaken.query.filter_by(CourseID=CourseID).filter_by(LearnerID=LearnerID).filter_by(ApplicationStatus="self_enrolled").all()
+    if len(applications):
+        for application in applications:
+            db.session.delete(application)
+        db.session.commit()
 
 
 #Reject Self-Enrol Application
