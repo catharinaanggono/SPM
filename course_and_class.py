@@ -2081,7 +2081,7 @@ def assign_learner(CourseID, ClassID):
 
 @app.route('/progress-tracker/<CourseID>/<ClassID>')
 def progress_tracker(CourseID, ClassID):
-    return render_template('progress_tracker.html', ClassID=ClassID, CourseID=CourseID)
+    return render_template('progress-tracker.html', ClassID=ClassID, CourseID=CourseID)
 
 @app.route('/home')
 def home():
@@ -2089,23 +2089,23 @@ def home():
 
 @app.route('/learner-acct')
 def learner_acct():
-    return render_template('learner_acct.html', UserID = 1)
+    return render_template('learner-acct.html', UserID = 1)
 
 @app.route('/view-engineers')
 def view_engineers():
-    return render_template('view_engineers.html')
+    return render_template('view-engineers.html')
 
 @app.route('/view-application')
 def view_applications():
-    return render_template('view_application.html')
+    return render_template('view-application.html')
 
 @app.route('/hr-home')
 def hr_home():
-    return render_template('hr_home.html')
+    return render_template('hr-home.html')
 
 @app.route('/all-forum')
 def all_forum():
-    return render_template('all_forum.html')
+    return render_template('all-forum.html')
 
 @app.route('/forum/<ForumID>')
 def forum(ForumID):
