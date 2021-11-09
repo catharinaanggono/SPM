@@ -175,23 +175,6 @@
         var regEndDate = document.getElementById("regEndDate").value;
         var trainerID = document.getElementById("trainer").value;
         var trainerIdList = $('#trainer').val();
-        console.log("###############")
-        console.log(courseID)
-        console.log(classSize)
-        console.log(startDate)
-        console.log(endDate)
-        console.log(regStartDate)
-        console.log(regEndDate)
-        console.log(trainerID)
-
-        // var msg = [];
-
-        // if(courseTitle.length <= 0){
-        //   msg.push("Please fill in the course title");
-        // }
-        // if(courseDesc.length <= 0){
-        //   msg.push("Please fill in the course description");
-        // }
 
         var send_value = {
           CourseID: courseID,
@@ -211,12 +194,8 @@
               window.location.href = HOST + `/view-courses`
 
             }
-            else {
-              document.getElementById("errorMsg").style.display = ""
-            }
         };
-        // console.log(JSON.stringify(send_value))
-        request.open("POST", HOST + "/create_class", false)
+        request.open("POST", HOST + "/create_class")
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(send_value))
 
