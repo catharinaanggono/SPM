@@ -146,7 +146,7 @@
 
             var thePdf = null;
             var scale = 1;
-            pdfjsLib.GlobalWorkerOptions.workerSrc = `{{ url_for('static', filename='js/pdf.worker.js') }}`;
+            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://mozilla.github.io/pdf.js/build/pdf.worker.js`;
 
             pdfjsLib.getDocument(url_used).promise.then(function(pdf) {
                 thePdf = pdf;
