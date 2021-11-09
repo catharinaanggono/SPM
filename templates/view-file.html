@@ -17,7 +17,7 @@
     <script src="{{ url_for('static', filename='js/scripts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
-    <script src='https://mozilla.github.io/pdf.js/build/pdf.js'></script>
+    <script src="{{ url_for('static', filename='js/pdf.js') }}"></script>
     <script src="{{ url_for('static', filename='js/autoload.js') }}"></script>
     <link rel="icon" href="{{ url_for('static', filename='img/lms_icon.png') }}">
 
@@ -146,7 +146,7 @@
 
             var thePdf = null;
             var scale = 1;
-            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://mozilla.github.io/pdf.js/build/pdf.worker.js`;
+            pdfjsLib.GlobalWorkerOptions.workerSrc = `{{ url_for('static', filename='js/pdf.worker.js') }}`;
 
             pdfjsLib.getDocument(url_used).promise.then(function(pdf) {
                 thePdf = pdf;
