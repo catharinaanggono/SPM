@@ -1512,18 +1512,26 @@ def distribution(ClassID):
     
     #section_output = {"1":{'completed':0, "imcomplete":0}, "2":{...}}
     section_output = {}
-
+    
     for each_section in all_section:
+        sect_id = each_section.json()['SectionID']
         section_output[each_section.json()['SectionID']] = {"completed": 0, "incomplete": 0}
+        material_in_section = SectionMaterial.query.filter_by(SectionID=sect_id).count()
+        for a_learner in learnerIDs:
+            mat_prog = MaterialProgress.query.filter_by(LearnerID = a_learner, SectionID=sect_id).count()
+            if mat_prog == material_in_section:
+                section_output[each_section.json()["SectionID"]]['completed'] += 1
+            else:
+                section_output[each_section.json()["SectionID"]]['incomplete'] += 1
 
     
-    for section in sections_progress:
-        #print(section.json())
-        if section.json()["SectionID"] in section_output:
-            section_output[section.json()["SectionID"]]['completed'] += 1
+    # for section in sections_progress:
+    #     #print(section.json())
+    #     if section.json()["SectionID"] in section_output:
+    #         section_output[section.json()["SectionID"]]['completed'] += 1
 
-    for key in section_output:
-        section_output[key]['incomplete'] = len(learnerIDs) - section_output[key]['completed']
+    # for key in section_output:
+    #     section_output[key]['incomplete'] = len(learnerIDs) - section_output[key]['completed']
     
     # print("------------------------")
     # print(section_output)
