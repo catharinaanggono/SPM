@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>uiCookies:Enlight &mdash; Free Bootstrap Theme, Free Responsive Bootstrap Website Template</title>
+    <title>Create Section</title>
     <meta name="description" content="Free Bootstrap Theme by uicookes.com">
     <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     
@@ -44,7 +44,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12 text-left section-heading probootstrap-animate">
-              <h1>About The School</h1>
+              <h1>Create Section</h1>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
             <div class='col-md-6'>
               <form id='file-form' method="POST" enctype='multipart/form-data'>
                 <input type="file" multiple name='file' id="file" style="display: none;" onchange="javascript:updateList()"/>
-                <input type="button" value="Upload File..." onclick="document.getElementById('file').click();" />
+                <input type="button" class='btn btn-primary' value="Upload File..." onclick="document.getElementById('file').click();" />
               </form>
               <p>Selected files:</p>
               <div id="fileList"></div>
@@ -82,7 +82,7 @@
             <div class='col-md-9'>
               <input type='text' placeholder='Title' id='title-1'>
               <input type='text' placeholder='Link' size='50' id='link-1'>
-              <button onclick='addLink()'> Add More Links </button>
+              <button class="btn btn-primary" onclick='addLink()'> Add More Links </button>
             </div>
           </div>
         </div>
@@ -111,7 +111,7 @@
         var output = document.getElementById('fileList');
         var children = "";
         for (var i = 0; i < input.files.length; ++i) {
-          children += `<span id='${input.files.item(i).name}'>` + input.files.item(i).name + ` <button onclick="removeFile('${input.files.item(i).name}')"> Remove File </button> </span>` + "<br>" ;
+          children += `<span id='${input.files.item(i).name}'>` + input.files.item(i).name + ` <button class="btn btn-danger" onclick="removeFile('${input.files.item(i).name}')"> Remove File </button> </span>` + "<br>" ;
         }
         output.innerHTML = children;
       }
